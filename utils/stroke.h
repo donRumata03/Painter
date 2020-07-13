@@ -7,7 +7,7 @@
 
 #include <pythonic.h>
 
-#include "utils/color.h"
+#include "color.h"
 
 /*
  * It`s basically a 2nd order Bezier curve => contains
