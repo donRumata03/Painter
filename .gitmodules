@@ -1,3 +1,6 @@
 [submodule "dependencies/pythonic"]
 	path = dependencies/pythonic
 	url = https://github.com/donRumata03/pythonic
+[submodule "dependencies/PowerfulGA"]
+	path = dependencies/PowerfulGA
+	url = https://github.com/donRumata03/PowerfulGA
