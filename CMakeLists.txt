@@ -47,7 +47,7 @@ utils/color.h
 utils/image_io_utils.cpp
 utils/image_io_utils.h
 
-        tests/opencv_test.h)
+        tests/opencv_test.h tests/cv_io_test.h)
 
 
 include_directories(/)

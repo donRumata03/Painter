@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <utils/image_io_utils.h>
 #include "painter_pch.h"
 #include "utils/color.h"
 
@@ -30,8 +31,9 @@ void complicatedThreshold(byte_Pixel &pixel)
 }
 
 inline void test_opencv() {
+	// auto image_path = fs::path(std::string(base_path)) / "resources"s / "test_input_images"s / "coffee.jpg"s; // std::string(base_path);
 
-	cv::Mat image = cv::imread(R"(D:\Projects\Tests\Opencv_test\bg.jpg)"); // cv::Mat::zeros(100, 100, CV_8U);
+	cv::Mat image = cv::imread(get_sample_image_path()); // cv::Mat::zeros(100, 100, CV_8U);
 
 	std::cout << std::boolalpha << image.type() << " " << CV_8UC3 << " " << (image.type() == CV_8UC3) << std::endl;
 
@@ -73,7 +75,7 @@ inline void test_opencv() {
 
 	image = convert_image_to_floating_point(image);
 
-	convert_image_between_RGB_and_BGR(image);
+	convert_image_between_RGB_and_BGR<Pixel>(image);
 
 	image = convert_image_from_floating_point(image);
 
