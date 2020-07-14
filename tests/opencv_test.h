@@ -36,7 +36,7 @@ inline void test_opencv() {
 	std::cout << std::boolalpha << image.type() << " " << CV_8UC3 << " " << (image.type() == CV_8UC3) << std::endl;
 
 	image.forEach<byte_Pixel>([&](byte_Pixel& pixel, const int position[]){
-		complicatedThreshold(pixel);
+		// complicatedThreshold(pixel);
 	});
 
 
@@ -71,7 +71,13 @@ inline void test_opencv() {
 //// for(int j = 0; j < image.cols; j++)
 //// image.at<double>(i,j)=1./(i+j+1);
 
+	image = convert_image_to_floating_point(image);
+
 	convert_image_between_RGB_and_BGR(image);
+
+	image = convert_image_from_floating_point(image);
+
+
 	cv::imwrite("D:/Projects/Painter/resources/test_saving.jpg", image);
 
 	cv::namedWindow("Test window", cv::WINDOW_GUI_NORMAL);
