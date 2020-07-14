@@ -1,4 +1,3 @@
 [submodule "dependencies/pythonic"]
 	path = dependencies/pythonic
 	url = https://github.com/donRumata03/pythonic
-	branch = master
