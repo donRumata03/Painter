@@ -20,15 +20,17 @@ std::vector<rgb_color<uint8_t>> get_color_top_top (const std::unordered_set<rgb_
 {
 
 
-	size_t resultive_color_number = process_color_warning(amount, all_color_number) // std::min(amount, all_color_number);
+	// size_t resultive_color_number = process_color_warning(amount, all_color_number) // std::min(amount, all_color_number);
 
 	// Pick first *resultive_color_number* ones
-	std::vector<byte_color> res(resultive_color_number);
+
+	/*std::vector<byte_color> res(resultive_color_number);
 	for (size_t top_index = 0; top_index < resultive_color_number; ++top_index) {
 		res[top_index] = color_top[top_index].first;
 	}
 
-	return res;
+	return res;*/
+	return {};
 }
 
 static size_t process_color_warning(size_t required_amount, size_t existing_amount){
@@ -54,9 +56,9 @@ std::vector<rgb_color<uint8_t>> dummy_get_compressed_unique_colors (const image 
 	std::vector<byte_color> all_color_sequence(all_colors.size());
 	std::copy(all_colors.begin(), all_colors.end(), all_color_sequence.begin());
 
-	auto color_top = get_sorted_elements(all_color_sequence);
+	// auto color_top = get_sorted_elements(all_color_sequence);
 
-	return get_color_top_top(color_top);
+	return {}; // get_color_top_top(color_top);
 }
 
 /**

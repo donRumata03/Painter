@@ -41,8 +41,8 @@ void show_image (const image &img, const std::string &image_name)
 
 void convert_image_between_RGB_and_BGR (image &img)
 {
-	img.forEach<cv::Vec3d>([](cv::Vec3d& pixel, const int position[]){
-		std::swap(pixel[0], pixel[1]);
+	img.forEach<Pixel>([](Pixel& pixel, const int position[]){
+		std::swap(pixel.x, pixel.z);
 	});
 }
 

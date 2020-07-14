@@ -47,10 +47,10 @@ utils/color.h
 utils/image_io_utils.cpp
 utils/image_io_utils.h
 
-)
+        tests/opencv_test.h)
 
 
-include_directories(.)
+include_directories(/)
 
 ## Add libraries to the project:
 
