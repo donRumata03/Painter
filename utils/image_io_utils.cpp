@@ -39,7 +39,7 @@ void cv_show_image (const image &img, const std::string &image_name)
 	auto char_image = convert_image_from_floating_point(img);
 	convert_image_between_RGB_and_BGR<byte_Pixel>(char_image);
 
-	cv::namedWindow(image_name, cv::WINDOW_GUI_NORMAL);
+	cv::namedWindow(image_name, cv::WINDOW_NORMAL);
 	cv::imshow(image_name, char_image);
 
 	cv::waitKey(0);
@@ -56,11 +56,14 @@ void save_image (const image &img, const std::string &filename)
 /**
  * Saves image and runs the "system" command:
  */
-void show_image_in_system_viewer (const image &img, const std::string &temp_path)
+void show_image_in_system_viewer (const image &img, const std::string &temp_name)
 {
-	if (temp_path.empty()) {
+	std::string temp_folder = (fs::path(std::string(base_path)) / "resources"s / "temp"s).string();
+	// std::cout << "temp folder is: " << temp_folder << std::endl;
+
+	std::string filename;
+	if (temp_name.empty()) {
 		// Generate random (chronological) path:
-		std::string temp_folder = (fs::path(std::string(base_path)) / "resources"s / "temp"s).string();
 		auto prev_temp_files = lsdir(temp_folder);
 
 		// std::string last_file_identifier = "0";
@@ -68,9 +71,25 @@ void show_image_in_system_viewer (const image &img, const std::string &temp_path
 		for (auto& temp_file : prev_temp_files) {
 			auto path_head = split(temp_file, { '/', '\\' }).back();
 
-			// last_file_identifier
+			// auto dot_splitted = split(path_head, { '.' });
+			// auto naked_name = Slice(dot_splitted, noslice, dot_splitted.size() - 1);
+
+			size_t first_dot_pos = path_head.find('.');
+			std::string identifier = Slice(path_head, noslice, first_dot_pos);
+			last_file_identifier = std::max(last_file_identifier, size_t(std::stoll(identifier)));
 		}
+
+		std::string this_file_identifier = std::to_string(last_file_identifier + 1);
+		filename = (fs::path(temp_folder) / (this_file_identifier + ".png")).string();
 	}
+	else {
+		filename = (fs::path(temp_folder) / temp_name).string();
+	}
+
+	std::cout << "Showing image in system viewer: Temporary filename is " << filename << std::endl;
+	save_image(img, filename);
+
+	system(filename.c_str());
 }
 
 

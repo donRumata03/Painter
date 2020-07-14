@@ -10,7 +10,7 @@
 void cv_show_image (const image &img, const std::string &image_name = "Image"); // Assume image is in RGB, elements are of type double
 image open_image(const std::string& filename);                     // Resultant image is in RGB, type is double
 void save_image(const image &img, const std::string &filename);  // Assume image is in RGB, elements are of type double
-void show_image_in_system_viewer (const image &img, const std::string &temp_path = ""); // Assume image is in RGB, elements are of type double
+void show_image_in_system_viewer (const image &img, const std::string &temp_name = ""); // Assume image is in RGB, elements are of type double
 
 
 template <class Pixel_type> void convert_image_between_RGB_and_BGR(image& img);

@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 ################################################################################
 # Set dependency directories:
 
-set(is_computer ON)
-set(is_notebook OFF)
+set(is_computer OFF)
+set(is_notebook ON)
 
 # They are different configurations
 if (is_computer)
@@ -12,7 +12,7 @@ if (is_computer)
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
 elseif(is_notebook)
-    set(current_opencv_dir D:/OpenCV4/opencv4)
+    set(current_opencv_dir D:/opencv/opencv4)
     set(current_GA_dir D:/Projects/Downloaded/PowerfulGA)
     set(current_pythonic_dir D:/Projects/Downloaded/pythonic)
 # User code for other platforms:
@@ -56,7 +56,8 @@ include_directories(/)
 
 # Find OpenCV:
 set(OpenCV_DIR ${current_opencv_dir})
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+message(${OpenCV_DIR})
 find_package(OpenCV REQUIRED)
 
 # Add OpenCV

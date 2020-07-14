@@ -5,6 +5,7 @@
 #ifndef PAINTER_COLOR_H
 #define PAINTER_COLOR_H
 
+#include <ostream>
 #include "painter_pch.h"
 
 using image = cv::Mat;
@@ -38,6 +39,8 @@ struct rgb_color
 	rgb_color(BGR_Vec, const cv::Vec<T, 3>& cv_bgr_color) : r(cv_bgr_color[2]), g(cv_bgr_color[1]), b(cv_bgr_color[0]) {}
 	rgb_color(RGB_Vec, const cv::Vec<T, 3>& cv_rgb_color) : r(cv_rgb_color[0]), g(cv_rgb_color[1]), b(cv_rgb_color[2]) {}
 
+	template<class Type> friend std::ostream &operator<< (std::ostream &os, const rgb_color<Type> &rgb_color);
+
 	// auto represent() -> std::add_const_t<decltype(std::tie(r, g, b))> const { return std::tie(r, g, b); }
 	auto represent() const {
 		auto non_const_this = const_cast<rgb_color<T>*>(this);
@@ -51,6 +54,13 @@ bool operator== (const rgb_color<Type> & first, const rgb_color<Type> & second)
 {
 	// return std::tie(first.r, first.g, first.b) == std::tie(second.r, second.g, second.b);
 	return first.represent() == second.represent();
+}
+
+template<class T>
+std::ostream &operator<< (std::ostream &os, const rgb_color<T> &rgb_color)
+{
+	os << "RGB_Color { r: " << rgb_color.r << " g: " << rgb_color.g << " b: " << rgb_color.b << " }";
+	return os;
 }
 
 // To be able to put it into hash tables:

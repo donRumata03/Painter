@@ -11,8 +11,10 @@ inline void test_image_processing_cycle(){
 
 	auto img = open_image(image_path);
 	std::cout << "W: " << img.cols << " H: " << img.rows << std::endl;
-	assert(image.type() == CV_64FC3);
-	std::cout << "img[100][200] is " << img.at<cv::Vec3d>(1000, 2000);
+	// assert(image.type() == CV_64FC3);
+	std::cout << "img[100][200] is " << img.at<cv::Vec3d>(1000, 2000) << std::endl;
 
-	cv_show_image(img);
+	// cv_show_image(img);
+
+	show_image_in_system_viewer(img, "third.png");
 }

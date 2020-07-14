@@ -1,5 +1,5 @@
 # Painter
-C++ program which deducts the best combination of stroks required to draw an image by a robot painter
+C++ program which deducts the best combination of strokes required to draw an image by a robot painter
 
 ## Usage
 The project depends on several other my projects:
