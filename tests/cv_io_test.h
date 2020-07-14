@@ -12,7 +12,14 @@ inline void test_image_processing_cycle(){
 	auto img = open_image(image_path);
 	std::cout << "W: " << img.cols << " H: " << img.rows << std::endl;
 	// assert(image.type() == CV_64FC3);
-	std::cout << "img[100][200] is " << img.at<cv::Vec3d>(1000, 2000) << std::endl;
+	std::cout << "img[1000][2000] is " << img.at<cv::Vec3d>(1000, 2000) << std::endl;
+
+
+	std::mutex mutex;
+	img.forEach<Pixel>([&](Pixel& pixel, const int position[]){
+		std::lock_guard guard(mutex);
+		// std::cout << "img[" << position[0] << "][" << position[1] << "] is " << pixel << std::endl;
+	});
 
 	// cv_show_image(img);
 

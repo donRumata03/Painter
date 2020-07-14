@@ -84,9 +84,9 @@ void show_image_in_system_viewer (const image &img, const std::string &temp_name
 	}
 	else {
 		filename = (fs::path(temp_folder) / temp_name).string();
+		std::cout << "Showing image in system viewer: Temporary filename is " << filename << std::endl;
 	}
 
-	std::cout << "Showing image in system viewer: Temporary filename is " << filename << std::endl;
 	save_image(img, filename);
 
 	system(filename.c_str());
@@ -127,14 +127,14 @@ image convert_from_hsv_to_rgb (const image &img)
 image convert_image_to_floating_point (const image &img)
 {
 	image res;
-	img.convertTo(res, CV_64FC3);
+	img.convertTo(res, CV_64FC3, 1./255);
 	return res;
 }
 
 image convert_image_from_floating_point (const image &img)
 {
 	image res;
-	img.convertTo(res, CV_8UC3);
+	img.convertTo(res, CV_8UC3, 255.);
 	return res;
 }
 
