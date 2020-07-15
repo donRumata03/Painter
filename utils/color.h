@@ -62,6 +62,15 @@ template<class I, class F>
 rgb_color<std::enable_if_t<std::is_integral_v<I>, I>>
  from_floating_point(const rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color);
 
+template<class E, class T> auto convert_color(rgb_color<T>& initial_color) {
+	static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>, "Exactly one of the types should be floating point!");
+	if constexpr(std::is_floating_point_v<T>) {
+		return from_floating_point<E, T>(initial_color);
+	}
+	else /*constexpr (std::is_floating_point_v<E>)*/ {
+		return to_floating_point<E, T>(initial_color);
+	}
+}
 
 
 template < class Type >

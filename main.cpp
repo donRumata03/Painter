@@ -12,7 +12,8 @@ int main ()
 	// color_hash_test();
 
 	// test_color_converting_to_floating_point();
-	test_color_converting_from_floating_point();
+	// test_color_converting_from_floating_point();
+	custom_color_converting_test();
 
 	return 0;
 }
