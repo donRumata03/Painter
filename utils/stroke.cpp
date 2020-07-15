@@ -28,5 +28,5 @@ double stroke::height_at (double t)
 
 	// TODO
 
-	return 0;
+	return width;
 }

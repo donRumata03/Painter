@@ -4,7 +4,7 @@
 
 #include "color.h"
 
-std::unordered_set<rgb_color<uint8_t>> get_unique_colors (const image &img)
+std::unordered_set<rgb_color<uint8_t>> get_unique_colors (const Image &img)
 {
 	std::unordered_set<rgb_color<uint8_t>> res;
 
@@ -45,7 +45,7 @@ static size_t process_color_warning(size_t required_amount, size_t existing_amou
 	return std::min(required_amount, existing_amount);
 }
 
-std::vector<rgb_color<uint8_t>> dummy_get_compressed_unique_colors (const image &img, size_t amount)
+std::vector<rgb_color<uint8_t>> dummy_get_compressed_unique_colors (const Image &img, size_t amount)
 {
 	// Make query to get_unique_colors:
 	auto all_colors = get_unique_colors(img);
@@ -71,7 +71,7 @@ std::vector<rgb_color<uint8_t>> dummy_get_compressed_unique_colors (const image 
  * It can return either a number of colors with higher number than the @param amount or a bit lower
  *
  */
-std::unordered_set<byte_color> iterative_get_compressed_unique_colors (const image &img, size_t amount)
+std::unordered_set<byte_color> iterative_get_compressed_unique_colors (const Image &img, size_t amount)
 {
 	auto all_unique_colors = get_unique_colors(img);
 	size_t resultive_target_color_number = process_color_warning(amount, all_unique_colors.size());

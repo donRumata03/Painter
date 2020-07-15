@@ -9,7 +9,7 @@
  * Input-output paying respect to floating point and RGB <-> BGR:
  */
 
-image open_image (const std::string &filename)
+Image open_image (const std::string &filename)
 {
 	auto img = cv::imread(filename);
 
@@ -27,7 +27,7 @@ image open_image (const std::string &filename)
 	return double_img;
 }
 
-void cv_show_image (const image &img, const std::string &image_name)
+void cv_show_image (const Image &img, const std::string &image_name)
 {
 	// Convert RGB to BGR to show with OpenCV default image shower:
 	/*
@@ -45,7 +45,7 @@ void cv_show_image (const image &img, const std::string &image_name)
 	cv::waitKey(0);
 }
 
-void save_image (const image &img, const std::string &filename)
+void save_image (const Image &img, const std::string &filename)
 {
 	auto char_image = convert_image_from_floating_point(img);
 	convert_image_between_RGB_and_BGR<byte_Pixel>(char_image);
@@ -56,7 +56,7 @@ void save_image (const image &img, const std::string &filename)
 /**
  * Saves image and runs the "system" command:
  */
-void show_image_in_system_viewer (const image &img, const std::string &temp_name)
+void show_image_in_system_viewer (const Image &img, const std::string &temp_name)
 {
 	std::string temp_folder = (fs::path(std::string(base_path)) / "resources"s / "temp"s).string();
 	// std::cout << "temp folder is: " << temp_folder << std::endl;
@@ -100,18 +100,18 @@ void show_image_in_system_viewer (const image &img, const std::string &temp_name
  * HSV <-> RGB conversions:
  */
 
-image convert_from_rgb_to_hsv (const image &img)
+Image convert_from_rgb_to_hsv (const Image &img)
 {
-	image res;
+	Image res;
 	cv::cvtColor(img, res, cv::COLOR_RGB2HSV);
 
 	return res;
 }
 
 
-image convert_from_hsv_to_rgb (const image &img)
+Image convert_from_hsv_to_rgb (const Image &img)
 {
-	image res;
+	Image res;
 	cv::cvtColor(img, res, cv::COLOR_HSV2RGB);
 
 	return res;
@@ -124,16 +124,16 @@ image convert_from_hsv_to_rgb (const image &img)
  * Floating point conversions:
  */
 
-image convert_image_to_floating_point (const image &img)
+Image convert_image_to_floating_point (const Image &img)
 {
-	image res;
+	Image res;
 	img.convertTo(res, CV_64FC3, 1./255);
 	return res;
 }
 
-image convert_image_from_floating_point (const image &img)
+Image convert_image_from_floating_point (const Image &img)
 {
-	image res;
+	Image res;
 	img.convertTo(res, CV_8UC3, 255.);
 	return res;
 }
