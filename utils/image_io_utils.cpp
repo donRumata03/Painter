@@ -84,6 +84,9 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 	}
 	else {
 		filename = (fs::path(temp_folder) / temp_name).string();
+		if (not is_in('.', temp_name)) {
+			filename += ".png";
+		}
 		std::cout << "Showing image in system viewer: Temporary filename is " << filename << std::endl;
 	}
 

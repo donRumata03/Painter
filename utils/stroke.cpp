@@ -13,7 +13,7 @@ stroke::stroke (stroke::point point1, stroke::point point2, stroke::point point3
 {}
 
 
-stroke::point stroke::coords_at (double t)
+stroke::point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
@@ -22,7 +22,7 @@ stroke::point stroke::coords_at (double t)
 	return {  };
 }
 
-double stroke::height_at (double t)
+double stroke::height_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 

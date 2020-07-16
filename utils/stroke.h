@@ -23,8 +23,8 @@ struct stroke
 
 	stroke() = default;
 	stroke(point point1, point point2, point point3, double _width, color _color);
-	point coords_at(double t); // Count the point of Bezier curve corresponding to t value given as the argument
-	double height_at(double t); // The height of the curve at x corresponding to time point t
+	point coords_at(double t) const; // Count the point of Bezier curve corresponding to t value given as the argument
+	double height_at(double t) const; // The height of the curve at x corresponding to time point t
 };
 
 

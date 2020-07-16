@@ -47,7 +47,7 @@ utils/color.h
 utils/image_io_utils.cpp
 utils/image_io_utils.h
 
-        tests/opencv_test.h tests/cv_io_test.h tests/color_test.h rasterization/stroke_rasterizer.cpp rasterization/stroke_rasterizer.h tests/stroke_rasterization_test.h)
+        tests/opencv_test.h tests/cv_io_test.h tests/color_test.h rasterization/stroke_rasterizer.cpp rasterization/stroke_rasterizer.h tests/stroke_rasterization_test.h rasterization/drawer.cpp rasterization/drawer.h)
 
 
 include_directories(/)

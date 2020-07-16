@@ -41,6 +41,7 @@ struct rgb_color
 	rgb_color(BGR_Vec, const cv::Vec<T, 3>& cv_bgr_color) : r(cv_bgr_color[2]), g(cv_bgr_color[1]), b(cv_bgr_color[0]) {}
 	rgb_color(RGB_Vec, const cv::Vec<T, 3>& cv_rgb_color) : r(cv_rgb_color[0]), g(cv_rgb_color[1]), b(cv_rgb_color[2]) {}
 
+	cv::Point3_<T> to_OpenCV_pixel() const;
 
 	template<class Type> friend std::ostream &operator<< (std::ostream &os, const rgb_color<Type> &rgb_color);
 
@@ -53,6 +54,15 @@ struct rgb_color
 	 */
 	template<class Type> friend bool operator == (const rgb_color<Type>&, const rgb_color<Type>&);
 };
+
+
+template<class T>
+cv::Point3_<T> rgb_color<T>::to_OpenCV_pixel() const {
+	return cv::Point3_<T> {
+		r, g, b
+	};
+}
+
 
 template<class F, class I>
 rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>>
@@ -150,12 +160,14 @@ namespace std
 template<class T>
 struct rgba_color
 {
-	T r, g, b, a;
+	T
+
+	r, g, b, a;
 };
 
 using color = rgb_color<double>;
-// using color = rgba_color;
 using Pixel = cv::Point3_<double>;
+// using color = rgba_color;
 
 using byte_color = rgb_color<uint8_t>;
 using byte_Pixel = cv::Point3_<uint8_t>;
