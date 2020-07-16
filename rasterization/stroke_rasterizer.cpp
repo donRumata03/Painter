@@ -18,7 +18,7 @@ void rasterize_stroke (Image &target_image, const stroke &stroke, size_t point_n
 		// Draw the line:
 		auto x = int(std::round(central_x));
 		for (size_t y = y0; y < y1; ++y) {
-			target_image.at<Pixel>(x, y) = stroke.background_color.to_OpenCV_pixel();
+			target_image.at<cv::Vec3d>(x, y) = stroke.background_color.to_OpenCV_Vec3();
 		}
 	}
 }

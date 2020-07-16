@@ -41,7 +41,7 @@ struct rgb_color
 	rgb_color(BGR_Vec, const cv::Vec<T, 3>& cv_bgr_color) : r(cv_bgr_color[2]), g(cv_bgr_color[1]), b(cv_bgr_color[0]) {}
 	rgb_color(RGB_Vec, const cv::Vec<T, 3>& cv_rgb_color) : r(cv_rgb_color[0]), g(cv_rgb_color[1]), b(cv_rgb_color[2]) {}
 
-	cv::Point3_<T> to_OpenCV_pixel() const;
+	cv::Vec<T, 3> to_OpenCV_Vec3() const;
 
 	template<class Type> friend std::ostream &operator<< (std::ostream &os, const rgb_color<Type> &rgb_color);
 
@@ -57,8 +57,8 @@ struct rgb_color
 
 
 template<class T>
-cv::Point3_<T> rgb_color<T>::to_OpenCV_pixel() const {
-	return cv::Point3_<T> {
+cv::Vec<T, 3> rgb_color<T>::to_OpenCV_Vec3() const {
+	return cv::Vec<T, 3> {
 		r, g, b
 	};
 }
