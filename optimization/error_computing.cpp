@@ -33,7 +33,7 @@ double image_mse (const Image &image1, const Image &image2)
 	return diff_sum / area;
 }
 
-double stroke_mse (const Image &image, const stroke &stroke, size_t step_number)
+double stroke_mse (const Image &image, const colored_stroke &stroke, size_t step_number)
 {
 	auto stroke_color = stroke.background_color.to_OpenCV_Vec3();
 

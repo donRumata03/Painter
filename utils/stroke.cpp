@@ -4,7 +4,7 @@
 
 #include "stroke.h"
 
-stroke::stroke (stroke::point point1, stroke::point point2, stroke::point point3, double _width, color _color)
+colored_stroke::colored_stroke (colored_stroke::point point1, colored_stroke::point point2, colored_stroke::point point3, double _width, color _color)
 			: p1(std::move(point1)),
 			  p2(std::move(point2)),
 			  p3(std::move(point3)),
@@ -13,7 +13,7 @@ stroke::stroke (stroke::point point1, stroke::point point2, stroke::point point3
 {}
 
 
-stroke::point stroke::coords_at (double t) const
+colored_stroke::point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
@@ -86,5 +86,5 @@ template < class Functor >
 void stroke::for_each (const Functor &operation, size_t step_number,
                        std::optional<Range_rectangle<lint>> range_limits) const
 {
-	const_cast<stroke*>(this)->for_each(operation, step_number, range_limits);
+	const_cast<colored_stroke*>(this)->for_each(operation, step_number, range_limits);
 }

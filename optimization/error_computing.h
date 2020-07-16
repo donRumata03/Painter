@@ -9,4 +9,4 @@
 
 
 double image_mse(const Image& image1, const Image& image2);
-double stroke_mse(const Image& image, const stroke& stroke, size_t step_number = 100);
+double stroke_mse(const Image& image, const colored_stroke& stroke, size_t step_number = 100);

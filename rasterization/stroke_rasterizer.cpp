@@ -4,7 +4,7 @@
 
 #include "stroke_rasterizer.h"
 
-void rasterize_stroke (Image &target_image, const stroke &stroke, size_t point_number)
+void rasterize_stroke (Image &target_image, const colored_stroke &stroke, size_t point_number)
 {
 	auto opencv_stroke_color = stroke.background_color.to_OpenCV_Vec3();
 
@@ -15,7 +15,7 @@ void rasterize_stroke (Image &target_image, const stroke &stroke, size_t point_n
 	}, point_number, range_rectangle);
 }
 
-void rasterize_strokes (Image &target_image, const std::vector<stroke> &strokes)
+void rasterize_strokes (Image &target_image, const std::vector<colored_stroke> &strokes)
 {
 	for (const auto& stroke : strokes) rasterize_stroke(target_image, stroke);
 }
