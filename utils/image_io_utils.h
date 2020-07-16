@@ -23,8 +23,8 @@ Image convert_from_hsv_to_rgb(const Image& img);
 Image convert_image_to_floating_point(const Image& img); // From uint8_t 3 channels to double
 Image convert_image_from_floating_point(const Image& img); // From double 3 channels to uint8_t
 
-
 std::string get_sample_image_path();
+
 
 
 

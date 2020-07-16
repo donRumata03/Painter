@@ -6,17 +6,13 @@
 
 void rasterize_stroke (Image &target_image, const stroke &stroke, size_t point_number)
 {
-	auto opencv_color = stroke.background_color.to_OpenCV_Vec3();
+	auto opencv_stroke_color = stroke.background_color.to_OpenCV_Vec3();
 
-	Range_rectangle<lint> range_rectangle = {
-			0, target_image.cols, 0, target_image.rows
-	};
+	Range_rectangle<lint> range_rectangle = get_image_range_limits(target_image);
 
 	stroke.for_each([&](size_t x, size_t y){
-		target_image.at<cv::Vec3d>(x, y) = opencv_color;
+		target_image.at<cv::Vec3d>(x, y) = opencv_stroke_color;
 	}, point_number, range_rectangle);
-
-
 }
 
 void rasterize_strokes (Image &target_image, const std::vector<stroke> &strokes)

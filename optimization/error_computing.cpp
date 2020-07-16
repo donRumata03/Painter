@@ -33,9 +33,22 @@ double image_mse (const Image &image1, const Image &image2)
 	return diff_sum / area;
 }
 
-double stroke_mse (const Image &image, const stroke &stroke)
+double stroke_mse (const Image &image, const stroke &stroke, size_t step_number)
 {
-	// TODO!
+	auto stroke_color = stroke.background_color.to_OpenCV_Vec3();
+
+	double total_diff_sum = 0;
+	size_t points_in_stroke = 0;
+
+	stroke.for_each(
+		[&](size_t x, size_t y){
+			const auto& image_pixel_color = image.at<cv::Vec3d>(y, x);
+
+			for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
+				total_diff_sum += square(stroke_color[dim_index] - image_pixel_color[dim_index]);
+			}
+		}, step_number, get_image_range_limits(image)
+			);
 
 	return 0;
 }

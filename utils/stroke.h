@@ -15,6 +15,12 @@ struct Range_rectangle {
 	T min_y, max_y;
 };
 
+inline Range_rectangle<lint> get_image_range_limits(const Image& image) {
+	return {
+			0, image.cols, 0, image.rows
+	};
+}
+
 /*
  * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
 */
