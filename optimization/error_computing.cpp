@@ -35,5 +35,7 @@ double image_mse (const Image &image1, const Image &image2)
 
 double stroke_mse (const Image &image, const stroke &stroke)
 {
+	// TODO!
+
 	return 0;
 }

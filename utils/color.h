@@ -9,7 +9,7 @@
 #include "painter_pch.h"
 
 using Image = cv::Mat;
-using for_each_Pixel = cv::Point2d;
+// using for_each_Pixel = cv::Point2d;
 
 class BGR_Vec {}; // A tag type
 class RGB_Vec {}; // A tag type
