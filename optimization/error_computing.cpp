@@ -47,8 +47,11 @@ double stroke_mse (const Image &image, const stroke &stroke, size_t step_number)
 			for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
 				total_diff_sum += square(stroke_color[dim_index] - image_pixel_color[dim_index]);
 			}
+
+			points_in_stroke++;
+
 		}, step_number, get_image_range_limits(image)
 			);
 
-	return 0;
+	return total_diff_sum / points_in_stroke;
 }

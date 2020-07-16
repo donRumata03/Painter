@@ -43,6 +43,8 @@ struct rgb_color
 
 	cv::Vec<T, 3> to_OpenCV_Vec3() const;
 
+	T& operator [](size_t color_index);
+
 	template<class Type> friend std::ostream &operator<< (std::ostream &os, const rgb_color<Type> &rgb_color);
 
 	// auto represent() -> std::add_const_t<decltype(std::tie(r, g, b))> const { return std::tie(r, g, b); }
@@ -98,6 +100,17 @@ std::ostream &operator<< (std::ostream &os, const rgb_color<T> &rgb_color)
 	<< " }";
 
 	return os;
+}
+
+template < class T >
+T &rgb_color<T>::operator[] (size_t index)
+{
+	assert(index <= 2);
+
+	if (index == 0) return r;
+	if (index == 1) return g;
+
+	return b;
 }
 
 template < class F, class I >
@@ -174,6 +187,9 @@ using byte_Pixel = cv::Point3_<uint8_t>;
 
 
 
+/**
+ * Color number reduction functions:
+ */
 
 std::unordered_set<rgb_color<uint8_t>> get_unique_colors(const Image& img);
 std::vector<byte_color> get_image_color_list();
