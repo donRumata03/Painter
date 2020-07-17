@@ -59,6 +59,7 @@ void stroke::for_each (
 		auto x = int(std::round(central_x));
 
 		if (x == last_x) continue; // To avoid repetitions
+		last_x = x;
 
 		if (has_range_limitations && x < range_limits->min_x || x >= range_limits->max_x) {
 			continue; // To satisfy range
