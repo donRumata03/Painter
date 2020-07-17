@@ -32,7 +32,7 @@ double stroke::height_at (double t) const
 }
 
 std::vector<point> stroke::get_points (
-		size_t step_number, std::optional<Range_rectangle<size_t>> range_limits) const
+		size_t step_number, std::optional<Range_rectangle<lint>> range_limits) const
 {
 	std::vector<point> res;
 

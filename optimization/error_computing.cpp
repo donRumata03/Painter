@@ -4,6 +4,8 @@
 
 #include "error_computing.h"
 
+#include <execution>
+
 double image_mse (const Image &image1, const Image &image2)
 {
 	assert(image1.size == image2.size());
@@ -35,23 +37,28 @@ double image_mse (const Image &image1, const Image &image2)
 
 double stroke_mse (const Image &image, const colored_stroke &stroke, size_t step_number)
 {
-	auto stroke_color = stroke.background_color.to_OpenCV_Vec3();
+	return stroke_mse(image, stroke.get_points(step_number, get_image_range_limits(image)), stroke.background_color);
+}
+
+double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_points, const color &stroke_color)
+{
+	auto stroke_color_vec = stroke_color.to_OpenCV_Vec3();
 
 	double total_diff_sum = 0;
 	size_t points_in_stroke = 0;
 
-	stroke.for_each(
-		[&](size_t x, size_t y){
-			const auto& image_pixel_color = image.at<cv::Vec3d>(y, x);
+	auto point_handler = [&](size_t x, size_t y){
+		const auto& image_pixel_color = image.at<cv::Vec3d>(y, x);
 
-			for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
-				total_diff_sum += square(stroke_color[dim_index] - image_pixel_color[dim_index]);
-			}
+		for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
+			total_diff_sum += square(stroke_color[dim_index] - image_pixel_color[dim_index]);
+		}
 
-			points_in_stroke++;
+		points_in_stroke++;
 
-		}, step_number, get_image_range_limits(image)
-			);
+	};
+
+	std::for_each(std::execution::par_unseq, stroke_points.begin(), stroke_points.end(), point_handler);
 
 	return total_diff_sum / points_in_stroke;
 }

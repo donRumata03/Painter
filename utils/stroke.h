@@ -53,7 +53,7 @@ struct stroke {
 	*/
 
 	[[nodiscard]] std::vector<point> get_points(
-			size_t step_number = 100, std::optional<Range_rectangle<size_t>> range_limits = std::nullopt
+			size_t step_number = 100, std::optional<Range_rectangle<lint>> range_limits = std::nullopt
 	) const;
 };
 
