@@ -11,13 +11,15 @@ color find_stroke_color (const stroke &colorless_stroke, const Image &image, dou
                          bool log_debug_information)
 {
 	color initial_color = find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
-	double initial_error = stroke_mse(image, colored_stroke(colorless_stroke, initial_color));
-
+	auto stroke_points = colorless_stroke.get_points(100, get_image_range_limits(image));
 	std::vector<double> initial_color_component_sequence = {
 			initial_color.r,
 			initial_color.g,
 			initial_color.b
 	};
+
+	double initial_error = stroke_mse(image, stroke_points, initial_color);
+
 
 	double little_color_delta = 1e-6;
 
@@ -28,35 +30,36 @@ color find_stroke_color (const stroke &colorless_stroke, const Image &image, dou
 
 		color current_color(current_color_vector);
 
-		auto this_colored_stroke = colored_stroke(colorless_stroke, current_color);
+		// auto this_colored_stroke = colored_stroke(colorless_stroke, current_color);
 
 		// Count error function if necessary:
 		if (current_error_function < 0) {
-			current_error_function = stroke_mse(image, this_colored_stroke);
+			current_error_function = stroke_mse(image, stroke_points, current_color);
 		}
 
 		// Count error function for near points:
-		auto shifted_colored_stroke = this_colored_stroke;
+		auto shifted_color = current_color;
+		// auto shifted_colored_stroke = this_colored_stroke;
 
 		std::array<double, 3> gradient{};
 		for (size_t color_dim_index = 0; color_dim_index < 3; ++color_dim_index) {
-			auto& this_color_value = shifted_colored_stroke.background_color[color_dim_index];
+			auto& this_color_value = shifted_color[color_dim_index];
 			this_color_value += little_color_delta;
 
-			double new_error_function = stroke_mse(image, shifted_colored_stroke);
+			double new_error_function = stroke_mse(image, stroke_points, shifted_color);
 
 			gradient[color_dim_index] = (new_error_function - current_error_function) / little_color_delta;
 
 			this_color_value += little_color_delta;
 		}
 
-		return { gradient[0], gradient[1], gradient[2] };
+		return { gradient.begin(), gradient.end() }; // { gradient[0], gradient[1], gradient[2] };
 	};
 
 	auto error_function_counter =
 		[&](const std::vector<double>& current_color_vector) -> double {
 			color current_color(current_color_vector);
-			return stroke_mse(image, colored_stroke(colorless_stroke, current_color));
+			return stroke_mse(image, stroke_points, current_color);
 	};
 
 	auto logging_callback = [](size_t iteration, double error_value) -> void {
