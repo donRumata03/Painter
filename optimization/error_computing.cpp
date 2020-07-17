@@ -35,12 +35,12 @@ double image_mse (const Image &image1, const Image &image2)
 	return diff_sum / area;
 }
 
-double stroke_mse (const Image &image, const colored_stroke &stroke, size_t step_number)
+double stroke_mse (const Image &image, const colored_stroke &stroke, size_t step_number, bool parallel = false)
 {
 	return stroke_mse(image, stroke.get_points(step_number, get_image_range_limits(image)), stroke.background_color);
 }
 
-double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_points, const color &stroke_color)
+double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_points, const color &stroke_color, bool parallel = false)
 {
 	auto stroke_color_vec = stroke_color.to_OpenCV_Vec3();
 
@@ -58,7 +58,14 @@ double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_
 
 	};
 
-	std::for_each(std::execution::par_unseq, stroke_points.begin(), stroke_points.end(), point_handler);
+	if (parallel) {
+		std::for_each(std::execution::par_unseq, stroke_points.begin(),
+		              stroke_points.end(), point_handler);
+	}
+	else {
+		std::for_each(std::execution::seq, stroke_points.begin(),
+		              stroke_points.end(), point_handler);
+	}
 
 	return total_diff_sum / points_in_stroke;
 }

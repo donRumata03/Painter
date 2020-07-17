@@ -25,7 +25,7 @@ struct stroke {
 	// using point = std::pair<double, double>;
 	using point = point;
 
-	point p1, p2, p3;
+	point p1{}, p2{}, p3{};
 	double width = -1;
 
 	// stroke() = default;
@@ -65,7 +65,7 @@ struct colored_stroke : stroke
 	color background_color;
 
 	colored_stroke() = default;
-	colored_stroke(point point1, point point2, point point3, double _width, color _color);
+	colored_stroke(const point &point1, const point &point2, const point &point3, double _width, color _color);
 	colored_stroke(const stroke& colorless_stroke, const color& bg_color) :
 		stroke(colorless_stroke), background_color(bg_color) {}
 };

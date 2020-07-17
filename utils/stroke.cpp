@@ -4,11 +4,8 @@
 
 #include "stroke.h"
 
-colored_stroke::colored_stroke (colored_stroke::point point1, colored_stroke::point point2, colored_stroke::point point3, double _width, color _color)
-			: p1(std::move(point1)),
-			  p2(std::move(point2)),
-			  p3(std::move(point3)),
-			  width(_width),
+colored_stroke::colored_stroke (const point &point1, const point &point2, const point &point3, double _width, color _color)
+			: stroke{point1, point2, point3, _width},
 			  background_color(_color)
 {}
 
