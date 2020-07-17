@@ -58,6 +58,9 @@ color find_stroke_color (const stroke &colorless_stroke, const Image &image, dou
 			return stroke_mse(image, colored_stroke(colorless_stroke, current_color));
 	};
 
+	// TODO: Use GA? Use newton? Use gradient descent with checking each step if the value decreases
+	// TODO: Have a combi-optimization built-in in GA library
+
 	// Perform optimization:
 	auto [optimization_mse, optimization_color_vector] = gradient_optimize(error_function_counter, error_function_gradient_counter,
 			initial_color_component_sequence, learning_rate, iterations);

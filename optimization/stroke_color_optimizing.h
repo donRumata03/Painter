@@ -9,8 +9,10 @@
 #include "error_computing.h"
 
 color find_stroke_color (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations);
-// ^^^ TODO: implement it somehow! (local optimization... after using dummy function)
 
 
 color find_stroke_color_by_ariphmetic_mean(const stroke& colorless_stroke, const Image& image);
-// ^^^ TODO
+
+
+// Optimize stroke set:
+// TODO!
