@@ -28,7 +28,7 @@ struct stroke {
 	point p1, p2, p3;
 	double width = -1;
 
-	stroke() = default;
+	// stroke() = default;
 	// colorless_stroke(
 	// 		const point& point1, const point& point2, const point& point3, double width) = default;
 

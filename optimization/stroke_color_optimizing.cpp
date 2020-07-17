@@ -7,7 +7,8 @@
 #include "error_computing.h"
 #include <other_optimization/local_optimization.h>
 
-color find_stroke_color (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations)
+color find_stroke_color (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations,
+                         bool log_debug_information)
 {
 	color initial_color = find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
 	double initial_error = stroke_mse(image, colored_stroke(colorless_stroke, initial_color));
@@ -58,12 +59,25 @@ color find_stroke_color (const stroke &colorless_stroke, const Image &image, dou
 			return stroke_mse(image, colored_stroke(colorless_stroke, current_color));
 	};
 
+	auto logging_callback = [](size_t iteration, double error_value) -> void {
+		std::cout << "Iteration " << iteration << ": error = " << error_value << std::endl;
+	};
+
 	// TODO: Use GA? Use newton? Use gradient descent with checking each step if the value decreases
 	// TODO: Have a combi-optimization built-in in GA library
 
-	// Perform optimization:
+	// Perform optimization: _______________________________________________---
+	if (log_debug_information){
+		std::cout << "____________________________________" << std::endl;
+	}
+
 	auto [optimization_mse, optimization_color_vector] = gradient_optimize(error_function_counter, error_function_gradient_counter,
-			initial_color_component_sequence, learning_rate, iterations);
+			initial_color_component_sequence, learning_rate, iterations); // TODO: use logger if debugging enabled
+
+	if (log_debug_information){
+		std::cout << "____________________________________" << std::endl;
+	}
+	//______________________________________________________
 
 	std::vector<double> best_color_vector;
 
@@ -79,8 +93,12 @@ color find_stroke_color (const stroke &colorless_stroke, const Image &image, dou
 
 	auto best_color = color(best_color_vector);
 
-	// Log the result:
-	// TODO
+	if (log_debug_information) {
+		// Log the result:
+		std::cout << "Optimization is finished!" << std::endl;
+		std::cout << "Error for dummy color pick: " << initial_error << std::endl;
+		std::cout << "Error for optimization color pick: " << optimization_mse << std::endl;
+	}
 
 	return best_color;
 }
