@@ -43,12 +43,14 @@ struct stroke {
  */
 	template<class Functor>
 	void for_each(const Functor& operation, size_t step_number = 100,
-	              std::optional<Range_rectangle<lint>> range_limits = std::nullopt);
+	              std::optional<Range_rectangle<lint>> range_limits = std::nullopt) const;
+	// ^^^ TODO: Measure and ...make it parallel?
 
+	/*
 	template<class Functor>
 	void for_each(const Functor& operation, size_t step_number = 100,
 	              std::optional<Range_rectangle<lint>> range_limits = std::nullopt) const;
-
+	*/
 
 	[[nodiscard]] std::vector<point> get_points(
 			size_t step_number = 100, std::optional<Range_rectangle<size_t>> range_limits = std::nullopt
@@ -64,6 +66,8 @@ struct colored_stroke : stroke
 
 	colored_stroke() = default;
 	colored_stroke(point point1, point point2, point point3, double _width, color _color);
+	colored_stroke(const stroke& colorless_stroke, const color& bg_color) :
+		stroke(colorless_stroke), background_color(bg_color) {}
 };
 
 

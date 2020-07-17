@@ -47,16 +47,16 @@ std::vector<point> stroke::get_points (
 
 template < class Functor >
 void stroke::for_each (
-		const Functor& operation, const size_t step_number, std::optional<Range_rectangle<lint>> range_limits)
+		const Functor& operation, const size_t step_number, std::optional<Range_rectangle<lint>> range_limits) const
 {
 	bool has_range_limitations = bool(range_limits);
-	auto last_x = static_cast<size_t>(-1);
+	auto last_x = static_cast<long long>(-1);
 
 	for (size_t point_index = 0; point_index < step_number; ++point_index) {
 		double t = double(point_index) / step_number;
 
 		auto [central_x, central_y] = coords_at(t);
-		auto x = int(std::round(central_x));
+		auto x = long long(std::round(central_x));
 
 		if (x == last_x) continue; // To avoid repetitions
 		last_x = x;
@@ -83,9 +83,13 @@ void stroke::for_each (
 	}
 }
 
+
+/*
+
 template < class Functor >
 void stroke::for_each (const Functor &operation, size_t step_number,
                        std::optional<Range_rectangle<lint>> range_limits) const
 {
 	const_cast<colored_stroke*>(this)->for_each(operation, step_number, range_limits);
 }
+*/

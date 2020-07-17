@@ -41,7 +41,12 @@ struct rgb_color
 	rgb_color(BGR_Vec, const cv::Vec<T, 3>& cv_bgr_color) : r(cv_bgr_color[2]), g(cv_bgr_color[1]), b(cv_bgr_color[0]) {}
 	rgb_color(RGB_Vec, const cv::Vec<T, 3>& cv_rgb_color) : r(cv_rgb_color[0]), g(cv_rgb_color[1]), b(cv_rgb_color[2]) {}
 
+	rgb_color(const std::vector<T>& vector) { assert(vector.size() == 3); r = vector[0]; g = vector[1]; b = vector[2]; }
+	rgb_color(const std::array<T, 3>& array) { r = array[0]; g = array[1]; b = array[2]; }
+
 	cv::Vec<T, 3> to_OpenCV_Vec3() const;
+	std::vector<T> to_vector() const;
+	std::array<T, 3> to_array() const;
 
 	T& operator [](size_t color_index);
 
@@ -111,6 +116,18 @@ T &rgb_color<T>::operator[] (size_t index)
 	if (index == 1) return g;
 
 	return b;
+}
+
+template < class T >
+std::vector<T> rgb_color<T>::to_vector () const
+{
+	return std::vector<T>(r, g, b);
+}
+
+template < class T >
+std::array<T, 3> rgb_color<T>::to_array () const
+{
+	return std::array<T, 3>(r, g, g);
 }
 
 template < class F, class I >

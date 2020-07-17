@@ -3,3 +3,105 @@
 //
 
 #include "stroke_color_optimizing.h"
+
+#include "error_computing.h"
+#include <other_optimization/local_optimization.h>
+
+color find_stroke_color (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations)
+{
+	color initial_color = find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
+	double initial_error = stroke_mse(image, colored_stroke(colorless_stroke, initial_color));
+
+	std::vector<double> initial_color_component_sequence = {
+			initial_color.r,
+			initial_color.g,
+			initial_color.b
+	};
+
+	double little_color_delta = 1e-6;
+
+	// Generate function for computing error function derivative:
+	auto error_function_gradient_counter =
+		[&](const std::vector<double>& current_color_vector, double current_error_function = -1.) -> std::vector<double>
+	{
+
+		color current_color(current_color_vector);
+
+		auto this_colored_stroke = colored_stroke(colorless_stroke, current_color);
+
+		// Count error function if necessary:
+		if (current_error_function < 0) {
+			current_error_function = stroke_mse(image, this_colored_stroke);
+		}
+
+		// Count error function for near points:
+		auto shifted_colored_stroke = this_colored_stroke;
+
+		std::array<double, 3> gradient{};
+		for (size_t color_dim_index = 0; color_dim_index < 3; ++color_dim_index) {
+			auto& this_color_value = shifted_colored_stroke.background_color[color_dim_index];
+			this_color_value += little_color_delta;
+
+			double new_error_function = stroke_mse(image, shifted_colored_stroke);
+
+			gradient[color_dim_index] = (new_error_function - current_error_function) / little_color_delta;
+
+			this_color_value += little_color_delta;
+		}
+
+		return { gradient[0], gradient[1], gradient[2] };
+	};
+
+	auto error_function_counter =
+		[&](const std::vector<double>& current_color_vector) -> double {
+			color current_color(current_color_vector);
+			return stroke_mse(image, colored_stroke(colorless_stroke, current_color));
+	};
+
+	// Perform optimization:
+	auto [optimization_mse, optimization_color_vector] = gradient_optimize(error_function_counter, error_function_gradient_counter,
+			initial_color_component_sequence, learning_rate, iterations);
+
+	std::vector<double> best_color_vector;
+
+	if (std::all_of(optimization_color_vector.begin(), optimization_color_vector.end(),
+	                [](double value) -> bool {return not std::isnan(value); })
+	    && not std::isnan(optimization_mse) && optimization_mse < initial_error) {
+
+		best_color_vector = std::move(optimization_color_vector);
+	}
+	else {
+		best_color_vector = std::move(initial_color_component_sequence);
+	}
+
+	auto best_color = color(best_color_vector);
+
+	// Log the result:
+	// TODO
+
+	return best_color;
+}
+
+
+color find_stroke_color_by_ariphmetic_mean (const stroke &colorless_stroke, const Image &image)
+{
+	double r_sum = 0, g_sum = 0, b_sum = 0;
+	size_t points_in_stroke = 0;
+
+	colorless_stroke.for_each([&](size_t x, size_t y){
+		const auto& image_pixel_color = image.at<cv::Vec3d>(y, x);
+
+		r_sum += image_pixel_color[0];
+		g_sum += image_pixel_color[1];
+		b_sum += image_pixel_color[2];
+
+		points_in_stroke++;
+	});
+
+	return color(
+			r_sum / points_in_stroke,
+			g_sum / points_in_stroke,
+			b_sum / points_in_stroke
+	);
+}
+
