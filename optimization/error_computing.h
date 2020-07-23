@@ -8,7 +8,7 @@
 #include "utils/stroke.h"
 
 
-double image_mse(const Image& image1, const Image& image2);
+double image_mse(const Image& image1, const Image& image2, bool parallel = false); // TODO: make parallel
 double stroke_mse(const Image& image, const colored_stroke& stroke, size_t step_number = 100, bool parallel = false);
 double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_points, const color &stroke_color, bool parallel = false);
 
