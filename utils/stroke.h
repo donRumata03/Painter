@@ -21,6 +21,9 @@ inline Range_rectangle<lint> get_image_range_limits(const Image& image) {
 	};
 }
 
+/**
+ * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
+*/
 struct stroke {
 	// using point = std::pair<double, double>;
 	using point = point;
@@ -57,9 +60,52 @@ struct stroke {
 	) const;
 };
 
-/*
- * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
-*/
+
+/// Template function implementations:
+
+template < class Functor >
+void stroke::for_each (
+		const Functor& operation, const size_t step_number, std::optional<Range_rectangle<lint>> range_limits) const
+{
+	bool has_range_limitations = bool(range_limits);
+	auto last_x = static_cast<long long>(-1e100);
+
+	for (size_t point_index = 0; point_index < step_number; ++point_index) {
+		double t = double(point_index) / step_number;
+
+		auto [central_x, central_y] = coords_at(t);
+		auto x = lint(std::round(central_x));
+
+		if (x == last_x) continue; // To avoid repetitions
+		last_x = x;
+
+		if (has_range_limitations && x < range_limits->min_x || x >= range_limits->max_x) {
+			continue; // To satisfy range
+		}
+
+		double height = height_at(t);
+		double height_half = height / 2;
+
+		auto y0 = lint(std::round(central_y - height_half));
+		auto y1 = lint(std::round(y0 + height));
+
+		if (has_range_limitations) {
+			y0 = std::clamp(y0, range_limits->min_y, range_limits->max_y - 1);
+			y1 = std::clamp(y1, range_limits->min_y, range_limits->max_y - 1);
+		}
+
+		// Vertical line here:
+		for (lint y = y0; y < y1; ++y) {
+			operation(x, y);
+		}
+	}
+}
+
+
+
+/**
+ * Colored version of stroke:
+ */
 struct colored_stroke : stroke
 {
 	color background_color;

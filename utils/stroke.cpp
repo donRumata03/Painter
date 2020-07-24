@@ -10,7 +10,7 @@ colored_stroke::colored_stroke (const point &point1, const point &point2, const 
 {}
 
 
-colored_stroke::point stroke::coords_at (double t) const
+stroke::point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
@@ -40,51 +40,26 @@ std::vector<point> stroke::get_points (
 	std::vector<point> res;
 
 	for_each(
-	[&](size_t x, size_t y){
-		res.emplace_back( x, y );
+	[&](lint x, lint y){
+		res.emplace_back( double(x), double(y) );
 	},
 			step_number, range_limits);
 
 	return res;
 }
 
-template < class Functor >
-void stroke::for_each (
-		const Functor& operation, const size_t step_number, std::optional<Range_rectangle<lint>> range_limits) const
-{
-	bool has_range_limitations = bool(range_limits);
-	auto last_x = static_cast<long long>(-1);
 
-	for (size_t point_index = 0; point_index < step_number; ++point_index) {
-		double t = double(point_index) / step_number;
 
-		auto [central_x, central_y] = coords_at(t);
-		auto x = lint(std::round(central_x));
 
-		if (x == last_x) continue; // To avoid repetitions
-		last_x = x;
 
-		if (has_range_limitations && x < range_limits->min_x || x >= range_limits->max_x) {
-			continue; // To satisfy range
-		}
 
-		double height = height_at(t);
-		double height_half = height / 2;
 
-		auto y0 = lint(std::round(central_y - height_half));
-		auto y1 = lint(std::round(y0 + height));
 
-		if (has_range_limitations) {
-			y0 = std::clamp(y0, range_limits->min_y, range_limits->max_y - 1);
-			y1 = std::clamp(y1, range_limits->min_y, range_limits->max_y - 1);
-		}
 
-		// Vertical line here:
-		for (size_t y = y0; y < y1; ++y) {
-			operation(x, y);
-		}
-	}
-}
+
+
+
+
 
 
 /*
