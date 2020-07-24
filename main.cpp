@@ -2,6 +2,7 @@
 
 #include <tests/cv_io_test.h>
 #include <tests/color_test.h>
+#include <tests/stroke_rasterization_test.h>
 #include "tests/opencv_test.h"
 
 int main ()
@@ -11,9 +12,13 @@ int main ()
 
 	// color_hash_test();
 
+	/// Color converting:
 	// test_color_converting_to_floating_point();
 	// test_color_converting_from_floating_point();
-	custom_color_converting_test();
+	// custom_color_converting_test();
+
+	/// Rasterization:
+	test_stroke_rasterizaton();
 
 	return 0;
 }

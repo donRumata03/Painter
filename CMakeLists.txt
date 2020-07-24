@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 ################################################################################
 # Set dependency directories:
 
-set(is_computer OFF)
-set(is_notebook ON)
+set(is_computer ON)
+set(is_notebook OFF)
 
 # They are different configurations
 if (is_computer)
@@ -47,7 +47,28 @@ utils/color.h
 utils/image_io_utils.cpp
 utils/image_io_utils.h
 
-        tests/opencv_test.h tests/cv_io_test.h tests/color_test.h rasterization/stroke_rasterizer.cpp rasterization/stroke_rasterizer.h tests/stroke_rasterization_test.h rasterization/drawer.cpp rasterization/drawer.h optimization/error_computing.cpp optimization/error_computing.h optimization/stroke_color_optimizing.cpp optimization/stroke_color_optimizing.h optimization/image_stroke_optimization.cpp optimization/image_stroke_optimization.h tests/test_stroke_color_optimization.h)
+tests/opencv_test.h
+tests/cv_io_test.h
+tests/color_test.h
+tests/stroke_rasterization_test.h
+
+rasterization/stroke_rasterizer.cpp
+rasterization/stroke_rasterizer.h
+
+rasterization/drawer.cpp
+rasterization/drawer.h
+
+optimization/error_computing.cpp
+optimization/error_computing.h
+
+optimization/stroke_color_optimizing.cpp
+optimization/stroke_color_optimizing.h
+
+optimization/image_stroke_optimization.cpp
+optimization/image_stroke_optimization.h
+tests/test_stroke_color_optimization.h
+
+)
 
 
 include_directories(/)

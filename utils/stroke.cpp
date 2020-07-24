@@ -14,16 +14,22 @@ colored_stroke::point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
+	point result;
+	for (size_t coord_index = 0; coord_index < 2; ++coord_index) {
+		result[coord_index] =
+				p1[coord_index]
+				+ square(1 - t) * (p0[coord_index] - p1[coord_index])
+				+ square(t) * (p2[coord_index] - p1[coord_index]);
+	}
 
-
-	return {  };
+	return result;
 }
 
 double stroke::height_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
-	// TODO
+	// TODO?
 
 	return width;
 }
@@ -53,7 +59,7 @@ void stroke::for_each (
 		double t = double(point_index) / step_number;
 
 		auto [central_x, central_y] = coords_at(t);
-		auto x = long long(std::round(central_x));
+		auto x = lint(std::round(central_x));
 
 		if (x == last_x) continue; // To avoid repetitions
 		last_x = x;
@@ -65,8 +71,8 @@ void stroke::for_each (
 		double height = height_at(t);
 		double height_half = height / 2;
 
-		auto y0 = size_t(std::round(central_y - height_half));
-		auto y1 = size_t(std::round(y0 + height));
+		auto y0 = lint(std::round(central_y - height_half));
+		auto y1 = lint(std::round(y0 + height));
 
 		if (has_range_limitations) {
 			y0 = std::clamp(y0, range_limits->min_y, range_limits->max_y - 1);

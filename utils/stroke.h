@@ -25,7 +25,7 @@ struct stroke {
 	// using point = std::pair<double, double>;
 	using point = point;
 
-	point p1{}, p2{}, p3{};
+	point p0{}, p1{}, p2{};
 	double width = -1;
 
 	// stroke() = default;

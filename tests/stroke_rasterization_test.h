@@ -12,6 +12,6 @@ inline void test_stroke_rasterizaton(){
 	                 colored_stroke({ 70, 30 }, { 20, 50 }, { 100, 80 },
 	                                10, {1., 1., -1}), 1000);
 
-	show_image_in_system_viewer(image, "rasterized stroke")
+	show_image_in_system_viewer(image, "rasterized stroke");
 }
 
