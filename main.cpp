@@ -18,6 +18,9 @@ int main ()
 	// custom_color_converting_test();
 
 	/// Rasterization:
+
+
+
 	test_stroke_rasterizaton();
 
 	return 0;

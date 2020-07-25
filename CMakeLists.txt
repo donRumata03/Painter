@@ -3,18 +3,22 @@ cmake_minimum_required(VERSION 3.16)
 ################################################################################
 # Set dependency directories:
 
-set(is_computer ON)
-set(is_notebook OFF)
+set(is_computer OFF)
+set(is_notebook ON)
 
 # They are different configurations
 if (is_computer)
     set(current_opencv_dir D:/OpenCV4/opencv4)
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
+
 elseif(is_notebook)
     set(current_opencv_dir D:/opencv/opencv4)
-    set(current_GA_dir D:/Projects/Downloaded/PowerfulGA)
-    set(current_pythonic_dir D:/Projects/Downloaded/pythonic)
+#    set(current_GA_dir D:/Projects/Downloaded/PowerfulGA)
+#    set(current_pythonic_dir D:/Projects/Downloaded/pythonic)
+    set(current_GA_dir D:/Projects/Utilities/GA)
+    set(current_pythonic_dir D:/pythonic)
+
 # User code for other platforms:
 # elseif(...)
     # ...
