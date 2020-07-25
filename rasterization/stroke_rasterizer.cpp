@@ -11,7 +11,7 @@ void rasterize_stroke (Image &target_image, const colored_stroke &stroke, size_t
 	Range_rectangle<lint> range_rectangle = get_image_range_limits(target_image);
 
 	stroke.for_each([&](size_t x, size_t y){
-		target_image.at<cv::Vec3d>(x, y) = opencv_stroke_color;
+		target_image.at<cv::Vec3d>(y, x) = opencv_stroke_color;
 	}, point_number, range_rectangle);
 }
 

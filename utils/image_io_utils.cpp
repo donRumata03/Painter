@@ -61,6 +61,17 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 	std::string temp_folder = (fs::path(std::string(base_path)) / "resources"s / "temp"s).string();
 	// std::cout << "temp folder is: " << temp_folder << std::endl;
 
+	auto space_checker = [](const std::string& which_path, const std::string& path_name){
+		if (std::any_of(which_path.begin(), which_path.end(), [](char value){ return value == ' '; })) {
+			std::cout << console_colors::red << "Bad " << path_name << ": there are spaces!" << console_colors::simple << std::endl;
+			assert(false);
+		}
+	};
+
+	space_checker(temp_folder, "temp path");
+	if (!temp_name.empty()) space_checker(temp_name, "user temp file name");
+
+
 	std::string filename;
 	if (temp_name.empty()) {
 		// Generate random (chronological) path:

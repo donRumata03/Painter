@@ -42,6 +42,7 @@ struct rgb_color
 	explicit rgb_color(const cv::Point3_<T>& cv_point);
 
 	cv::Vec<T, 3> to_OpenCV_Vec3() const;
+	cv::Scalar to_OpenCV_Scalar() const;
 	std::vector<T> to_vector() const;
 	std::array<T, 3> to_array() const;
 
@@ -149,6 +150,16 @@ cv::Vec<T, 3> rgb_color<T>::to_OpenCV_Vec3() const {
 		r, g, b
 	}; // TODO: make it converting operator
 }
+
+template < class T >
+cv::Scalar rgb_color<T>::to_OpenCV_Scalar () const
+{
+	return cv::Scalar
+	{
+		r, b, b, 0.
+	};
+}
+
 
 template < class Type >
 bool operator== (const rgb_color<Type> & first, const rgb_color<Type> & second)
