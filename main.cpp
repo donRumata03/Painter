@@ -5,6 +5,7 @@
 #include <tests/stroke_rasterization_test.h>
 #include <tests/stroke_counting_test.h>
 #include <tests/draw_test.h>
+#include <tests/stroke_color_optimization_test.h>
 #include "tests/opencv_test.h"
 
 int main ()
@@ -25,9 +26,12 @@ int main ()
 	// color_hash_test();
 
 	/// Rasterization:
-	test_stroke_rasterizaton();
+	// test_stroke_rasterizaton();
 	// draw_circle_test();
 	// draw_line_test();
+
+	/// Optimization:
+	test_stroke_color_optimization_with_displaying();
 
 	return 0;
 }

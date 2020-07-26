@@ -16,3 +16,19 @@ inline void test_stroke_counting()
 		std::cout << t << " : " << stroke1.coords_at(t) << std::endl;
 	}
 }
+
+inline void test_stroke_for_each() {
+	auto limits = Range_rectangle<lint> {
+		0, 10, 0, 10
+	};
+
+	stroke stroke{
+			{},
+			{},
+			{}
+	};
+
+	std::cout << stroke.get_points(10000, limits) << std::endl;
+}
+
+

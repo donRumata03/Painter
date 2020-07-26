@@ -120,7 +120,7 @@ color find_stroke_color_by_ariphmetic_mean (const stroke &colorless_stroke, cons
 		b_sum += image_pixel_color[2];
 
 		points_in_stroke++;
-	});
+	}, 10000, get_image_range_limits(image));
 
 	return color(
 			r_sum / points_in_stroke,

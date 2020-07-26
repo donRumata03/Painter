@@ -45,7 +45,7 @@ struct stroke {
  * are processed.
  */
 	template<class Functor>
-	void for_each(const Functor& operation, size_t step_number = 100,
+	void for_each(const Functor& operation, size_t step_number = 10000,
 	              std::optional<Range_rectangle<lint>> range_limits = std::nullopt) const;
 	// ^^^ TODO: Measure and ...make it parallel?
 
@@ -56,7 +56,7 @@ struct stroke {
 	*/
 
 	[[nodiscard]] std::vector<point> get_points(
-			size_t step_number = 100, std::optional<Range_rectangle<lint>> range_limits = std::nullopt
+			size_t step_number = 10000, std::optional<Range_rectangle<lint>> range_limits = std::nullopt
 	) const;
 };
 

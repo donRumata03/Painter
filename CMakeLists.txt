@@ -70,7 +70,7 @@ optimization/stroke_color_optimizing.h
 
 optimization/image_stroke_optimization.cpp
 optimization/image_stroke_optimization.h
-tests/test_stroke_color_optimization.h
+        tests/stroke_color_optimization_test.h
 
         tests/stroke_counting_test.h tests/draw_test.h tests/base_test.h)
 
