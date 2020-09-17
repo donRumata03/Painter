@@ -15,3 +15,4 @@
 
 // My constants:
 inline constexpr const char* base_path = "D:/Projects/Painter";
+// inline constexpr const char* base_path = "/home/vova/dev/Robots/Painter";

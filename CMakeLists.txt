@@ -3,14 +3,15 @@ cmake_minimum_required(VERSION 3.16)
 ################################################################################
 # Set dependency directories:
 
-set(is_computer OFF)
-set(is_notebook ON)
+set(is_computer ON)
+set(is_notebook OFF)
 
 # They are different configurations
 if (is_computer)
     set(current_opencv_dir D:/OpenCV4/opencv4)
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
+    set(current_boost_dir D:/lib/boost_1_72_0)
 
 elseif(is_notebook)
     set(current_opencv_dir D:/opencv/opencv4)
@@ -18,6 +19,7 @@ elseif(is_notebook)
 #    set(current_pythonic_dir D:/Projects/Downloaded/pythonic)
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
+    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
 
 # User code for other platforms:
 # elseif(...)
@@ -70,9 +72,14 @@ optimization/stroke_color_optimizing.h
 
 optimization/image_stroke_optimization.cpp
 optimization/image_stroke_optimization.h
-        tests/stroke_color_optimization_test.h
+tests/stroke_color_optimization_test.h
 
-        tests/stroke_counting_test.h tests/draw_test.h tests/test_base.h tests/error_computing_tests/image_mse_test.h)
+tests/stroke_counting_test.h
+tests/draw_test.h
+tests/test_base.h
+tests/error_computing_tests/image_mse_test.h
+
+)
 
 
 include_directories(/)
@@ -97,7 +104,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 
 # Add pythonic:
 set(Pythonic_DIR ${current_pythonic_dir})
-message(${Pythonic_DIR})
+# message(${Pythonic_DIR})
 find_package(Pythonic REQUIRED)
 
 include_directories(${pythonic_include_directories})
@@ -112,7 +119,8 @@ target_link_libraries(Painter ${PowerfulGA_static_library})
 
 # Add boost:
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
-set(Boost_DIR D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+# set(Boost_DIR ${current_boost_dir})
+set(Boost_INCLUDE_DIR ${current_boost_dir})
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 

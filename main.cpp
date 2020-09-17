@@ -32,10 +32,12 @@ int main ()
 	// draw_line_test();
 
 	/// Error counting:
-	test_image_mse();
+	// test_image_mse();
+	// test_parallel_image_mse();
+	compare_image_mse_performance_parallel();
 
 	/// Optimization:
-	test_stroke_color_optimization_with_displaying();
+	// test_stroke_color_optimization_with_displaying();
 
 	return 0;
 }

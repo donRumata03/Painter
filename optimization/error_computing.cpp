@@ -20,8 +20,6 @@ double image_mse (const Image &image1, const Image &image2, bool parallel)
 				const auto &first_pixel = image1.at<cv::Vec3d>(y, x);
 				const auto &second_pixel = image2.at<cv::Vec3d>(y, x);
 
-				// TODO: parallelize for loop!
-
 				/*
 				double red_diff = square( first_pixel[0] - second_pixel[0] );
 				double green_diff = square( first_pixel[1] - second_pixel[1] );
@@ -36,17 +34,25 @@ double image_mse (const Image &image1, const Image &image2, bool parallel)
 		}
 	}
 	else { // Parallel:
+		std::atomic<double> atomic_diff_sum = 0;
+
 		image1.forEach<Pixel>([&](Pixel& first_pixel_value, const int position[]){
 			// TODO: x, y or y, x? => define first and second pixels
+			double this_diff_sum = 0; // atomic_diff_sum.load();
 
 			const auto first_pixel = color(first_pixel_value);
 			const auto second_pixel = color(image2.at<cv::Vec3d>(position[0], position[1]));
 
 
 			for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
-				diff_sum += square(second_pixel[dim_index] - first_pixel[dim_index]);
+				this_diff_sum += square(second_pixel[dim_index] - first_pixel[dim_index]);
 			}
+
+			// atomic_diff_sum.store(this_diff_sum);
+			atomic_diff_sum += this_diff_sum;
 		});
+
+		diff_sum = atomic_diff_sum;
 	}
 
 	return diff_sum / area;
