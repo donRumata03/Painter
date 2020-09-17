@@ -5,7 +5,7 @@
 #pragma once
 
 #include "rasterization/drawer.h"
-#include "base_test.h"
+#include "test_base.h"
 
 inline void draw_circle_test() {
 	size_t image_width = 1920;

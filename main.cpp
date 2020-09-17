@@ -6,6 +6,7 @@
 #include <tests/stroke_counting_test.h>
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>
+#include <tests/error_computing_tests/image_mse_test.h>
 #include "tests/opencv_test.h"
 
 int main ()
@@ -29,6 +30,9 @@ int main ()
 	// test_stroke_rasterizaton();
 	// draw_circle_test();
 	// draw_line_test();
+
+	/// Error counting:
+	test_image_mse();
 
 	/// Optimization:
 	test_stroke_color_optimization_with_displaying();
