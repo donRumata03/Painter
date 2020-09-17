@@ -110,6 +110,12 @@ find_package(PowerfulGA REQUIRED)
 include_directories(${PowerfulGA_include_directories})
 target_link_libraries(Painter ${PowerfulGA_static_library})
 
+# Add boost:
+# see https://cmake.org/cmake/help/latest/module/FindBoost.html
+set(Boost_DIR D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
 # Run Cotire on the project in order to speed the build up by deducting precompiled headers:
 include(cotire)
 cotire(Painter)
