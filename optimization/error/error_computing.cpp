@@ -37,12 +37,12 @@ double image_mse (const Image &image1, const Image &image2, bool parallel)
 		std::atomic<double> atomic_diff_sum = 0;
 
 		image1.forEach<Pixel>([&](Pixel& first_pixel_value, const int position[]){
-			// TODO: x, y or y, x? => define first and second pixels
 			double this_diff_sum = 0; // atomic_diff_sum.load();
 
 			const auto first_pixel = color(first_pixel_value);
 			const auto second_pixel = color(image2.at<cv::Vec3d>(position[0], position[1]));
 
+			// TODO: divide pixels into areas to improve performance!
 
 			for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
 				this_diff_sum += square(second_pixel[dim_index] - first_pixel[dim_index]);

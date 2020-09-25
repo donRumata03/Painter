@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "optimization/error_computing.h"
+#include "optimization/error/error_computing.h"
 
 
 inline void test_image_mse()

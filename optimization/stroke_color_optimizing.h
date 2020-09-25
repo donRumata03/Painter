@@ -6,7 +6,7 @@
 
 #include "utils/image_io_utils.h"
 #include "utils/stroke.h"
-#include "error_computing.h"
+#include "optimization/error/error_computing.h"
 
 color find_stroke_color (
 		const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations,

@@ -64,8 +64,8 @@ rasterization/stroke_rasterizer.h
 rasterization/drawer.cpp
 rasterization/drawer.h
 
-optimization/error_computing.cpp
-optimization/error_computing.h
+        optimization/error/error_computing.cpp
+        optimization/error/error_computing.h
 
 optimization/stroke_color_optimizing.cpp
 optimization/stroke_color_optimizing.h
@@ -79,7 +79,7 @@ tests/draw_test.h
 tests/test_base.h
 tests/error_computing_tests/image_mse_test.h
 
-)
+        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h utils/stroke_limits.h)
 
 
 include_directories(/)

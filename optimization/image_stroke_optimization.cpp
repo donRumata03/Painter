@@ -3,3 +3,5 @@
 //
 
 #include "image_stroke_optimization.h"
+
+
