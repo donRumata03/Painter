@@ -95,6 +95,7 @@ find_package(OpenCV REQUIRED)
 # Add OpenCV
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(Painter ${OpenCV_LIBS})
+# message(${OpenCV_LIBS})
 
 # ______________________________
 # Add my libraries:
@@ -120,9 +121,10 @@ target_link_libraries(Painter ${PowerfulGA_static_library})
 # Add boost:
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 # set(Boost_DIR ${current_boost_dir})
-set(Boost_INCLUDE_DIR ${current_boost_dir})
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIR})
+
+# set(Boost_INCLUDE_DIR ${current_boost_dir})
+# find_package(Boost REQUIRED)
+# include_directories(${Boost_INCLUDE_DIR})
 
 # Run Cotire on the project in order to speed the build up by deducting precompiled headers:
 include(cotire)
