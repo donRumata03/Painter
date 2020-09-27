@@ -4,10 +4,13 @@
 
 #include "stroke.h"
 
+/*
+
 colored_stroke::colored_stroke (const point &point1, const point &point2, const point &point3, double _width, color _color)
 			: stroke{point1, point2, point3, _width},
 			  background_color(_color)
 {}
+*/
 
 
 stroke::point stroke::coords_at (double t) const

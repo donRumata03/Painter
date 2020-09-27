@@ -30,7 +30,7 @@ inline void test_stroke_color_optimization_with_displaying() {
 	std::cout << "Optimal color is " << optimal_color << std::endl;
 
 	// Display the stroke:
-	rasterize_stroke(image, colored_stroke(colorless_stroke, optimal_color));
+	rasterize_stroke(image, colored_stroke{colorless_stroke, optimal_color});
 
 	auto out_path = (fs::path(base_path) / ("resources/stroke_color_optimization_test/output"s + image_name)).string();
 

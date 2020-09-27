@@ -21,7 +21,7 @@ inline void test_image_mse()
 	std::cout << faraway_image.size << "\n";
 	std::cout << middle_image.size << "\n";
 
-	std::cout << console_colors::green << "Loaded images!" << console_colors::simple << std::endl;
+	std::cout << console_colors::green << "Loaded images!" << console_colors::remove_all_colors << std::endl;
 
 	//
 	std::cout << "Original vs. Faraway: \t" << image_mse(original_image, faraway_image, false) << std::endl;
@@ -39,7 +39,7 @@ inline void test_parallel_image_mse()
 	Image original_image = open_image((input_path / "brown_coffee.png").string());
 	Image faraway_image = open_image((input_path / "blue_coffee.png").string());
 
-	std::cout << console_colors::green << "Loaded images!" << console_colors::simple << std::endl;
+	std::cout << console_colors::green << "Loaded images!" << console_colors::remove_all_colors << std::endl;
 
 	std::cout << "Standard: " << image_mse(original_image, faraway_image, false) << std::endl;
 	std::cout << "Parallel: " << image_mse(original_image, faraway_image, true) << std::endl;
@@ -55,7 +55,7 @@ inline void compare_image_mse_performance_parallel() {
 	Image original_image = open_image((input_path / "brown_coffee.png").string());
 	Image faraway_image = open_image((input_path / "blue_coffee.png").string());
 
-	std::cout << console_colors::green << "Loaded images!" << console_colors::simple << std::endl;
+	std::cout << console_colors::green << "Loaded images!" << console_colors::remove_all_colors << std::endl;
 
 	std::cout << "\t\t\t\tPerformance tests:" << std::endl;
 

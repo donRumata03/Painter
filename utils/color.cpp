@@ -39,7 +39,7 @@ static size_t process_color_warning(size_t required_amount, size_t existing_amou
 		          "WARNING: the number of colors you requested (" << required_amount <<
 		          ") is bigger than the total number of unique colors in image (" << existing_amount << ")" <<
 		          " => taking the number of unique colors which the image has." <<
-		          console_colors::simple << console_colors::simple << std::endl;
+		          console_colors::remove_all_colors << std::endl;
 	}
 
 	return std::min(required_amount, existing_amount);

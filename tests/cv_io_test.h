@@ -6,6 +6,11 @@
 
 #include "utils/image_io_utils.h"
 
+inline void test_image_creation() {
+	Image image = make_default_image(1920, 1080);
+	show_image_in_system_viewer(image);
+}
+
 inline void test_image_processing_cycle(){
 	std::string image_path = get_sample_image_path();
 

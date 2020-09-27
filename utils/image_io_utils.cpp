@@ -4,6 +4,15 @@
 
 #include "image_io_utils.h"
 
+/*
+ * Default image constructing:
+ */
+
+Image make_default_image (size_t w, size_t h)
+{
+	return Image(cv::Size{ int(h), int(w) }, CV_64FC3);
+}
+
 
 /*
  * Input-output paying respect to floating point and RGB <-> BGR:
@@ -63,7 +72,7 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 
 	auto space_checker = [](const std::string& which_path, const std::string& path_name){
 		if (std::any_of(which_path.begin(), which_path.end(), [](char value){ return value == ' '; })) {
-			std::cout << console_colors::red << "Bad " << path_name << ": there are spaces!" << console_colors::simple << std::endl;
+			std::cout << console_colors::red << "Bad " << path_name << ": there are spaces!" << console_colors::remove_all_colors << std::endl;
 			assert(false);
 		}
 	};

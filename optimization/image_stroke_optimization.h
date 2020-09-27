@@ -16,12 +16,12 @@ struct stroke_image_fitting_params
 
 struct stroke_fitting_return_struct
 {
-	std::vector<colored_stroke>;
+	// std::vector<colored_stroke>;
 };
 
 
 stroke_fitting_return_struct fit_strokes_to_image() {
-
+	return {};
 }
 
 // TODO: add total optimization!

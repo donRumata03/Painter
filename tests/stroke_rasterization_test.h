@@ -21,8 +21,8 @@ inline void test_stroke_rasterizaton(){
 	};
 
 	rasterize_stroke(image,
-	                 colored_stroke(points[0], points[1], points[2],
-	                                100, {1., 1., 1}), 10000);
+	                 colored_stroke{points[0], points[1], points[2],
+	                                100, {1., 1., 1}}, 10000);
 
 	// Draw the points:
 	double r = 10;

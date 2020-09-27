@@ -14,9 +14,23 @@ class final_error_function
 	size_t total_stroke_number;
 	size_t w, h;
 
-	explicit final_error_function(const Image& image, size_t strokes) : initial_image(image), total_stroke_number(strokes) {
+	const bool is_run_sequentially;
+	Image personal_buffer;
+
+	/**
+	 *
+	 * @param is_run_sequentially: if it`s set to true, is stores only one buffer allocated in the constructor
+	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
+	 */
+	explicit final_error_function(const Image& image, size_t strokes, bool is_run_sequentially)
+					: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially)
+	{
 		w = image.cols;
 		h = image.rows;
+
+		if (is_run_sequentially) {
+			personal_buffer = Image(1, 1);
+		}
 	}
 
 	double operator()(const std::vector<double>& stroke_data_buffer) const
@@ -30,7 +44,7 @@ class final_error_function
 		for (size_t stroke_index = 0; stroke_index < total_stroke_number; ++stroke_index) {
 			size_t stroke_value_initial_index = 7 * stroke_index;
 
-			auto& unpacked_colorless_stroke = strokes.emplace_back(
+			auto& unpacked_colored_stroke = strokes.emplace_back(
 					stroke{
 							{ stroke_data_buffer[stroke_value_initial_index], stroke_data_buffer[stroke_value_initial_index + 1] },
 							{ stroke_data_buffer[stroke_value_initial_index + 2], stroke_data_buffer[stroke_value_initial_index +3] },
@@ -40,8 +54,7 @@ class final_error_function
 					double {} // <- Color is undefined
 			);
 
-			find_stroke_color(unpacked_colorless_stroke, initial_image);
-
+			find_stroke_color(unpacked_colored_stroke, initial_image);
 		}
 	}
 

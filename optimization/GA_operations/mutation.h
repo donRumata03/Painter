@@ -9,7 +9,7 @@
  */
 class mutator
 {
-	limits
-
-	explicit mutator();
+//	limits
+//
+//	explicit mutator();
 };

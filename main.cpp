@@ -13,9 +13,10 @@ int main ()
 {
 	system(("chcp "s + std::to_string(CP_UTF8)).c_str());
 
+	/// IO tests:
 	// test_opencv();
 	// test_image_processing_cycle();
-
+	test_image_creation();
 
 	/// Color converting:
 	// test_color_converting_to_floating_point();
