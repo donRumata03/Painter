@@ -24,7 +24,7 @@ inline void test_stroke_color_optimization_with_displaying() {
 			points[0], points[1], points[2], 30
 	};
 
-	// auto optimal_color = find_stroke_color(colorless_stroke, image, 0.001, 1000, false);
+	// auto optimal_color = find_stroke_color_by_gradient_descent(colorless_stroke, image, 0.001, 1000, false);
 	auto optimal_color = find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
 
 	std::cout << "Optimal color is " << optimal_color << std::endl;

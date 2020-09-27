@@ -7,8 +7,8 @@
 #include "optimization/error/error_computing.h"
 #include <other_optimization/local_optimization.h>
 
-color find_stroke_color (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations,
-                         bool log_debug_information)
+color find_stroke_color_by_gradient_descent (const stroke &colorless_stroke, const Image &image, double learning_rate, size_t iterations,
+                                             bool log_debug_information)
 {
 	color initial_color = find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
 	auto stroke_points = colorless_stroke.get_points(100, get_image_range_limits(image));
@@ -127,5 +127,15 @@ color find_stroke_color_by_ariphmetic_mean (const stroke &colorless_stroke, cons
 			g_sum / points_in_stroke,
 			b_sum / points_in_stroke
 	);
+}
+
+color find_stroke_color (const stroke &colorless_stroke, const Image &image)
+{
+	return find_stroke_color_by_ariphmetic_mean(colorless_stroke, image);
+}
+
+void find_stroke_color (colored_stroke &colored_stroke, const Image &image)
+{
+	colored_stroke.background_color = find_stroke_color(reinterpret_cast<const stroke&>(colored_stroke), image);
 }
 

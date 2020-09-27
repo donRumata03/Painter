@@ -6,6 +6,7 @@
 #define PAINTER_STROKE_H
 
 #include <pythonic.h>
+#include <ostream>
 
 #include "color.h"
 
@@ -58,6 +59,8 @@ struct stroke {
 	[[nodiscard]] std::vector<point> get_points(
 			size_t step_number = 10000, std::optional<Range_rectangle<lint>> range_limits = std::nullopt
 	) const;
+
+	friend std::ostream &operator<< (std::ostream &os, const stroke &stroke);
 };
 
 
@@ -110,10 +113,14 @@ struct colored_stroke : stroke
 {
 	color background_color;
 
+	friend std::ostream &operator<< (std::ostream &os, const colored_stroke &stroke);
+
+	/*
 	colored_stroke() = default;
 	colored_stroke(const point &point1, const point &point2, const point &point3, double _width, color _color);
 	colored_stroke(const stroke& colorless_stroke, const color& bg_color) :
 		stroke(colorless_stroke), background_color(bg_color) {}
+	*/
 };
 
 

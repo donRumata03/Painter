@@ -48,6 +48,12 @@ std::vector<point> stroke::get_points (
 	return res;
 }
 
+std::ostream &operator<< (std::ostream &os, const stroke &stroke)
+{
+	os << "Stroke { p0: " << stroke.p0 << " p1: " << stroke.p1 << " p2: " << stroke.p2 << " width: " << stroke.width << " }";
+	return os;
+}
+
 
 
 
@@ -71,3 +77,8 @@ void stroke::for_each (const Functor &operation, size_t step_number,
 	const_cast<colored_stroke*>(this)->for_each(operation, step_number, range_limits);
 }
 */
+std::ostream &operator<< (std::ostream &os, const colored_stroke &stroke)
+{
+	os << reinterpret_cast<const struct stroke &>(stroke) << " background_color: " << stroke.background_color;
+	return os;
+}
