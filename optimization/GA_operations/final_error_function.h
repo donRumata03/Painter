@@ -15,7 +15,7 @@ class final_error_function
 	size_t w, h;
 
 	const bool is_run_sequentially;
-	Image personal_buffer;
+	mutable Image personal_buffer;
 
 	/**
 	 *
@@ -29,7 +29,7 @@ class final_error_function
 		h = image.rows;
 
 		if (is_run_sequentially) {
-			personal_buffer = Image(1, 1);
+			personal_buffer = make_default_image(w, h);
 		}
 	}
 
@@ -51,11 +51,21 @@ class final_error_function
 							{ stroke_data_buffer[stroke_value_initial_index + 4], stroke_data_buffer[stroke_value_initial_index +5] },
 							stroke_data_buffer[stroke_value_initial_index + 6]
 					},
-					double {} // <- Color is undefined
+					double {} // <- The stroke color is undefined at this moment
 			);
 
 			find_stroke_color(unpacked_colored_stroke, initial_image);
 		}
+
+		// Compute MSE:
+		Image this_buffer = personal_buffer;
+
+		if (!is_run_sequentially) {
+			// Allocate the buffer:
+			this_buffer = make_default_image(w, h);
+		}
+
+		return image_mse(initial_image, this_buffer);
 	}
 
 };
