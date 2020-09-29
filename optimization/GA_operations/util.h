@@ -16,14 +16,13 @@ inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<d
 	auto total_stroke_number = stroke_data_buffer.size() / 7;
 
 	std::vector<colored_stroke> strokes;
-	strokes.reserve(total_stroke_number);
+	strokes.resize(total_stroke_number);
 
 	for (size_t stroke_index = 0; stroke_index < total_stroke_number; ++stroke_index) {
 		size_t stroke_value_initial_index = 7 * stroke_index;
 
 		/*auto &unpacked_colored_stroke = */
-		strokes.emplace_back(
-				stroke {
+		reinterpret_cast<stroke&>(strokes[stroke_index]) = stroke {
 						{ stroke_data_buffer[stroke_value_initial_index],
 						  stroke_data_buffer[stroke_value_initial_index + 1] },
 						{ stroke_data_buffer[stroke_value_initial_index + 2],
@@ -31,9 +30,9 @@ inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<d
 						{ stroke_data_buffer[stroke_value_initial_index + 4],
 						  stroke_data_buffer[stroke_value_initial_index + 5] },
 						stroke_data_buffer[stroke_value_initial_index + 6]
-				},
-				double {} // <- The stroke color is undefined at this moment
-		);
+				};
+
+		strokes[stroke_index].width = double{}; // <- The stroke color is undefined at this moment
 	}
 
 	return strokes;

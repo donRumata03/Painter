@@ -7,6 +7,7 @@
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>
 #include <tests/error_computing_tests/image_mse_test.h>
+#include <tests/stroke_constrainiing_test.h>
 #include "tests/opencv_test.h"
 
 int main ()
@@ -17,7 +18,7 @@ int main ()
 
 	// test_opencv();
 	// test_image_processing_cycle();
-	test_image_creation();
+	// test_image_creation();
 
 	/// Color converting:
 	// test_color_converting_to_floating_point();
@@ -37,6 +38,8 @@ int main ()
 	// test_image_mse();
 	// test_parallel_image_mse();
 	// compare_image_mse_performance_parallel();
+
+	launch_stroke_constraining_visualizing_test();
 
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();
