@@ -24,8 +24,29 @@ void shift_stroke (stroke &stroke, const stroke::point &shifting_vector)
 	shift_point(stroke.p2, shifting_vector);
 }
 
-double get_best_shift(const stroke::point& target_coords, const stroke::point& rect_coords) {
-	// TODO
+double get_best_shift(const std::pair<double, double>& target_coords, const std::pair<double, double>& rect_coords, double randomness_coefficient = 0.1) {
+	assert(target_coords.second > target_coords.first);
+	assert(rect_coords.second > rect_coords.first);
+
+	// TODO: add some randomness here to prevent concentrating many strokes on the border
+	// double sigma = (rect_coords.second - rect_coords.first) * randomness_coefficient;
+
+	// double movement_factor = randomness_coefficient + 1;
+	// double res = 0;
+	// return std::clamp(res * movement_factor, rect_coords.first, rect_coords.second);
+
+	double delta = 0;
+
+	if (target_coords.first < rect_coords.first) {
+		// Move up
+		delta = rect_coords.first - target_coords.first;
+	}
+	else {
+		// Move down
+		delta = rect_coords.second - target_coords.second;
+	}
+
+	return delta;
 }
 
 ////////////////////////////////////////
@@ -49,5 +70,7 @@ void carefully_constrain_stroke_to_fit_into_rect (stroke &stroke, const RangeRec
 	double dy = get_best_shift( { stroke_rectangle.min_y, stroke_rectangle.max_y }, { rectangle.min_y, rectangle.max_y } );
 
 	shift_stroke(stroke, { dx, dy });
+
+	brute_constrain_stroke_to_fit_into_rect(stroke, rectangle);
 }
 
