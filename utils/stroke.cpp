@@ -38,7 +38,7 @@ double stroke::height_at (double t) const
 }
 
 std::vector<point> stroke::get_points (
-		size_t step_number, std::optional<Range_rectangle<lint>> range_limits) const
+		size_t step_number, std::optional<RangeRectangle<lint>> range_limits) const
 {
 	std::vector<point> res;
 
@@ -75,7 +75,7 @@ std::ostream &operator<< (std::ostream &os, const stroke &stroke)
 
 template < class Functor >
 void stroke::for_each (const Functor &operation, size_t step_number,
-                       std::optional<Range_rectangle<lint>> range_limits) const
+                       std::optional<RangeRectangle<lint>> range_limits) const
 {
 	const_cast<colored_stroke*>(this)->for_each(operation, step_number, range_limits);
 }

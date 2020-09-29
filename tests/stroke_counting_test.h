@@ -18,7 +18,7 @@ inline void test_stroke_counting()
 }
 
 inline void test_stroke_for_each() {
-	auto limits = Range_rectangle<lint> {
+	auto limits = RangeRectangle<lint> {
 		0, 10, 0, 10
 	};
 

@@ -12,6 +12,6 @@
 class mutator
 {
 	stroke_limit_descriptor limits;
-//
-//	explicit mutator();
+
+	explicit mutator();
 };

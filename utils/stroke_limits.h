@@ -13,7 +13,9 @@ class stroke_limit_descriptor
 
 	double min_width, max_width; /// width
 
-	bool stroke_satisfies_requirements(const stroke& stroke) const {
+	RangeRectangle<double> image_rectangle;
+
+	[[nodiscard]] bool stroke_satisfies_requirements(const stroke& stroke) const {
 		/// Check width:
 		if (stroke.width < min_width or stroke.width > max_width) return false;
 
@@ -37,5 +39,27 @@ class stroke_limit_descriptor
 		auto dy = max_y_found - min_y_found;
 
 		return dx <= max_dx and dx >= min_dx and dy <= max_dy and dy >= min_dy;
+	}
+
+	bool constrain_stroke_to_requirements(stroke& stroke) {
+		// Returns initial state of stroke
+		if (stroke_satisfies_requirements(stroke)) return true;
+
+		// Constrain width:
+		stroke.width = std::clamp(stroke.width, min_width, max_width);
+/*
+		stroke.width = std::max(stroke.width, min_width);
+		stroke.width = std::min(stroke.width, max_width);
+*/
+/*
+
+		auto constrain_point = [&](stroke::point& point){
+			point.x = std::clamp(point.x, min_);
+		};
+*/
+
+		// TODO
+
+		return false;
 	}
 };
