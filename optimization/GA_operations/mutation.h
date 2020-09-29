@@ -4,12 +4,14 @@
 
 #pragma once
 
+#include "utils/stroke_limits.h"
+
 /**
  * Callable object for mutation in GA
  */
 class mutator
 {
-//	limits
+	stroke_limit_descriptor limits;
 //
 //	explicit mutator();
 };
