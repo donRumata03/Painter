@@ -58,7 +58,7 @@ class stroke_limit_descriptor
 		};
 */
 
-		// TODO
+
 
 		return false;
 	}

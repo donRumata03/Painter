@@ -7,6 +7,8 @@
 #include "optimization/error/error_computing.h"
 #include "optimization/stroke_color_optimizing.h"
 
+#include "optimization/GA_operations/util.h"
+
 class final_error_function
 {
 	const Image& initial_image;
@@ -39,6 +41,7 @@ class final_error_function
 		assert(total_stroke_number * 7 == stroke_data_buffer.size()); // Should be dividable by 7 and the result should be equal to 7 * this->total_stroke_number (one double for each stuff)
 
 		// Parse the stroke set and compute the colors for them:
+/*
 		std::vector<colored_stroke> strokes;
 
 		for (size_t stroke_index = 0; stroke_index < total_stroke_number; ++stroke_index) {
@@ -56,6 +59,10 @@ class final_error_function
 
 			find_stroke_color(unpacked_colored_stroke, initial_image);
 		}
+*/
+		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
+		for (auto& stroke : strokes) find_stroke_color(stroke, initial_image);
+
 
 		// Compute MSE:
 		Image this_buffer = personal_buffer;

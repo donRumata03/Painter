@@ -79,7 +79,7 @@ tests/draw_test.h
 tests/test_base.h
 tests/error_computing_tests/image_mse_test.h
 
-        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h utils/stroke_limits.h optimization/GA_operations/final_error_function.h)
+        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h utils/stroke_limits.h optimization/GA_operations/final_error_function.h optimization/GA_operations/util.h)
 
 
 include_directories(/)
