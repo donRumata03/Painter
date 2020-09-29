@@ -11,14 +11,10 @@
 Image make_default_image (size_t w, size_t h)
 {
 	std::cout << "Creating" << std::endl;
-
 	auto size = cv::Size{ int(h), int(w) };
-
 	std::cout << "Created size" << std::endl;
 
-	return cv::Mat(size, CV_64FC3);
-
-	std::cout << "Created" << std::endl;
+	return cv::Mat(size, CV_64FC3, { 1., 1., 1., 1.});
 }
 
 
@@ -88,15 +84,19 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 	space_checker(temp_folder, "temp path");
 	if (!temp_name.empty()) space_checker(temp_name, "user temp file name");
 
+	// std::cout << "Checked spaces" << std::endl;
 
 	std::string filename;
 	if (temp_name.empty()) {
 		// Generate random (chronological) path:
 		auto prev_temp_files = lsdir(temp_folder);
 
+		std::cout << prev_temp_files << std::endl;
+
 		// std::string last_file_identifier = "0";
 		size_t last_file_identifier = 0;
 		for (auto& temp_file : prev_temp_files) {
+
 			auto path_head = split(temp_file, { '/', '\\' }).back();
 
 			// auto dot_splitted = split(path_head, { '.' });
@@ -104,8 +104,21 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 
 			size_t first_dot_pos = path_head.find('.');
 			std::string identifier = Slice(path_head, noslice, first_dot_pos);
-			last_file_identifier = std::max(last_file_identifier, size_t(std::stoll(identifier)));
+
+			size_t numeric_identifier = 0;
+
+			try {
+				numeric_identifier = std::stoll(identifier);
+			} catch (std::exception& e) {
+				std::cout << "Exception while converting to long long" << std::endl;
+				//
+			}
+
+			last_file_identifier = std::max(last_file_identifier, size_t(numeric_identifier));
+			std::cout << temp_file << std::endl;
 		}
+
+		// std::cout << "Found last file identifier" << std::endl;
 
 		std::string this_file_identifier = std::to_string(last_file_identifier + 1);
 		filename = (fs::path(temp_folder) / (this_file_identifier + ".png")).string();
@@ -117,6 +130,8 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 		}
 		std::cout << "Showing image in system viewer: Temporary filename is " << filename << std::endl;
 	}
+
+	// std::cout << "Found path" << std::endl;
 
 	save_image(img, filename);
 

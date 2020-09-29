@@ -15,18 +15,9 @@ int main ()
 
 	/// IO tests:
 
-	auto size = cv::Size{ int(1080), int(1920) };
-
-	auto img = cv::Mat(2000, 2000, CV_64FC3, {0., 0., 0., 0. });
-	std::cout << img.at<cv::Vec3d>(100, 100) << std::endl;
-	std::cout << "Created size" << std::endl;
-
-	show_image_in_system_viewer(img);
-
-
 	// test_opencv();
 	// test_image_processing_cycle();
-	// test_image_creation();
+	test_image_creation();
 
 	/// Color converting:
 	// test_color_converting_to_floating_point();

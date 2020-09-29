@@ -7,8 +7,33 @@
 #include "utils/image_io_utils.h"
 
 inline void test_image_creation() {
+	/*
+	auto size = cv::Size{ int(1080), int(1920) };
+
+	auto img = cv::Mat(2000, 2000, CV_64FC3, {0., 0., 0., 0. });
+	std::cout << img.at<cv::Vec3d>(100, 100) << std::endl;
+	std::cout << "Created image" << std::endl;
+	 */
+
 	Image image = make_default_image(1920, 1080);
-	show_image_in_system_viewer(image);
+	std::cout << "Made the image" << std::endl;
+
+	std::cout << image.at<cv::Vec3d>(100, 100) << std::endl;
+	image.at<cv::Vec3d>(100, 100) = { 0., 0., 0. };
+	std::cout << image.at<cv::Vec3d>(100, 100) << std::endl;
+
+	for (size_t i = 0; i < 1000; ++i) {
+		for (size_t j = 0; j < 1000; ++j) {
+			image.at<cv::Vec3d>(i, j) = { 0., 0., 0. };
+		}
+	}
+
+	std::cout << image.size << std::endl;
+
+	save_image(image, "D:/Projects/Painter/resources/rubbish/test_saving.png");
+
+	// cv_show_image(image);
+	show_image_in_system_viewer(image); //, "test_creating_image.png");
 }
 
 inline void test_image_processing_cycle(){
