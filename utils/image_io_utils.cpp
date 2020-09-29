@@ -10,9 +10,9 @@
 
 Image make_default_image (size_t w, size_t h)
 {
-	std::cout << "Creating" << std::endl;
-	auto size = cv::Size{ int(h), int(w) };
-	std::cout << "Created size" << std::endl;
+	// std::cout << "Creating" << std::endl;
+	auto size = cv::Size{ int(w), int(h) };
+	// std::cout << "Created size" << std::endl;
 
 	return cv::Mat(size, CV_64FC3, { 1., 1., 1., 1.});
 }
@@ -91,8 +91,6 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 		// Generate random (chronological) path:
 		auto prev_temp_files = lsdir(temp_folder);
 
-		std::cout << prev_temp_files << std::endl;
-
 		// std::string last_file_identifier = "0";
 		size_t last_file_identifier = 0;
 		for (auto& temp_file : prev_temp_files) {
@@ -115,7 +113,7 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 			}
 
 			last_file_identifier = std::max(last_file_identifier, size_t(numeric_identifier));
-			std::cout << temp_file << std::endl;
+			// std::cout << temp_file << std::endl;
 		}
 
 		// std::cout << "Found last file identifier" << std::endl;

@@ -23,12 +23,26 @@ inline void test_image_creation() {
 	std::cout << image.at<cv::Vec3d>(100, 100) << std::endl;
 
 	for (size_t i = 0; i < 1000; ++i) {
-		for (size_t j = 0; j < 1000; ++j) {
-			image.at<cv::Vec3d>(i, j) = { 0., 0., 0. };
+		for (size_t j = 0; j < 100; ++j) {
+			image.at<cv::Vec3d>(i, j) = { 0., 0., 0. }; // So, indexing is [y, x]
 		}
 	}
 
+	int max_first = 0, max_second = 0;
+
+	image.forEach<Pixel>([&image, &max_first, &max_second](Pixel& pixel, const int position[]){
+		auto first_coord = position[0];
+		auto second_coord = position[1];
+
+		max_first = std::max(first_coord, max_first);
+		max_second = std::max(second_coord, max_second);
+
+		pixel.z = 0.; // It`s Blue
+	});
+
 	std::cout << image.size << std::endl;
+
+	std::cout << "Max x: " << max_first << "Max y: " << max_second << std::endl; // So, indexes are also given [y, x]
 
 	save_image(image, "D:/Projects/Painter/resources/rubbish/test_saving.png");
 
