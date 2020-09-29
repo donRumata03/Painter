@@ -10,7 +10,7 @@
 #include "rasterization/drawer.h"
 
 inline void visualize_stroke_constraining(const stroke& stroke_to_show_constraining, size_t image_w, size_t image_h, const std::string& example_name) {
-	colored_stroke colored_stroke { stroke_to_show_constraining, rgb_color{ 0.5, 1., 0.3 } };
+	colored_stroke colored_stroke { stroke_to_show_constraining, rgb_color{ 0.5, 0.1, 0.3 } };
 	auto stroke_to_change = colored_stroke;
 
 	// TODO: have grey bg
@@ -34,6 +34,8 @@ inline void visualize_stroke_constraining(const stroke& stroke_to_show_constrain
 	std::cout << "Created directory" << std::endl;
 	save_image(before, (this_dir / "before.png").string());
 	save_image(after, (this_dir / "after.png").string());
+
+	std::cout << "Saved images" << std::endl;
 }
 
 inline void launch_stroke_constraining_visualizing_test() {
@@ -43,4 +45,6 @@ inline void launch_stroke_constraining_visualizing_test() {
 			                              { 1700, 500 },
 			                              100
 		}, 1920, 1080, "SimplestExample");
+
+	std::cout << "Gone out of the scope" << std::endl;
 }

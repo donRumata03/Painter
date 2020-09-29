@@ -18,7 +18,7 @@ struct RangeRectangle {
 
 	void constrain_point(point& point) const {
 		point.x = std::clamp(point.x, double(min_x), double(max_x));
-		point.y = std::clamp(point.x, double(min_x), double(max_x));
+		point.y = std::clamp(point.y, double(min_y), double(max_y));
 	}
 
 	[[nodiscard]] point get_center () const {

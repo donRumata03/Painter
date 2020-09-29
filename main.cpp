@@ -7,7 +7,7 @@
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>
 #include <tests/error_computing_tests/image_mse_test.h>
-#include <tests/stroke_constrainiing_test.h>
+#include <tests/stroke_constraining_test.h>
 #include "tests/opencv_test.h"
 
 int main ()
