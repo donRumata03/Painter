@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "utils/image_io_utils.h"
-#include "utils/stroke.h"
+#include "io_api/image_io_utils.h"
+#include "data_representation/stroke.h"
 
 
 double image_mse(const Image& image1, const Image& image2, bool parallel = false);

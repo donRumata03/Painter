@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/image_io_utils.h"
+#include "io_api/image_io_utils.h"
 
 /// Line
 Image &draw_line_unchecked (Image &image, const std::pair<lint, lint> &start, const std::pair<lint, lint> &end,

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/color.h"
+#include "data_representation/color.h"
 
 inline void color_hash_test() {
 	color c = { 1., 3., 5. };

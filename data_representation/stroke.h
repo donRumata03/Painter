@@ -9,23 +9,8 @@
 #include <ostream>
 
 #include "color.h"
+#include "range_rectangle.h"
 
-template<class T>
-struct RangeRectangle {
-	T min_x, max_x;
-	T min_y, max_y;
-
-	void constrain_point(point& point) {
-		point.x = std::clamp(point.x, double(min_x), double(max_x));
-		point.y = std::clamp(point.x, double(min_x), double(max_x));
-	}
-};
-
-inline RangeRectangle<lint> get_image_range_limits(const Image& image) {
-	return {
-			0, image.cols, 0, image.rows
-	};
-}
 
 /**
  * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
@@ -45,9 +30,9 @@ struct stroke {
 	[[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time point t
 
 	/**
-	 * Width isn`t useful
+	 * Width isn`t used to determine the rectangle
 	 */
-	RangeRectangle<double> get_bounding_box();
+	[[nodiscard]] RangeRectangle<double> get_bounding_box() const;
 
 	/**
 	 * @param range_limits: if it`s not std::nullopt, only pixels

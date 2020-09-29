@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/stroke.h"
+#include "data_representation/stroke.h"
 
 inline void test_stroke_counting()
 {

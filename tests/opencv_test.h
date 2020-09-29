@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <utils/image_io_utils.h>
+#include <io_api/image_io_utils.h>
 #include "painter_pch.h"
-#include "utils/color.h"
+#include "data_representation/color.h"
 
 // Define a pixel
 // typedef cv::Point3_<uint8_t> Pixel;

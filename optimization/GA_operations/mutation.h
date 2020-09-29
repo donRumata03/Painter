@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/stroke_limits.h"
+#include "common_operations/stroke_limits.h"
 
 #include "optimization/GA_operations/util.h"
 

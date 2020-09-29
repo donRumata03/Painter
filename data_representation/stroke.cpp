@@ -57,18 +57,29 @@ std::ostream &operator<< (std::ostream &os, const stroke &stroke)
 	return os;
 }
 
+RangeRectangle<double> stroke::get_bounding_box () const
+{
+	RangeRectangle<double> res{};
 
+	res.min_x = std::numeric_limits<double>::max();
+	res.min_y = std::numeric_limits<double>::max();
+	res.max_x = std::numeric_limits<double>::min();
+	res.max_y = std::numeric_limits<double>::min();
 
+	auto process_point = [&](const stroke::point& p) {
+		res.min_x = std::min(res.min_x, p.x);
+		res.min_y = std::min(res.min_y, p.y);
 
+		res.max_x = std::max(res.max_x, p.x);
+		res.max_y = std::max(res.max_y, p.y);
+	};
 
+	process_point(p0);
+	process_point(p1);
+	process_point(p2);
 
-
-
-
-
-
-
-
+	return res;
+}
 
 
 /*

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "utils/image_io_utils.h"
-#include "utils/stroke.h"
+#include "io_api/image_io_utils.h"
+#include "data_representation/stroke.h"
 #include "optimization/error/error_computing.h"
 
 color find_stroke_color_by_gradient_descent (

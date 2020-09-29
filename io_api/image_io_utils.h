@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "color.h"
+#include "data_representation/color.h"
 
 Image make_default_image(size_t w, size_t h); // Resultant image is in RGB, type is double
 

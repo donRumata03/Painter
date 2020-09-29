@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "stroke.h"
+#include "data_representation/stroke.h"
 
 class stroke_limit_descriptor
 {
@@ -19,6 +19,7 @@ class stroke_limit_descriptor
 		/// Check width:
 		if (stroke.width < min_width or stroke.width > max_width) return false;
 
+/*
 		/// Check x and y:
 		double min_x_found = std::numeric_limits<double>::max(), min_y_found = std::numeric_limits<double>::max(),
 			   max_x_found = std::numeric_limits<double>::min(), max_y_found = std::numeric_limits<double>::min();
@@ -34,9 +35,11 @@ class stroke_limit_descriptor
 		process_point(stroke.p0);
 		process_point(stroke.p1);
 		process_point(stroke.p2);
+*/
+		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
 
-		auto dx = max_x_found - min_x_found;
-		auto dy = max_y_found - min_y_found;
+		auto dx = stroke_bounding_box.max_x - stroke_bounding_box.min_x;
+		auto dy = stroke_bounding_box.max_y - stroke_bounding_box.min_y;
 
 		return dx <= max_dx and dx >= min_dx and dy <= max_dy and dy >= min_dy;
 	}
@@ -45,7 +48,7 @@ class stroke_limit_descriptor
 		// Returns initial state of stroke
 		if (stroke_satisfies_requirements(stroke)) return true;
 
-		// Constrain width:
+		// Constrain width independently:
 		stroke.width = std::clamp(stroke.width, min_width, max_width);
 /*
 		stroke.width = std::max(stroke.width, min_width);
@@ -57,7 +60,8 @@ class stroke_limit_descriptor
 			point.x = std::clamp(point.x, min_);
 		};
 */
-
+		// Firstly
+		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
 
 
 		return false;

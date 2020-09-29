@@ -64,7 +64,7 @@ class final_error_function
 		for (auto& stroke : strokes) find_stroke_color(stroke, initial_image);
 
 
-		// Compute MSE:
+		// Compute MSE; OpenCV reference counting system manages the memory properly:
 		Image this_buffer = personal_buffer;
 
 		if (!is_run_sequentially) {

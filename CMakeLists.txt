@@ -41,17 +41,17 @@ add_executable(       Painter
 
 main.cpp
 
-utils/stroke.cpp
-utils/stroke.h
+        data_representation/stroke.cpp
+        data_representation/stroke.h
 
 # painter_pch.h
 
 
-utils/color.cpp
-utils/color.h
+        data_representation/color.cpp
+        data_representation/color.h
 
-utils/image_io_utils.cpp
-utils/image_io_utils.h
+        io_api/image_io_utils.cpp
+        io_api/image_io_utils.h
 
 tests/opencv_test.h
 tests/cv_io_test.h
@@ -79,7 +79,7 @@ tests/draw_test.h
 tests/test_base.h
 tests/error_computing_tests/image_mse_test.h
 
-        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h utils/stroke_limits.h optimization/GA_operations/final_error_function.h optimization/GA_operations/util.h)
+        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h common_operations/stroke_limits.h optimization/GA_operations/final_error_function.h optimization/GA_operations/util.h data_representation/range_rectangle.h common_operations/constraining.cpp common_operations/constraining.h)
 
 
 include_directories(/)

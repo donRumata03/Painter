@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <utils/stroke.h>
+#include <data_representation/stroke.h>
 #include "optimization/error/error_computing.h"
 #include "stroke_color_optimizing.h"
 

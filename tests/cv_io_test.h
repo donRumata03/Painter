@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/image_io_utils.h"
+#include "io_api/image_io_utils.h"
 
 inline void test_image_creation() {
 	/*

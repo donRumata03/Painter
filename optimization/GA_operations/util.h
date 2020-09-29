@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "utils/stroke.h"
+#include "data_representation/stroke.h"
 
 /**
  * The returning buffer actually doesn`t have colors.
