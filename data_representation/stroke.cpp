@@ -37,12 +37,63 @@ double stroke::height_at (double t) const
 	return width;
 }
 
+
+std::pair<double, double> stroke::derivative_at (double t) const
+{
+	// TODO!
+
+	return std::pair<double, double>();
+}
+
+
+
+double stroke::t_at (const point& point_in_stroke)
+{
+	point the_result;
+
+	if ((p0 - 2 * p1 + p2).is_zero()) {
+		if (p0 != p1) {
+			the_result = (point_in_stroke - p0) / (2 * (p1 - p0));
+		}
+		else { // p0 == p1 != p2
+			point for_sqrt = (point_in_stroke - p0) / (p2 - p1);
+			assert(for_sqrt.x != 0 and for_sqrt.y != 0);
+			the_result = sqrt(for_sqrt);
+		}
+
+		if (the_result.x >= 0 and the_result.y <= 1) return the_result.x;
+		assert(the_result.y >= 0 and the_result.y <= 1);
+		return the_result.y;
+	}
+	else { // p0 - 2p1 + p2 != 0
+		point for_sqrt = (p0 - 2 * p1 + p2) * point_in_stroke + p1 * p1 - p0 * p2;
+		assert(for_sqrt.x != 0 and for_sqrt.y != 0);
+		point the_sqr = sqrt(for_sqrt);
+
+
+		point solution1 = (p0 - p1 + the_sqr) / (p0 - 2 * p1 + p2);
+		point solution2 = (p0 - p1 - the_sqr) / (p0 - 2 * p1 + p2);
+
+		// std::cout << solution1 << " " << solution2 << std::endl;
+
+		for (auto& possible_t : { solution1.x, solution1.y, solution2.x, solution2.y } ) {
+			if (possible_t >= 0 and possible_t <= 1) return possible_t;
+		}
+
+		assert(false);
+	}
+
+
+	return -1;
+}
+
+
 std::vector<point> stroke::get_points (
 		size_t step_number, std::optional<RangeRectangle<lint>> range_limits) const
 {
 	std::vector<point> res;
 
-	for_each(
+	this->for_each(
 	[&](lint x, lint y){
 		res.emplace_back( double(x), double(y) );
 	},
@@ -80,6 +131,7 @@ RangeRectangle<double> stroke::get_bounding_box () const
 
 	return res;
 }
+
 
 
 /*

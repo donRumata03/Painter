@@ -28,6 +28,7 @@ int main ()
 	/// Simple Utils:
 	// test_stroke_counting();
 	// color_hash_test();
+	test_stroke_inverse_counting();
 
 	/// Rasterization:
 	// test_stroke_rasterizaton();
@@ -39,7 +40,7 @@ int main ()
 	// test_parallel_image_mse();
 	// compare_image_mse_performance_parallel();
 
-	launch_stroke_constraining_visualizing_test();
+	// launch_stroke_constraining_visualizing_test();
 
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "common_operations/constraining.h"
+#include "common_operations/basic_constraining.h"
 #include "io_api/image_io_utils.h"
 #include "rasterization/stroke_rasterizer.h"
 #include "rasterization/drawer.h"

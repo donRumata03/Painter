@@ -5,6 +5,7 @@
 #pragma once
 
 #include "data_representation/stroke.h"
+#include "basic_constraining.h"
 
 class stroke_limit_descriptor
 {

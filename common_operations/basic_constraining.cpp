@@ -2,7 +2,7 @@
 // Created by Vova on 29.09.2020.
 //
 
-#include "constraining.h"
+#include "basic_constraining.h"
 
 
 bool fits_into (const stroke &stroke, const RangeRectangle<double> &rectangle)

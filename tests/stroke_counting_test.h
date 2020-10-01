@@ -31,4 +31,23 @@ inline void test_stroke_for_each() {
 	std::cout << stroke.get_points(10000, limits) << std::endl;
 }
 
+inline void test_stroke_inverse_counting() {
+	stroke stroke { { 5, 1 }, { 6, 7 }, { 0, 10 }, 1 };
+
+	point c1 = stroke.coords_at(0.5);
+
+	std::cout << "Midpoint: " << c1 << std::endl;
+
+	// stroke.t_at(c1);
+	std::cout << stroke.t_at( stroke.coords_at(0.1) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.2) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.3) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.4) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.5) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.6) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.7) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.8) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(0.9) ) << std::endl;
+	std::cout << stroke.t_at( stroke.coords_at(1) )   << std::endl;
+}
 

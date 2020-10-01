@@ -28,6 +28,8 @@ struct stroke {
 
 	[[nodiscard]] point coords_at(double t) const; // Count the point of Bezier curve corresponding to t value given as the argument
 	[[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time point t
+	[[nodiscard]] std::pair<double, double> derivative_at(double t) const; // Returns pair of dx/dt and dy/dt
+	double t_at(const point& point_in_stroke);
 
 	/**
 	 * Width isn`t used to determine the rectangle
