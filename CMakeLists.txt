@@ -8,7 +8,7 @@ set(is_notebook OFF)
 
 # They are different configurations
 if (is_computer)
-    set(current_opencv_dir D:/OpenCV4/opencv4)
+    set(current_opencv_dir D:/OpenCV4/build)
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
     set(current_boost_dir D:/lib/boost_1_72_0)
@@ -95,7 +95,7 @@ find_package(OpenCV REQUIRED)
 # Add OpenCV
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(Painter ${OpenCV_LIBS})
-# message(${OpenCV_LIBS})
+message("${OpenCV_LIBS}")
 
 # ______________________________
 # Add my libraries:

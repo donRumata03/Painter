@@ -17,6 +17,7 @@ stroke::point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
+/*
 	point result;
 	for (size_t coord_index = 0; coord_index < 2; ++coord_index) {
 		result[coord_index] =
@@ -26,6 +27,8 @@ stroke::point stroke::coords_at (double t) const
 	}
 
 	return result;
+*/
+	return p1 + square(1 - t) * (p0 - p1) + square(t) * (p2 - p1);
 }
 
 double stroke::height_at (double t) const
@@ -38,17 +41,18 @@ double stroke::height_at (double t) const
 }
 
 
-std::pair<double, double> stroke::derivative_at (double t) const
+point stroke::derivative_at (double t) const
 {
-	// TODO!
-
-	return std::pair<double, double>();
+	point res = 2 * (t - 1) * (p0 - p1) + 2 * t * (p2 - p1);
+	return res;
 }
 
 
 
-double stroke::t_at (const point& point_in_stroke)
+double stroke::t_at (const point& point_in_stroke) const
 {
+	auto is_good_t = [](double t_candidate) -> bool { return t_candidate >= 0 and t_candidate <= 1; };
+
 	point the_result;
 
 	if ((p0 - 2 * p1 + p2).is_zero()) {
@@ -61,8 +65,8 @@ double stroke::t_at (const point& point_in_stroke)
 			the_result = sqrt(for_sqrt);
 		}
 
-		if (the_result.x >= 0 and the_result.y <= 1) return the_result.x;
-		assert(the_result.y >= 0 and the_result.y <= 1);
+		if (is_good_t(the_result.x)) return the_result.x;
+		assert(is_good_t(the_result.y));
 		return the_result.y;
 	}
 	else { // p0 - 2p1 + p2 != 0
@@ -74,10 +78,19 @@ double stroke::t_at (const point& point_in_stroke)
 		point solution1 = (p0 - p1 + the_sqr) / (p0 - 2 * p1 + p2);
 		point solution2 = (p0 - p1 - the_sqr) / (p0 - 2 * p1 + p2);
 
-		// std::cout << solution1 << " " << solution2 << std::endl;
+		// std::cout << "Solutions: " << solution1 << " " << solution2 << std::endl;
 
-		for (auto& possible_t : { solution1.x, solution1.y, solution2.x, solution2.y } ) {
-			if (possible_t >= 0 and possible_t <= 1) return possible_t;
+		std::vector<double> solutions = { solution1.x, solution1.y, solution2.x, solution2.y };
+		std::sort(solutions.begin(), solutions.end());
+		// std::cout << solutions << std::endl;
+
+		size_t solution_index = 0;
+		for (auto& possible_t : solutions) {
+			// std::cout << possible_t << " " << (possible_t >= 0) << std::endl;
+			if (solution_index != solutions.size() - 1 and is_good_t(possible_t) and almost_equal(possible_t, solutions[solution_index + 1], 1e-7)) {
+				return possible_t;
+			}
+			solution_index++;
 		}
 
 		assert(false);

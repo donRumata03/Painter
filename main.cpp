@@ -1,4 +1,6 @@
 #include "painter_pch.h"
+#include "signal.h"
+
 
 #include <tests/cv_io_test.h>
 #include <tests/color_test.h>
@@ -10,8 +12,18 @@
 #include <tests/stroke_constraining_test.h>
 #include "tests/opencv_test.h"
 
+
+void posix_death_signal(int signum)
+{
+	std::cout << console_colors::red << "SegFault :(" << console_colors::remove_all_colors << std::endl;
+	signal(signum, SIG_DFL);
+	exit(3);
+}
+
 int main ()
 {
+	signal(SIGSEGV, posix_death_signal);
+
 	system(("chcp "s + std::to_string(CP_UTF8)).c_str());
 
 	/// IO tests:

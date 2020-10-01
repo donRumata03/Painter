@@ -39,15 +39,25 @@ inline void test_stroke_inverse_counting() {
 	std::cout << "Midpoint: " << c1 << std::endl;
 
 	// stroke.t_at(c1);
-	std::cout << stroke.t_at( stroke.coords_at(0.1) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.2) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.3) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.4) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.5) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.6) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.7) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.8) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(0.9) ) << std::endl;
-	std::cout << stroke.t_at( stroke.coords_at(1) )   << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.1) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.2) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.3) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.4) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.5) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.6) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.7) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.8) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(0.9) ) << std::endl;
+	// std::cout << stroke.t_at( stroke.coords_at(1) )   << std::endl;
+
+	std::cout << "_____________________________________________________________________________________" << std::boolalpha << std::endl;
+
+	for (auto t : linspace(0, 1, 100, true)) {
+		std::cout << t << " " << stroke.t_at( stroke.coords_at(t)) << " " << almost_equal(stroke.t_at( stroke.coords_at(t) ), t) << std::endl;
+	}
 }
 
+inline void test_stroke_derivative_counting() {
+	// Comparing following derivative and simple counting:
+
+}
