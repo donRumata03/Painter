@@ -11,7 +11,7 @@
  * The strokes are marked as colored ror performance reasons.
  */
 inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<double>& stroke_data_buffer) {
-	assert(sizeof(stroke) / sizeof(double) == 7); // This format is assumed
+	assert(sizeof(stroke) == 7 * sizeof(double)); // This format is assumed
 	assert(!(stroke_data_buffer.size() % 7)); // Should be dividable by 7
 	auto total_stroke_number = stroke_data_buffer.size() / 7;
 

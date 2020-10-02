@@ -9,7 +9,7 @@
 
 #include "optimization/GA_operations/util.h"
 
-class final_error_function
+struct final_error_function
 {
 	const Image& initial_image;
 

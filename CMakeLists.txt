@@ -79,7 +79,7 @@ tests/draw_test.h
 tests/test_base.h
 tests/error_computing_tests/image_mse_test.h
 
-        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h common_operations/stroke_limits.h optimization/GA_operations/final_error_function.h optimization/GA_operations/util.h data_representation/range_rectangle.h common_operations/basic_constraining.cpp common_operations/basic_constraining.h optimization/GA_operations/final_constrainer.h tests/stroke_constraining_test.h launching/launch_main_ga.cpp launching/launch_main_ga.h)
+        optimization/GA_operations/mutation.cpp optimization/GA_operations/mutation.h common_operations/stroke_limits.h optimization/GA_operations/final_error_function.h optimization/GA_operations/util.h data_representation/range_rectangle.h common_operations/basic_constraining.cpp common_operations/basic_constraining.h optimization/GA_operations/final_constrainer.h tests/stroke_constraining_test.h launching/launch_main_ga.cpp launching/launch_main_ga.h optimization/GA_operations/stroke_range_generator.h)
 
 
 include_directories(/)
