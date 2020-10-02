@@ -59,5 +59,5 @@ inline void test_stroke_inverse_counting() {
 
 inline void test_stroke_derivative_counting() {
 	// Comparing following derivative and simple counting:
-
+	// TODO!!
 }

@@ -7,7 +7,7 @@
 #include "data_representation/stroke.h"
 #include "basic_constraining.h"
 
-class stroke_limit_descriptor
+struct stroke_limit_descriptor
 {
 	double min_dx, max_dx; /// delta x
 	double min_dy, max_dy; /// delta y

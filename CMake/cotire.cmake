@@ -3614,7 +3614,7 @@ if (CMAKE_SCRIPT_MODE_FILE)
 
     # include target script if available
     if ("${COTIRE_ARGV2}" MATCHES "\\.cmake$")
-        # the included target scripts sets up additional variables relating to the target (e.g., COTIRE_TARGET_SOURCES)
+        # the included target launching sets up additional variables relating to the target (e.g., COTIRE_TARGET_SOURCES)
         include("${COTIRE_ARGV2}")
     endif()
 
