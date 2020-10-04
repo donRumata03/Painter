@@ -32,7 +32,7 @@ inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<d
 						stroke_data_buffer[stroke_value_initial_index + 6]
 				};
 
-		strokes[stroke_index].width = double{}; // <- The stroke color is undefined at this moment
+		// strokes[stroke_index].width = double{}; // <- The stroke color is undefined at this moment
 	}
 
 	return strokes;

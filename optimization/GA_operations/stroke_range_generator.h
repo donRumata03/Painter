@@ -7,14 +7,22 @@
 #include "painter_pch.h"
 #include "data_representation/stroke.h"
 
-inline std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_genome (size_t stroke_number, const point& image_size) {
+inline std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_genome (
+		size_t stroke_number, const point& image_size, const std::pair<double, double>& width_range)
+{
 	assert(sizeof(stroke) == 7 * sizeof(double));
 	std::vector<std::pair<double, double>> res (stroke_number * 7);
+
+	std::pair<double, double> x_range = { 0., double(image_size.x) };
+	std::pair<double, double> y_range = { 0., double(image_size.y) };
 
 	for (size_t stroke_index = 0; stroke_index < stroke_number; ++stroke_index) {
 		size_t base_buffer_index = stroke_index * 7;
 
-		res[base_buffer_index + 0] = {}; // TODO
+		res[base_buffer_index + 0] = res[base_buffer_index + 2] = res[base_buffer_index + 4] = x_range;
+		res[base_buffer_index + 1] = res[base_buffer_index + 3] = res[base_buffer_index + 5] = y_range;
+
+		res[base_buffer_index + 6] = width_range;
 	}
 
 	return res;

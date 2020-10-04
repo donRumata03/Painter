@@ -14,7 +14,7 @@ Image make_default_image (size_t w, size_t h)
 	auto size = cv::Size{ int(w), int(h) };
 	// std::cout << "Created size" << std::endl;
 
-	return cv::Mat(size, CV_64FC3, { 1., 1., 1., 1.});
+	return cv::Mat(size, CV_64FC3, { 0., 0., 0.});
 }
 
 
