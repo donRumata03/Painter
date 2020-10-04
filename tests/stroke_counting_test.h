@@ -57,7 +57,7 @@ inline void test_stroke_inverse_counting() {
 	}
 }
 
-std::vector<point> get_stroke_path_by_derivative(const stroke& stroke, size_t n)
+inline std::vector<point> get_stroke_path_by_derivative(const stroke& stroke, size_t n)
 {
 	std::vector<point> res;
 	res.reserve(n + 1);
@@ -109,3 +109,57 @@ inline void test_stroke_derivative_counting() {
 
 	show_plot();
 }
+
+inline double get_stroke_length_by_derivative(const stroke& stroke, size_t n)
+{
+	double res = 0;
+
+	point accumulator = stroke.coords_at(0);
+	double step = 1. / n;
+
+	for (size_t index = 1; index <= n; ++index) {
+		double t = index / double(n);
+
+		res += step * abs(stroke.derivative_at(t));
+	}
+
+	return res;
+}
+
+inline double get_stroke_length_by_counting_path(const stroke& stroke, size_t n)
+{
+	double res = 0;
+
+	point prev_point = stroke.coords_at(0);
+	double step = 1. / n;
+
+	for (size_t index = 1; index <= n; ++index) {
+		double t = index / double(n);
+		point new_point = stroke.coords_at(t);
+		res += point::dist(new_point, prev_point);
+
+		prev_point = new_point;
+	}
+
+	return res;
+}
+
+
+
+
+inline void test_length_function_by_comparing_with_derivative() {
+	size_t n = 2000;
+	double step = 1. / n;
+
+	stroke test_stroke { { 5, 1 }, { 6, 7 }, { 0, 10 }, 1 };
+
+	double deriv_length = get_stroke_length_by_derivative(test_stroke, 100'000);
+	double path_length = get_stroke_length_by_counting_path(test_stroke, 100'000);
+
+	double analitic_length = test_stroke.length();
+
+	std::cout << "Length by derivative: " << deriv_length << std::endl;
+	std::cout << "Length by path: " << path_length << std::endl;
+	std::cout << "Length analitically: " << analitic_length << std::endl;
+}
+

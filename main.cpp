@@ -11,7 +11,7 @@
 #include <tests/error_computing_tests/image_mse_test.h>
 #include <tests/GA_tests/stroke_constraining_test.h>
 #include <launching/launch_main_ga.h>
-#include <tests/GA_tests/populationn_generation_tests.h>
+#include <tests/GA_tests/population_generation_tests.h>
 #include "tests/opencv_test.h"
 
 
@@ -44,7 +44,7 @@ int main ()
 	// color_hash_test();
 	// test_stroke_inverse_counting();
 	// test_stroke_derivative_counting();
-
+	test_length_function_by_comparing_with_derivative();
 
 	/// Rasterization:
 	// test_stroke_rasterizaton();
@@ -60,7 +60,7 @@ int main ()
 
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();
-	test_stroke_generation_with_rasterization();
+	// test_stroke_generation_with_rasterization();
 
 	/// The actual GA:
 	// std::string image_path = (fs::path(base_path) / "resources" / "working_tests" / "input" / "brown_coffee.png").string();

@@ -109,8 +109,25 @@ double stroke::t_at (const point& point_in_stroke) const
 
 double stroke::length () const
 {
-	// TODO!
-	return 0;
+	point a = p0 - 2 * p1 + p2;
+	point b = 2 * (p1 - p0);
+
+	double A = 4 * squared_abs(a);
+	double B = 4 * (a.x * b.x + a.y * b.y);
+	double C = squared_abs(b);
+
+	double S_abc = 2 * sqrt(A + B + C);
+	double A_2 = sqrt(A);
+	double A_32 = 2 * A * A_2;
+	double C_2 = 2 * sqrt(C);
+	double BA = B / A_2;
+
+	return ( A_32 * S_abc +
+	         A_2*B*(S_abc-C_2) +
+	         (4 * C * A - B * B)*log((2 * A_2 + BA + S_abc)/(BA + C_2))
+	       )
+	       /
+	       (4*A_32);
 }
 
 
