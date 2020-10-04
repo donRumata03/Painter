@@ -80,10 +80,10 @@ inline void compare_image_mse_performance_parallel() {
 	std::cout << "Parallel time distribution: " << parallel_distribution_graph << std::endl;
 
 
-	add_to_plot(sequential_distribution_graph, {
+	add_pairs_to_plot(sequential_distribution_graph, {
 		.name = "Time Without parallel"
 	});
-	add_to_plot(parallel_distribution_graph, {
+	add_pairs_to_plot(parallel_distribution_graph, {
 		.name = "Parallel"
 	});
 

@@ -9,6 +9,7 @@ void launch_the_GA (const std::string &filename)
 {
 	// Constants:
 	size_t stroke_number = 100;
+	double stroke_width_fraction = 0.05;
 
 	Image image = open_image(filename);
 	// show_image_in_system_viewer(image);
@@ -26,7 +27,12 @@ void launch_the_GA (const std::string &filename)
 	final_constrainer configured_constrainer(limits);
 	operations.genome_constraint = configured_constrainer;
 
-	auto mutation_sigmas = generate_point_sigmas_for_stroke_genome(stroke_number, { double(image_w), double(image_h) }, 1. / 20, );
+	auto mutation_sigmas = generate_point_sigmas_for_stroke_genome(
+			stroke_number,
+			{ double(image_w), double(image_h) },
+			1. / 20,
+			stroke_width_fraction *  geometric_mean({ double(image_w), double(image_h) })
+	);
 
 	GA_params ga_params {
 		.population_size = 100,
@@ -39,9 +45,10 @@ void launch_the_GA (const std::string &filename)
 		.hazing_percent = 0.6,
 
 		/// Mutation:
-		.mutation_percent_sigma = 0,
+		.mutation_percent_sigma = -1,
 		.target_gene_mutation_number = stroke_number * 1.5, // Out of `stroke_number * 7`
 		.cut_mutations = true,
+		.individual_mutation_sigmas = mutation_sigmas,
 
 
 			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;

@@ -30,6 +30,7 @@ struct stroke {
 	[[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time point t
 	[[nodiscard]] point derivative_at(double t) const; // Returns pair of dx/dt and dy/dt
 	[[nodiscard]] double t_at(const point& point_in_stroke) const;
+	[[nodiscard]] double length() const;
 
 	/**
 	 * Width isn`t used to determine the rectangle

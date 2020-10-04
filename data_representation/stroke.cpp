@@ -93,12 +93,26 @@ double stroke::t_at (const point& point_in_stroke) const
 			solution_index++;
 		}
 
+		// If didn't find 2 appropriate solutions, try looking for only one:
+		for(auto& possible_t : solutions) {
+			if(is_good_t(possible_t)) {
+				return possible_t;
+			}
+		}
+
 		assert(false);
 	}
 
 
 	return -1;
 }
+
+double stroke::length () const
+{
+	// TODO!
+	return 0;
+}
+
 
 
 std::vector<point> stroke::get_points (
