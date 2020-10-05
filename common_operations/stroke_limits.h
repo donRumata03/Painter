@@ -45,7 +45,7 @@ struct stroke_limit_descriptor
 		return dx <= max_dx and dx >= min_dx and dy <= max_dy and dy >= min_dy;
 	}
 
-	bool constrain_stroke_to_requirements(stroke& stroke) {
+	bool constrain_stroke_to_requirements(stroke& stroke) const {
 		// Returns initial state of stroke
 		if (stroke_satisfies_requirements(stroke)) return true;
 
@@ -61,7 +61,11 @@ struct stroke_limit_descriptor
 			point.x = std::clamp(point.x, min_);
 		};
 */
-		// Firstly
+		// Move it:
+		carefully_constrain_stroke_to_fit_into_rect(stroke, image_rectangle);
+
+		// TODO: implement constraining width, dx, dy of stroke!!!
+		// Constrain other parameters:
 		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
 
 

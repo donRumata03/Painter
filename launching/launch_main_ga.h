@@ -12,6 +12,9 @@
 #include "optimization/GA_operations/util.h"
 #include "optimization/GA_operations/mutation.h"
 #include "optimization/GA_operations/final_constrainer.h"
-#include "optimization/GA_operations/final_error_function.h"
+#include "optimization/GA_operations/final_fitness_function.h"
+#include <optimization/GA_operations/stroke_range_generator.h>
+
+#include "common_operations/basic_constraining.h"
 
 void launch_the_GA (const std::string &filename);

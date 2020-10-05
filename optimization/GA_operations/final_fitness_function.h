@@ -9,7 +9,7 @@
 
 #include "optimization/GA_operations/util.h"
 
-struct final_error_function
+struct final_fitness_function
 {
 	const Image& initial_image;
 
@@ -24,7 +24,7 @@ struct final_error_function
 	 * @param is_run_sequentially: if it`s set to true, is stores only one buffer allocated in the constructor
 	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
 	 */
-	explicit final_error_function(const Image& image, size_t strokes, bool is_run_sequentially)
+	explicit final_fitness_function(const Image& image, size_t strokes, bool is_run_sequentially)
 					: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially)
 	{
 		w = image.cols;
@@ -72,7 +72,9 @@ struct final_error_function
 			this_buffer = make_default_image(w, h);
 		}
 
-		return image_mse(initial_image, this_buffer);
+		double MSE = image_mse(initial_image, this_buffer);
+
+		return 1 / MSE;
 	}
 
 };

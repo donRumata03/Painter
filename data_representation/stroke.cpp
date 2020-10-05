@@ -109,6 +109,8 @@ double stroke::t_at (const point& point_in_stroke) const
 
 double stroke::length () const
 {
+	// For formula derivation visit https://malczak.linuxpl.com/blog/quadratic-bezier-curve-length/
+
 	point a = p0 - 2 * p1 + p2;
 	point b = 2 * (p1 - p0);
 

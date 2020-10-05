@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <optimization/stroke_color_optimizing.h>
 #include "data_representation/stroke.h"
 
 /**
@@ -37,6 +38,12 @@ inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<d
 
 	return strokes;
 }
+
+inline void colorize_strokes (std::vector<colored_stroke>& strokes_to_colorize, const Image& image)
+{
+	for (auto& stroke : strokes_to_colorize) find_stroke_color(stroke, image);
+};
+
 
 template<
         class ColoredOrNotStroke,
