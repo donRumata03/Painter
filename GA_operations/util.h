@@ -11,6 +11,7 @@
  * The returning buffer actually doesn`t have colors.
  * The strokes are marked as colored ror performance reasons.
  */
+// template<bool color_stored = false>
 inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<double>& stroke_data_buffer) {
 	assert(sizeof(stroke) == 7 * sizeof(double)); // This format is assumed
 	assert(!(stroke_data_buffer.size() % 7)); // Should be dividable by 7
@@ -49,24 +50,32 @@ template<
         class ColoredOrNotStroke,
         std::enable_if_t<std::is_same_v<ColoredOrNotStroke, stroke> or std::is_same_v<ColoredOrNotStroke, colored_stroke>, int*> nothing = nullptr
 >
-std::vector<double> pack_stroke_data(const std::vector<colored_stroke>& strokes) {
+// template<bool store_color>
+inline std::vector<double> pack_stroke_data(const std::vector<ColoredOrNotStroke>& strokes) {
+	// constexpr size_t stroke_size_in_doubles = store_color ? 7;
+
+	// std::cout << "Started packing" << std::endl;
+
 	auto stroke_number = strokes.size();
-	std::vector<double> stroke_data_buffer(stroke_number);
+	std::vector<double> stroke_data_buffer(stroke_number * 7);
 
 	for (size_t stroke_index = 0; stroke_index < stroke_number; ++stroke_index) {
 		const auto& the_stroke = strokes[stroke_index];
+		size_t base_index = stroke_index * 7;
 
-		stroke_data_buffer[stroke_index]     = the_stroke.p0.x;
-		stroke_data_buffer[stroke_index + 1] = the_stroke.p0.y;
+		stroke_data_buffer[base_index]     = the_stroke.p0.x;
+		stroke_data_buffer[base_index + 1] = the_stroke.p0.y;
 
-		stroke_data_buffer[stroke_index + 2] = the_stroke.p1.x;
-		stroke_data_buffer[stroke_index + 3] = the_stroke.p1.y;
+		stroke_data_buffer[base_index + 2] = the_stroke.p1.x;
+		stroke_data_buffer[base_index + 3] = the_stroke.p1.y;
 
-		stroke_data_buffer[stroke_index + 4] = the_stroke.p2.x;
-		stroke_data_buffer[stroke_index + 5] = the_stroke.p2.y;
+		stroke_data_buffer[base_index + 4] = the_stroke.p2.x;
+		stroke_data_buffer[base_index + 5] = the_stroke.p2.y;
 
-		stroke_data_buffer[stroke_index + 7] = the_stroke.width;
+		stroke_data_buffer[base_index + 6] = the_stroke.width;
 	}
+
+	// std::cout << "Ended packing" << std::endl;
 
 	return stroke_data_buffer;
 }

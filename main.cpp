@@ -56,18 +56,22 @@ int main ()
 	// test_parallel_image_mse();
 	// compare_image_mse_performance_parallel();
 
-	// launch_stroke_constraining_visualizing_test();
 
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();
+
+	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
+	// test_stroke_generation();
+	// launch_stroke_constraining_visualizing_test();
+
 
 	/// The actual GA:
 	std::string image_path = (fs::path(base_path) / "resources" / "working_tests" / "input" / "brown_coffee.png").string();
-
-	// GA_launcher launcher(image_path);
-
 	launch_the_GA(image_path);
 
+
+
 	return 0;
+	// GA_launcher launcher(image_path);
 }

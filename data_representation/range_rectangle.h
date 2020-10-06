@@ -12,6 +12,9 @@ struct RangeRectangle {
 	T min_x, max_x;
 	T min_y, max_y;
 
+	[[nodiscard]] T dx() const { return max_x - min_x; }
+	[[nodiscard]] T dy() const { return max_y - min_y; }
+
 	[[nodiscard]] bool point_satisfies_requirements(const point& point) const {
 		return (point.x >= min_x and point.x <= max_x) and (point.y >= min_y and point.y <= max_y);
 	}

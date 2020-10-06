@@ -4,18 +4,18 @@
 
 #pragma once
 
+#include <GA_operations/population_generator.h>
 #include "painter_pch.h"
-#include "optimization/error/error_computing.h"
 
+#include "optimization/error/error_computing.h"
 #include "optimization/stroke_color_optimizing.h"
 
-#include "optimization/GA_operations/util.h"
-#include "optimization/GA_operations/mutation.h"
-#include "optimization/GA_operations/final_constrainer.h"
-#include "optimization/GA_operations/final_fitness_function.h"
-#include <optimization/GA_operations/stroke_range_generator.h>
+#include "GA_operations/util.h"
+#include "GA_operations/mutation.h"
+#include "GA_operations/final_constrainer.h"
+#include "GA_operations/final_fitness_function.h"
+#include "GA_operations/stroke_range_generator.h"
 
-#include <utility>
 
 #include "common_operations/basic_constraining.h"
 
@@ -40,8 +40,8 @@ public:
 
 private:
 	/// Constants:
-	size_t stroke_number = 100;
-	size_t population_size = 100;
+	size_t stroke_number = 1000;
+	size_t population_size = 10;
 	size_t epoch_num = 10;
 
 	double stroke_length_to_image_size_fraction = 0.05;
@@ -81,6 +81,7 @@ private:
 	/// GA-specific data / actors:
 	final_fitness_function* configured_fitness_function {};
 	final_constrainer configured_constrainer{};
+	final_generator configured_generator{};
 
 	GA::GA_operation_set ga_operations;
 	GA_params ga_params {};

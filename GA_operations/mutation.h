@@ -6,7 +6,7 @@
 
 #include "common_operations/stroke_limits.h"
 
-#include "optimization/GA_operations/util.h"
+#include "util.h"
 
 /**
  * Callable object for mutation in GA

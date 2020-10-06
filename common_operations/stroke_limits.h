@@ -16,6 +16,18 @@ struct stroke_limit_descriptor
 
 	RangeRectangle<double> image_rectangle;
 
+	double image_dx() const { return image_rectangle.max_x - image_rectangle.min_x; }
+	double image_dy() const { return image_rectangle.max_y - image_rectangle.min_y; }
+
+	bool validate_self() const {
+		if (min_dx >= max_dx) return false;
+		if (min_dy >= max_dy) return false;
+		if (image_dx() <= max_dx) return false;
+		if (image_dy() <= max_dy) return false;
+
+		return true;
+	}
+
 	[[nodiscard]] bool stroke_satisfies_requirements(const stroke& stroke) const {
 		/// Check width:
 		if (stroke.width < min_width or stroke.width > max_width) return false;

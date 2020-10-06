@@ -7,7 +7,7 @@
 #include "optimization/error/error_computing.h"
 #include "optimization/stroke_color_optimizing.h"
 
-#include "optimization/GA_operations/util.h"
+#include "util.h"
 
 struct final_fitness_function
 {

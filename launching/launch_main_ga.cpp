@@ -2,7 +2,7 @@
 // Created by Vova on 02.10.2020.
 //
 
-#include <optimization/GA_operations/callbacks/GA_informer.h>
+#include <GA_operations/callbacks/GA_informer.h>
 #include "launch_main_ga.h"
 
 void launch_the_GA (const std::string &filename)
@@ -155,8 +155,10 @@ void GA_launcher::configure_common_helpers ()
 void GA_launcher::configure_GA_operation_helpers ()
 {
 	configured_constrainer = final_constrainer(limits);
-	ga_operations.genome_constraint = configured_constrainer;
+	configured_generator = final_generator(limits, stroke_number);
 
+	ga_operations.genome_constraint = configured_constrainer;
+	ga_operations.population_generation = configured_generator;
 
 	point_ranges = generate_point_ranges_for_stroke_genome(
 			stroke_number,
@@ -200,7 +202,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 
 void GA_launcher::run ()
 {
-	this->GA_fitnesses.reserve(epoch_num + 1);
+	// this->GA_fitnesses.reserve(epoch_num + 1);
 
 	std::cout << "[GA_launcher]: Running GA..." << std::endl;
 
@@ -217,7 +219,12 @@ void GA_launcher::run ()
 
 void GA_launcher::show_fitness_dynamic ()
 {
+	std::cout << "GA_fitnesses: " << GA_fitnesses << std::endl;
+
 	std::vector<double> xs_for_fitnesses(GA_fitnesses.size());
-	add_vectors_to_plot(GA_fitnesses, xs_for_fitnesses, { .name = "Fitness dynamic" });
-	show_plot();
+	for (size_t x_index = 0; x_index < xs_for_fitnesses.size(); ++x_index) {
+		xs_for_fitnesses[x_index] = double(x_index);
+	}
+	add_vectors_to_plot(xs_for_fitnesses, GA_fitnesses);
+	show_plot({ .window_title = "Fitness dynamic" });
 }

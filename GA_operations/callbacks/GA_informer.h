@@ -9,7 +9,7 @@
 
 #include "painter_pch.h"
 
-#include "optimization/GA_operations/util.h"
+#include "GA_operations/util.h"
 
 class GA_informer
 {
@@ -28,7 +28,9 @@ public:
 		Image new_image = make_default_image(initial_image.cols, initial_image.rows);
 		rasterize_strokes(new_image, strokes);
 
-		// show_image_in_system_viewer(new_image);
+		show_image_in_system_viewer(new_image);
+
+		// std::cout << "Closed explorer?" << std::endl; // <- YES!
 	}
 };
 
