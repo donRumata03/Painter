@@ -46,5 +46,5 @@ inline void launch_stroke_constraining_visualizing_test() {
 			                              100
 		}, 1920, 1080, "SimplestExample");
 
-	std::cout << "Gone out of the scope" << std::endl;
+	// std::cout << "Gone out of the scope" << std::endl;
 }

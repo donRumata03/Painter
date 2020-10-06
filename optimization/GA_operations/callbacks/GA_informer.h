@@ -13,10 +13,10 @@
 
 class GA_informer
 {
-	Image initial_image;
+	const Image& initial_image;
 
 public:
-	explicit GA_informer(Image image) : initial_image(std::move(image)) {}
+	explicit GA_informer(const Image& image) : initial_image(image) {}
 
 	void operator() (double GA_percent, double best_fitness_value, const std::vector<double>& best_stroke_genome){
 		std::cout << "GA percent is: \t" << GA_percent << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
@@ -28,7 +28,7 @@ public:
 		Image new_image = make_default_image(initial_image.cols, initial_image.rows);
 		rasterize_strokes(new_image, strokes);
 
-		show_image_in_system_viewer(new_image);
+		// show_image_in_system_viewer(new_image);
 	}
 };
 

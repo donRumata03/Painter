@@ -29,13 +29,13 @@ inline std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_g
 }
 
 inline std::vector<double> generate_point_sigmas_for_stroke_genome (size_t stroke_number, const point& image_size,
-										double percent_sigma_for_coords, double absolute_sigma_for_width)
+										double absolute_sigma_for_coords, double absolute_sigma_for_width)
 {
 	assert(sizeof(stroke) == 7 * sizeof(double));
 	std::vector<double> res(stroke_number * 7);
 
-	double x_sigma = image_size.x * percent_sigma_for_coords;
-	double y_sigma = image_size.y * percent_sigma_for_coords;
+	double x_sigma = absolute_sigma_for_coords;
+	double y_sigma = absolute_sigma_for_coords;
 	// double width_sigma = ;
 
 	for (size_t stroke_index = 0; stroke_index < stroke_number; ++stroke_index) {

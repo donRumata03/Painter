@@ -11,16 +11,20 @@
 
 struct final_fitness_function
 {
-	const Image& initial_image;
+	Image initial_image {};
 
-	size_t total_stroke_number;
-	size_t w, h;
+	size_t total_stroke_number {};
+	size_t w{}, h{};
 
-	const bool is_run_sequentially;
-	mutable Image personal_buffer;
+	bool is_run_sequentially {};
+	mutable Image personal_buffer {};
+
+	std::shared_ptr<std::atomic<size_t>> total_runs = nullptr; // todo
+	std::shared_ptr<std::atomic<double>> total_time = nullptr; // todo
+
+	final_fitness_function() = default;
 
 	/**
-	 *
 	 * @param is_run_sequentially: if it`s set to true, is stores only one buffer allocated in the constructor
 	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
 	 */
@@ -37,7 +41,6 @@ struct final_fitness_function
 
 	double operator()(const std::vector<double>& stroke_data_buffer) const
 	{
-		// !(stroke_data_buffer.size() % 6)
 		assert(total_stroke_number * 7 == stroke_data_buffer.size()); // Should be dividable by 7 and the result should be equal to 7 * this->total_stroke_number (one double for each stuff)
 
 		// Parse the stroke set and compute the colors for them:

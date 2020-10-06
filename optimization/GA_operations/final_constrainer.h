@@ -9,14 +9,16 @@
 
 struct final_constrainer
 {
-	stroke_limit_descriptor limits;
+	stroke_limit_descriptor limits {};
+
+	final_constrainer() = default;
 
 	explicit final_constrainer(const stroke_limit_descriptor& descriptor) : limits(descriptor)
 	{
 		//
 	}
 
-	void operator ()(GA::population& population, const std::vector<std::pair<double, double>>& constraints) {
+	void operator ()(GA::population& population, const std::vector<std::pair<double, double>>& constraints) const {
 		// Ignore given constraints
 		for (const auto& genome : population) {
 			auto strokes = unpack_stroke_data_buffer(genome);

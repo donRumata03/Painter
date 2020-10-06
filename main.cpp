@@ -64,7 +64,9 @@ int main ()
 
 	/// The actual GA:
 	std::string image_path = (fs::path(base_path) / "resources" / "working_tests" / "input" / "brown_coffee.png").string();
-	std::cout << image_path << ":" << std::endl;
+
+	// GA_launcher launcher(image_path);
+
 	launch_the_GA(image_path);
 
 	return 0;

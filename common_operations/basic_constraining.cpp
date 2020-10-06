@@ -25,8 +25,15 @@ void shift_stroke (stroke &stroke, const stroke::point &shifting_vector)
 }
 
 double get_best_shift(const std::pair<double, double>& target_coords, const std::pair<double, double>& rect_coords, double randomness_coefficient = 0.1) {
-	assert(target_coords.second > target_coords.first);
-	assert(rect_coords.second > rect_coords.first);
+	// assert(target_coords.second > target_coords.first);
+	// assert(rect_coords.second > rect_coords.first);
+
+	if (target_coords.second <= target_coords.first || rect_coords.second <= rect_coords.first) {
+		std::cout << console_colors::red << "Something's wrong with rect or target coords: " << console_colors::remove_all_colors << std::endl;
+		std::cout << "Target coords: " << target_coords << std::endl;
+		std::cout << "Rect coords: " << rect_coords << std::endl;
+		assert(false);
+	}
 
 	// TODO: add some randomness here to prevent concentrating many strokes on the border
 	// double sigma = (rect_coords.second - rect_coords.first) * randomness_coefficient;

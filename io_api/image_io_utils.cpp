@@ -108,7 +108,7 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 			try {
 				numeric_identifier = std::stoll(identifier);
 			} catch (std::exception& e) {
-				std::cout << "Exception while converting to long long" << std::endl;
+				// std::cout << "Exception while converting to long long" << std::endl;
 				//
 			}
 

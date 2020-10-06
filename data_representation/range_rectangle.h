@@ -29,9 +29,10 @@ struct RangeRectangle {
 	}
 };
 
-inline RangeRectangle<lint> get_image_range_limits(const Image& image) {
+template<class ReturnType = lint, std::enable_if_t<std::is_integral_v<ReturnType> || std::is_floating_point_v<ReturnType>, void*> = nullptr>
+RangeRectangle<ReturnType> get_image_range_limits(const Image& image) {
 	return {
-			0, image.cols, 0, image.rows
+			ReturnType(0), ReturnType(image.cols), ReturnType(0), ReturnType(image.rows)
 	};
 }
 
