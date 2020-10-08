@@ -163,3 +163,23 @@ inline void test_length_function_by_comparing_with_derivative() {
 	std::cout << "Length analitically: " << analitic_length << std::endl;
 }
 
+
+inline void test_stroke_scaling() {
+	auto image = get_default_image();
+
+	std::vector<std::pair<double, double>> points = {
+			{ 110, 110 }, { 200, 500 }, { 1000, 800 }
+	};
+
+	auto test_stroke = colored_stroke{ points[0], points[1], points[2],
+	                                             100, {1., 1., 1}};
+
+	rasterize_stroke(image, test_stroke, 10000);
+	show_image_in_system_viewer(image);
+
+	test_stroke.scale_from_center(0.5);
+	test_stroke.background_color = { 1, 0.1, 0.1 };
+
+	rasterize_stroke(image, test_stroke, 10000);
+	show_image_in_system_viewer(image);
+}

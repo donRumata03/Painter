@@ -154,6 +154,16 @@ std::ostream &operator<< (std::ostream &os, const stroke &stroke)
 	return os;
 }
 
+
+void stroke::scale_from_center (double scale_factor)
+{
+	point center = this->center();
+
+	p0.scale_from(center, scale_factor);
+	p1.scale_from(center, scale_factor);
+	p2.scale_from(center, scale_factor);
+}
+
 RangeRectangle<double> stroke::get_bounding_box () const
 {
 	RangeRectangle<double> res{};

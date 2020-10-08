@@ -46,6 +46,7 @@ int main ()
 	// test_stroke_inverse_counting();
 	// test_stroke_derivative_counting();
 	// test_length_function_by_comparing_with_derivative();
+	test_stroke_scaling();
 
 	/// Rasterization:
 	// test_stroke_rasterizaton();
@@ -65,7 +66,7 @@ int main ()
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
 	// launch_stroke_constraining_visualizing_test();
-	generate_stoke_image_example();
+	// generate_stoke_image_example();
 
 	/// The actual GA:
 	std::string coffee_path = (fs::path(base_path) / "resources" / "example_images" / "brown_coffee.png").string();

@@ -10,23 +10,33 @@ inline void generate_stoke_image_example() {
 	size_t w = 500;
 	size_t h = 300;
 
-	double width = 50;
+	double width = 30;
+
+	double position_from_factor = 0.1;
 
 	auto stroke_limit = stroke_limit_descriptor {
 		double(w) * 0.5,
-		double(w) * 0.6,
+		double(w) * 0.7,
 		double(h) * 0.5,
-		double(h) * 0.6,
+		double(h) * 0.7,
 		width * 0.8,
 		width * 1.2,
 		{
-			0., double(w), 0., double(h)
+			double(w) * position_from_factor,
+			double(w) * (1 - position_from_factor),
+			double(h) * position_from_factor,
+			double(h) * (1 - position_from_factor)
 		}
 	};
+
+
 
 	colored_stroke generated_stroke;
 	reinterpret_cast<stroke&>(generated_stroke) = generate_stroke(stroke_limit);
 	generated_stroke.background_color = { 0.3, 1, 0.1 };
+
+//	std::cout << stroke_limit.image_dx() << " " << stroke_limit.image_dy() << std::endl;
+//	std::cout << stroke_limit.validate_self() << std::endl;
 
 	Image image = make_default_image(w, h);
 	rasterize_stroke(image, generated_stroke);
