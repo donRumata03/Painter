@@ -197,7 +197,10 @@ void GA_launcher::configure_GA_operation_helpers ()
 	};
 
 	configured_fitness_function = new final_fitness_function{ image, stroke_number, true };
-	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "", enable_detailed_logging);
+
+	bool enable_detailed_logging = (logging_percentage != 0);
+	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "",
+			logging_percentage, enable_detailed_logging);
 
 	std::cout << "[GA_launcher]: successfully initialized GA-specific parameters" << std::endl;
 }

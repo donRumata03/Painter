@@ -16,7 +16,6 @@
  */
 class image_logging_callback
 {
-	// TODO!
 	Image image;
 
 	fs::path path_for_logging;
@@ -24,6 +23,7 @@ class image_logging_callback
 	fs::path path_for_best_genomes;
 
 	bool detalized_logging = false;
+	double logged_genome_rate = 1.;
 
 //	std::string new_population_logging_path;
 //	std::string after_mutation_logging_path;
@@ -31,8 +31,8 @@ class image_logging_callback
 
 public:
 	image_logging_callback() = default;
-	image_logging_callback(Image image, const std::string& path_for_logging, const std::string& path_for_copying, bool log_precisely = true)
-		: path_for_copying(path_for_copying), path_for_logging(path_for_logging), image(std::move(image)), detalized_logging(log_precisely)
+	image_logging_callback(Image image, const std::string& path_for_logging, const std::string& path_for_copying, double logged_percent, bool log_precisely = true)
+		: path_for_copying(path_for_copying), path_for_logging(path_for_logging), image(std::move(image)), logged_genome_rate(logged_percent), detalized_logging(log_precisely)
 	{
 		if (fs::exists(this->path_for_logging)) fs::remove_all(this->path_for_logging);
 		if (fs::exists(this->path_for_copying)) fs::remove_all(this->path_for_copying);
@@ -86,13 +86,12 @@ public:
 		fs::create_directories(this_path_by_operation);
 		fs::create_directories(this_path_by_index);
 
+		auto genomes_to_log = size_t(std::round(population.size() * this->logged_genome_rate));
+		std::cout << "[Image Logger]: logging " << genomes_to_log << "genomes" << std::endl;
+
 		size_t genome_index = 0;
 		for (auto& genome : population) {
-//			auto strokes = unpack_stroke_data_buffer(genome);
-//			colorize_strokes(strokes, image);
-//
-//			Image new_image = make_default_image(image.cols, image.rows);
-//			rasterize_strokes(new_image, strokes);
+			if (genome_index >= genomes_to_log) break;
 
 			fs::path final_folder_by_index = this_path_by_index / (std::to_string(genome_index));
 			fs::create_directories(final_folder_by_index);

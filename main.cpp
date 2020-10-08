@@ -65,17 +65,19 @@ int main ()
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
-	launch_stroke_constraining_visualizing_test();
+	// launch_stroke_constraining_visualizing_test();
 	// generate_stoke_image_example();
 
 	/// The actual GA:
 	std::string coffee_path = (fs::path(base_path) / "resources" / "example_images" / "brown_coffee.png").string();
 	std::string van_gogh_path = (fs::path(base_path) / "resources" / "example_images" / "van-gogh.jpg").string();
+	std::string one_stroke_path = (fs::path(base_path) / "resources" / "example_images" / "one_stroke.png").string();
 
 	// const auto& image_path = coffee_path;
-	const auto& image_path = van_gogh_path;
+	// const auto& image_path = van_gogh_path;
+	const auto& image_path = one_stroke_path;
 
-	// launch_the_GA(image_path);
+	launch_the_GA(image_path);
 
 
 
