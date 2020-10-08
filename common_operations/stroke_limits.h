@@ -73,12 +73,20 @@ struct stroke_limit_descriptor
 			point.x = std::clamp(point.x, min_);
 		};
 */
+
+		// Scale it:
+		constrain_stroke_size_parameters(stroke,
+		                                 min_dx,
+		                                 max_dx,
+
+		                                 min_dy,
+		                                 max_dy,
+
+		                                 min_width,
+		                                 max_width);
+
 		// Move it:
 		carefully_constrain_stroke_to_fit_into_rect(stroke, image_rectangle);
-
-		// TODO: implement constraining width, dx, dy of stroke!!!
-		// Constrain other parameters:
-		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
 
 
 		return false;

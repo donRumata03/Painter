@@ -17,5 +17,6 @@ void brute_constrain_stroke_to_fit_into_rect(stroke& stroke, const RangeRectangl
 void carefully_constrain_stroke_to_fit_into_rect(stroke& stroke, const RangeRectangle<double>& rectangle); // Moved
 
 /// Here the rect is scaled to
+void constrain_stroke_size_parameters(stroke& stroke, double min_dx, double max_dx, double min_dy, double max_dy, double min_width, double max_width);
 
 

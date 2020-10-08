@@ -50,5 +50,14 @@ stroke generate_stroke (const stroke_limit_descriptor &stroke_descriptor)
 	// Width is easy to generate:
 	res_stroke.width = randval(stroke_descriptor.min_width, stroke_descriptor.max_width, gen);
 
+	constrain_stroke_size_parameters(res_stroke,
+			stroke_descriptor.min_dx,
+			stroke_descriptor.max_dx,
+            stroke_descriptor.min_dy,
+            stroke_descriptor.max_dy,
+
+			stroke_descriptor.min_width,
+			stroke_descriptor.max_width);
+
 	return res_stroke;
 }

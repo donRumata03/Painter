@@ -81,3 +81,25 @@ void carefully_constrain_stroke_to_fit_into_rect (stroke &stroke, const RangeRec
 	brute_constrain_stroke_to_fit_into_rect(stroke, rectangle);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+void constrain_stroke_size_parameters (stroke &stroke,
+                                       double min_dx, double max_dx,
+                                       double min_dy, double max_dy,
+                                       double min_width, double max_width)
+{
+	auto bounding_box = stroke.get_bounding_box();
+
+	auto stroke_dx = bounding_box.max_x - bounding_box.min_x;
+	auto stroke_dy = bounding_box.max_y - bounding_box.min_y;
+
+	if(stroke_dx < min_dx) stroke.scale_x_from_center(min_dx / stroke_dx);
+	if(stroke_dx > max_dx) stroke.scale_x_from_center(max_dx / stroke_dx);
+
+	if(stroke_dy < min_dy) stroke.scale_y_from_center(min_dy / stroke_dy);
+	if(stroke_dy > max_dy) stroke.scale_y_from_center(max_dy / stroke_dy);
+
+			                 // Width
+	stroke.width = std::clamp(stroke.width, min_width, max_width);
+}
+
