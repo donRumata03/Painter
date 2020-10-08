@@ -46,7 +46,7 @@ int main ()
 	// test_stroke_inverse_counting();
 	// test_stroke_derivative_counting();
 	// test_length_function_by_comparing_with_derivative();
-	test_stroke_scaling();
+	// test_stroke_scaling();
 
 	/// Rasterization:
 	// test_stroke_rasterizaton();
@@ -65,7 +65,7 @@ int main ()
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
-	// launch_stroke_constraining_visualizing_test();
+	launch_stroke_constraining_visualizing_test();
 	// generate_stoke_image_example();
 
 	/// The actual GA:
