@@ -5,6 +5,7 @@
 #pragma once
 
 #include <GA_operations/population_generator.h>
+#include <GA_operations/callbacks/image_logging_callback.h>
 #include "painter_pch.h"
 
 #include "optimization/error/error_computing.h"
@@ -41,13 +42,15 @@ public:
 private:
 	/// Constants:
 	size_t stroke_number = 1000;
-	size_t population_size = 10;
+	size_t population_size = 1000;
 	size_t epoch_num = 10;
 
 	double stroke_length_to_image_size_fraction = 0.05;
-	double stroke_width_to_length_factor = 0.2; // Width = length * stroke_width_to_length_factor
-	double stroke_coord_mutation_to_stroke_length_factor = 1.5;
-	double stroke_width_mutation_to_stroke_width_factor = 0.4;
+	double stroke_width_to_length_factor = 0.4; // Width = length * stroke_width_to_length_factor
+	double stroke_coord_mutation_to_stroke_length_factor = 0.3;
+	double stroke_width_mutation_to_stroke_width_factor = 0.1;
+
+	bool enable_detailed_logging = false;
 
 	/// For example, stroke sizes may vary from
 	/// stroke_typical_length / sqrt(stroke_param_relative_range)
@@ -82,9 +85,10 @@ private:
 	final_fitness_function* configured_fitness_function {};
 	final_constrainer configured_constrainer{};
 	final_generator configured_generator{};
+	image_logging_callback logger {};
 
 	GA::GA_operation_set ga_operations;
-	GA_params ga_params {};
+	GA::GA_params ga_params {};
 
 	std::vector<std::pair<double, double>> point_ranges;
 	std::vector<double> mutation_sigmas;

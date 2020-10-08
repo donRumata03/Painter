@@ -58,12 +58,12 @@ void cv_show_image (const Image &img, const std::string &image_name)
 	cv::waitKey(0);
 }
 
-void save_image (const Image &img, const std::string &filename)
+void save_image (const Image &img, const fs::path &filename)
 {
 	auto char_image = convert_image_from_floating_point(img);
 	convert_image_between_RGB_and_BGR<byte_Pixel>(char_image);
 
-	cv::imwrite(filename, char_image);
+	cv::imwrite(filename.string(), char_image);
 }
 
 /**

@@ -94,8 +94,14 @@ find_package(OpenCV REQUIRED)
 
 # Add OpenCV
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(Painter ${OpenCV_LIBS})
-message("${OpenCV_LIBS}")
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    message("Debug ${OpenCV_LIBS}")
+    target_link_libraries(Painter debug ${OpenCV_LIBS})
+else()
+    message("Release ${OpenCV_LIBS}")
+    target_link_libraries(Painter ${OpenCV_LIBS})
+endif()
+
 
 # ______________________________
 # Add my libraries:

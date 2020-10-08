@@ -190,12 +190,12 @@ void GA_launcher::configure_GA_operation_helpers ()
 			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;
 			// 	std::optional<double> exiting_fitness_value = {};
 			.custom_operations = ga_operations,
-			.allow_multithreading = false,
+			.allow_multithreading = true,
 //		size_t threads = std::thread::hardware_concurrency() - 2;
 	};
 
 	configured_fitness_function = new final_fitness_function{ image, stroke_number, true };
-
+	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "", enable_detailed_logging);
 
 	std::cout << "[GA_launcher]: successfully initialized GA-specific parameters" << std::endl;
 }
@@ -206,12 +206,15 @@ void GA_launcher::run ()
 
 	std::cout << "[GA_launcher]: Running GA..." << std::endl;
 
+	std::function<void(const GA::population&, size_t, GA::logging_type)> logger_storage {logger};
+
 	GA::ga_optimize(
 			*configured_fitness_function,
 			point_ranges,
 			ga_params,
 			GA_informer(image),
-			&GA_fitnesses
+			&GA_fitnesses,
+			&logger_storage
 	);
 
 	std::cout << "[GA_launcher]: Finished GA" << std::endl;

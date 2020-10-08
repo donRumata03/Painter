@@ -5,6 +5,7 @@
 #pragma once
 
 #include <optimization/stroke_color_optimizing.h>
+#include <rasterization/stroke_rasterizer.h>
 #include "data_representation/stroke.h"
 
 /**
@@ -78,4 +79,25 @@ inline std::vector<double> pack_stroke_data(const std::vector<ColoredOrNotStroke
 	// std::cout << "Ended packing" << std::endl;
 
 	return stroke_data_buffer;
+}
+
+inline Image stroke_buffer_to_image(const std::vector<double>& stroke_buffer, const Image& original_image) {
+	auto strokes = unpack_stroke_data_buffer(stroke_buffer);
+	colorize_strokes(strokes, original_image);
+
+	Image new_image = make_default_image(original_image.cols, original_image.rows);
+	rasterize_strokes(new_image, strokes);
+
+	return new_image;
+}
+
+inline void save_stroke_buffer_as_image(const std::vector<double>& stroke_buffer, const Image& original_image, const fs::path& filename) {
+	Image image = stroke_buffer_to_image(stroke_buffer, original_image);
+	save_image(image, filename);
+}
+
+inline void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffer, const Image& original_image, const std::vector<fs::path>& filenames) {
+	Image image = stroke_buffer_to_image(stroke_buffer, original_image);
+	for (auto& filename : filenames)
+		save_image(image, filename);
 }
