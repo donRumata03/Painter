@@ -156,9 +156,11 @@ void GA_launcher::configure_GA_operation_helpers ()
 {
 	configured_constrainer = final_constrainer(limits);
 	configured_generator = final_generator(limits, stroke_number);
+	configured_crossover = final_crossover();
 
 	ga_operations.genome_constraint = configured_constrainer;
 	ga_operations.population_generation = configured_generator;
+	ga_operations.parents_matting = configured_crossover;
 
 	point_ranges = generate_point_ranges_for_stroke_genome(
 			stroke_number,

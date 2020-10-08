@@ -6,6 +6,7 @@
 
 #include <GA_operations/population_generator.h>
 #include <GA_operations/callbacks/image_logging_callback.h>
+#include <GA_operations/final_crossover.h>
 #include "painter_pch.h"
 
 #include "optimization/error/error_computing.h"
@@ -85,6 +86,7 @@ private:
 	final_fitness_function* configured_fitness_function {};
 	final_constrainer configured_constrainer{};
 	final_generator configured_generator{};
+	final_crossover configured_crossover{};
 	image_logging_callback logger {};
 
 	GA::GA_operation_set ga_operations;

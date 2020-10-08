@@ -13,7 +13,6 @@ inline void visualize_stroke_constraining(const stroke& stroke_to_show_constrain
 	colored_stroke colored_stroke { stroke_to_show_constraining, rgb_color{ 0.5, 0.1, 0.3 } };
 	auto stroke_to_change = colored_stroke;
 
-	// TODO: have grey bg
 	Image before = make_default_image(image_w, image_h);
 	Image after = make_default_image(image_w, image_h);
 

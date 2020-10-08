@@ -12,6 +12,7 @@
 #include <tests/GA_tests/stroke_constraining_test.h>
 #include <launching/launch_main_ga.h>
 #include <tests/GA_tests/population_generation_tests.h>
+#include <tests/example_stroke_image_generation.h>
 #include "tests/opencv_test.h"
 
 
@@ -64,14 +65,18 @@ int main ()
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
 	// launch_stroke_constraining_visualizing_test();
-
+	generate_stoke_image_example();
 
 	/// The actual GA:
-	std::string image_path = (fs::path(base_path) / "resources" / "working_tests" / "input" / "brown_coffee.png").string();
-	launch_the_GA(image_path);
+	std::string coffee_path = (fs::path(base_path) / "resources" / "example_images" / "brown_coffee.png").string();
+	std::string van_gogh_path = (fs::path(base_path) / "resources" / "example_images" / "van-gogh.jpg").string();
+
+	// const auto& image_path = coffee_path;
+	const auto& image_path = van_gogh_path;
+
+	// launch_the_GA(image_path);
 
 
 
 	return 0;
-	// GA_launcher launcher(image_path);
 }
