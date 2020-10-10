@@ -19,8 +19,8 @@ struct final_fitness_function
 	bool is_run_sequentially {};
 	mutable Image personal_buffer {};
 
-	std::shared_ptr<std::atomic<size_t>> total_runs = nullptr; // todo
-	std::shared_ptr<std::atomic<double>> total_time = nullptr; // todo
+	std::shared_ptr<std::atomic<size_t>> total_runs = nullptr;
+	std::shared_ptr<std::atomic<double>> total_time = nullptr;
 
 	final_fitness_function() = default;
 

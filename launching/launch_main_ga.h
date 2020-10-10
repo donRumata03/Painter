@@ -43,13 +43,15 @@ public:
 private:
 	/// Constants:
 	size_t stroke_number = 1;
-	size_t population_size = 20'000;
-	size_t epoch_num = 10;
+	size_t population_size = 1'000;
+	size_t epoch_num = 200;
 
-	double stroke_length_to_image_size_fraction = 0.5; // 0.05;
+	double stroke_length_to_image_size_fraction = 0.4; // 0.05;
 	double stroke_width_to_length_factor = 0.2; // 0.4; // Width = length * stroke_width_to_length_factor
 	double stroke_coord_mutation_to_stroke_length_factor = 0.3;
 	double stroke_width_mutation_to_stroke_width_factor = 0.2; // 0.1;
+
+	double move_mutation_probability = 0.2;
 
 	// double logging_percentage = 0.01;
 	double logging_percentage = 0.00;
@@ -88,6 +90,8 @@ private:
 	final_constrainer configured_constrainer{};
 	final_generator configured_generator{};
 	final_crossover configured_crossover{};
+	mutator configured_mutator{};
+
 	image_logging_callback logger {};
 
 	GA::GA_operation_set ga_operations;

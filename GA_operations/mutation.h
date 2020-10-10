@@ -13,16 +13,49 @@
  */
 class mutator
 {
-	stroke_limit_descriptor limits;
+	stroke_limit_descriptor limits{};
+	double move_probability = -1;
 
-	explicit mutator(const stroke_limit_descriptor& limits) : limits(limits)
+public:
+	mutator() = default;
+
+	explicit mutator(const stroke_limit_descriptor& limits, double move_probability) : limits(limits), move_probability(move_probability)
 	{
-		//
+		assert(move_probability >= 0 and move_probability <= 1);
 	}
 
-	void operator()(std::vector<double>& stroke_data_buffer, const std::vector<double>& sigmas, double target_gene_number, const normalizer& normaaa) {
+	void operator()(std::vector<double>& stroke_data_buffer, const std::vector<double>& sigmas, double target_gene_number, const normalizer& normaaa) const {
 		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
 
+		if (random() < move_probability) {
+			assert(sizeof(stroke) / sizeof(double) == 7);
+			assert(stroke_data_buffer.size() == sigmas.size());
+
+			double per_gene_move_probability = target_gene_number / double(stroke_data_buffer.size());
+
+			for(auto& this_stroke : strokes) {
+				bool move_or_not_to_move = random() < per_gene_move_probability;
+				if (!move_or_not_to_move) {
+					// std::cout << "Not Move" << std::endl;
+					return;
+				}
+				// std::cout << "Move" << std::endl;
+
+
+				// Move:
+				double x_sigma = sigmas[0];
+				double y_sigma = sigmas[1];
+
+				double dx = normaaa.generate(0, x_sigma);
+				double dy = normaaa.generate(0, y_sigma);
+
+				shift_stroke(this_stroke, { dx, dy });
+			}
+		}
+		else{
+			// Randomly mutate:
+			return GA::mutate(stroke_data_buffer, sigmas, target_gene_number, normaaa);
+		}
 	}
 
 };
