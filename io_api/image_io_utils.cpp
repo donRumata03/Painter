@@ -8,13 +8,18 @@
  * Default image constructing:
  */
 
-Image make_default_image (size_t w, size_t h)
+Image make_default_image (size_t w, size_t h, const color& color)
 {
 	// std::cout << "Creating" << std::endl;
 	auto size = cv::Size{ int(w), int(h) };
 	// std::cout << "Created size" << std::endl;
 
-	return cv::Mat(size, CV_64FC3, { 0., 0., 0.});
+	return cv::Mat(size, CV_64FC3, { color.r, color.g, color.b });
+}
+
+Image make_default_image (size_t w, size_t h, double grey_brightness)
+{
+	return make_default_image(w, h, { grey_brightness, grey_brightness, grey_brightness });
 }
 
 

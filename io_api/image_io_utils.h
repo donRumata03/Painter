@@ -6,7 +6,8 @@
 
 #include "data_representation/color.h"
 
-Image make_default_image(size_t w, size_t h); // Resultant image is in RGB, type is double
+Image make_default_image(size_t w, size_t h, const color& color = {}); // Resultant image is in RGB, type is double
+Image make_default_image (size_t w, size_t h, double grey_brightness);
 
 void cv_show_image (const Image &img, const std::string &image_name = "Image"); // Assume image is in RGB, elements are of type double
 Image open_image(const std::string& filename);                     // Resultant image is in RGB, type is double

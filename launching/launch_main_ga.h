@@ -43,22 +43,22 @@ public:
 private:
 	/// Constants:
 	size_t stroke_number = 1;
-	size_t population_size = 100000;
+	size_t population_size = 20'000;
 	size_t epoch_num = 10;
 
-	double stroke_length_to_image_size_fraction = 0.2; // 0.05;
+	double stroke_length_to_image_size_fraction = 0.5; // 0.05;
 	double stroke_width_to_length_factor = 0.2; // 0.4; // Width = length * stroke_width_to_length_factor
 	double stroke_coord_mutation_to_stroke_length_factor = 0.3;
 	double stroke_width_mutation_to_stroke_width_factor = 0.2; // 0.1;
 
-	// bool enable_detailed_logging = true;
-	double logging_percentage = 0.0001;
+	// double logging_percentage = 0.01;
+	double logging_percentage = 0.00;
 
 	/// For example, stroke sizes may vary from
 	/// stroke_typical_length / sqrt(stroke_param_relative_range)
 	///              to
 	/// stroke_typical_length * sqrt(stroke_param_relative_range)
-	double stroke_param_relative_range = 4;
+	double stroke_param_relative_range = 6;
 
 	std::string filename;
 

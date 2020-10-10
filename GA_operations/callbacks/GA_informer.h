@@ -21,6 +21,10 @@ public:
 	void operator() (double GA_percent, double best_fitness_value, const std::vector<double>& best_stroke_genome){
 		std::cout << "GA percent is: \t" << GA_percent << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
 
+		// std::cout << best_stroke_genome << std::endl;
+
+		return;
+
 		// Show image:
 		auto strokes = unpack_stroke_data_buffer(best_stroke_genome);
 		colorize_strokes(strokes, initial_image);

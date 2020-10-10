@@ -183,7 +183,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 //		double hyper_elite_fit_pow = 5;
 //		double elite_fit_pow = 2;
 //		double parent_fit_pow = 0.3;
-			.hazing_percent = 0.6,
+			.hazing_percent = 0.8,
 			/// Mutation:
 			.mutation_percent_sigma = -1,
 			.target_gene_mutation_number = stroke_number * 1.5, // Out of `stroke_number * 7`
@@ -196,7 +196,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 //		size_t threads = std::thread::hardware_concurrency() - 2;
 	};
 
-	configured_fitness_function = new final_fitness_function{ image, stroke_number, true };
+	configured_fitness_function = new final_fitness_function{ image, stroke_number, false };
 
 	bool enable_detailed_logging = (logging_percentage != 0);
 	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "",

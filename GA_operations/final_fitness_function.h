@@ -75,7 +75,13 @@ struct final_fitness_function
 			this_buffer = make_default_image(w, h);
 		}
 
+		// Rasterize strokes:
+		rasterize_strokes(this_buffer, strokes);
+
+
 		double MSE = image_mse(initial_image, this_buffer);
+
+		// std::cout << MSE << std::endl;
 
 		return 1 / MSE;
 	}
