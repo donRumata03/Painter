@@ -46,6 +46,8 @@ private:
 	size_t population_size = 1'000;
 	size_t epoch_num = 200;
 
+	color canvas_color = { 0., 0., 0. };
+
 	double stroke_length_to_image_size_fraction = 0.4; // 0.05;
 	double stroke_width_to_length_factor = 0.2; // 0.4; // Width = length * stroke_width_to_length_factor
 	double stroke_coord_mutation_to_stroke_length_factor = 0.3;
@@ -60,7 +62,9 @@ private:
 	/// stroke_typical_length / sqrt(stroke_param_relative_range)
 	///              to
 	/// stroke_typical_length * sqrt(stroke_param_relative_range)
-	double stroke_param_relative_range = 6;
+	double stroke_param_relative_range = 3;
+
+	bool enable_multithreading = false;
 
 	std::string filename;
 

@@ -19,6 +19,8 @@ struct final_fitness_function
 	bool is_run_sequentially {};
 	mutable Image personal_buffer {};
 
+	color canvas_color {};
+
 	std::shared_ptr<std::atomic<size_t>> total_runs = nullptr;
 	std::shared_ptr<std::atomic<double>> total_time = nullptr;
 
@@ -28,8 +30,8 @@ struct final_fitness_function
 	 * @param is_run_sequentially: if it`s set to true, is stores only one buffer allocated in the constructor
 	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
 	 */
-	explicit final_fitness_function(const Image& image, size_t strokes, bool is_run_sequentially)
-					: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially)
+	explicit final_fitness_function(const Image& image, size_t strokes, bool is_run_sequentially, const color& canvas_color = { 0., 0., 0. })
+					: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially), canvas_color(canvas_color)
 	{
 		w = image.cols;
 		h = image.rows;
@@ -78,10 +80,18 @@ struct final_fitness_function
 		// Rasterize strokes:
 		rasterize_strokes(this_buffer, strokes);
 
-
 		double MSE = image_mse(initial_image, this_buffer);
 
-		// std::cout << MSE << std::endl;
+
+		auto this_canvas_color = canvas_color;
+		if (is_run_sequentially) {
+			// Clean-up the buffer:
+			personal_buffer.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
+				pixel.x = this_canvas_color.r;
+				pixel.y = this_canvas_color.g;
+				pixel.z = this_canvas_color.b;
+			});
+		}
 
 		return 1 / MSE;
 	}

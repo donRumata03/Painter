@@ -1,3 +1,4 @@
 /resources/temp/
 /log/
 !/log/.gitkeep
+images_for_testing/Vector

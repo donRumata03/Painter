@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ostream>
 #include "painter_pch.h"
 #include "color.h"
 
@@ -29,6 +30,13 @@ struct RangeRectangle {
 				(min_x + max_x) / 2,
 				(min_y + max_y) / 2,
 		};
+	}
+
+	friend std::ostream &operator<< (std::ostream &os, const RangeRectangle &rectangle)
+	{
+		os << "RangeRectangle { " << "min_x: " << rectangle.min_x << " max_x: " << rectangle.max_x << " min_y: " << rectangle.min_y
+		   << " max_y: " << rectangle.max_y << " }";
+		return os;
 	}
 };
 

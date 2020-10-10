@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ostream>
 #include "data_representation/stroke.h"
 #include "basic_constraining.h"
 
@@ -90,5 +91,13 @@ struct stroke_limit_descriptor
 
 
 		return false;
+	}
+
+	friend std::ostream &operator<< (std::ostream &os, const stroke_limit_descriptor &descriptor)
+	{
+		os << "Stroke limit descriptor { " << "min_dx: " << descriptor.min_dx << " max_dx: " << descriptor.max_dx << " min_dy: " << descriptor.min_dy
+		   << " max_dy: " << descriptor.max_dy << " min_width: " << descriptor.min_width << " max_width: "
+		   << descriptor.max_width << " image_rectangle: " << descriptor.image_rectangle << " }";
+		return os;
 	}
 };

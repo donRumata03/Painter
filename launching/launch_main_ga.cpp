@@ -194,11 +194,11 @@ void GA_launcher::configure_GA_operation_helpers ()
 			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;
 			// 	std::optional<double> exiting_fitness_value = {};
 			.custom_operations = ga_operations,
-			.allow_multithreading = true,
+			.allow_multithreading = enable_multithreading,
 //		size_t threads = std::thread::hardware_concurrency() - 2;
 	};
 
-	configured_fitness_function = new final_fitness_function{ image, stroke_number, false };
+	configured_fitness_function = new final_fitness_function{ image, stroke_number, !enable_multithreading, canvas_color };
 
 	bool enable_detailed_logging = (logging_percentage != 0);
 	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "",

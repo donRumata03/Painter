@@ -10,7 +10,10 @@ stroke generate_stroke (const stroke_limit_descriptor &stroke_descriptor)
 	double image_dy = stroke_descriptor.image_rectangle.max_y - stroke_descriptor.image_rectangle.min_y;
 
 	// assert(image_dx >= stroke_descriptor.max_dx);
-	assert(stroke_descriptor.validate_self());
+	if (!stroke_descriptor.validate_self()) {
+		std::cout << console_colors::red << stroke_descriptor << console_colors::remove_all_colors << std::endl;
+		assert(false);
+	}
 
 
 	std::random_device rd{};
