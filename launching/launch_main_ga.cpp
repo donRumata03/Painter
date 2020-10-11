@@ -188,7 +188,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 			.hazing_percent = 0.8,
 			/// Mutation:
 			.mutation_percent_sigma = -1,
-			.target_gene_mutation_number = stroke_number * 1.5, // Out of `stroke_number * 7`
+			.target_gene_mutation_number = stroke_number * 4., // Out of `stroke_number * 7`
 			.cut_mutations = true,
 			.individual_mutation_sigmas = mutation_sigmas,
 			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;

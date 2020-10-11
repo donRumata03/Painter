@@ -37,7 +37,7 @@ struct final_fitness_function
 		h = image.rows;
 
 		if (is_run_sequentially) {
-			personal_buffer = make_default_image(w, h);
+			personal_buffer = make_default_image(w, h, canvas_color);
 		}
 	}
 
@@ -74,7 +74,7 @@ struct final_fitness_function
 
 		if (!is_run_sequentially) {
 			// Allocate the buffer:
-			this_buffer = make_default_image(w, h);
+			this_buffer = make_default_image(w, h, canvas_color);
 		}
 
 		// Rasterize strokes:

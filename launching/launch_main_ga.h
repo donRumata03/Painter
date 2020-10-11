@@ -42,16 +42,16 @@ public:
 
 private:
 	/// Constants:
-	size_t stroke_number = 1;
-	size_t population_size = 1'000;
-	size_t epoch_num = 200;
+	size_t stroke_number = 30;
+	size_t population_size = 2'500;
+	size_t epoch_num = 400;
 
 	color canvas_color = { 0., 0., 0. };
 
-	double stroke_length_to_image_size_fraction = 0.4; // 0.05;
-	double stroke_width_to_length_factor = 0.2; // 0.4; // Width = length * stroke_width_to_length_factor
-	double stroke_coord_mutation_to_stroke_length_factor = 0.3;
-	double stroke_width_mutation_to_stroke_width_factor = 0.2; // 0.1;
+	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
+	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor
+	double stroke_coord_mutation_to_stroke_length_factor = 0.5;
+	double stroke_width_mutation_to_stroke_width_factor = 0.5; // 0.1;
 
 	double move_mutation_probability = 0.2;
 
