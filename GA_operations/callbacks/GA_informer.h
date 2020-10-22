@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include <utility>
+
 #include <io_api/image_io_utils.h>
 #include <rasterization/stroke_rasterizer.h>
 
@@ -14,12 +14,13 @@
 class GA_informer
 {
 	const Image& initial_image;
+	size_t total_iterations = 0;
 
 public:
-	explicit GA_informer(const Image& image) : initial_image(image) {}
+	explicit GA_informer(const Image& image, size_t _total_iterations) : initial_image(image), total_iterations(_total_iterations) {}
 
-	void operator() (double GA_percent, double best_fitness_value, const std::vector<double>& best_stroke_genome){
-		std::cout << "GA percent is: \t" << GA_percent << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
+	void operator() (size_t GA_iterations, double best_fitness_value, const std::vector<double>& best_stroke_genome){
+		std::cout << "GA percent: \t" << percent_plotter(GA_iterations, total_iterations, 1) << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
 
 		// std::cout << best_stroke_genome << std::endl;
 

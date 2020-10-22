@@ -217,7 +217,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 //		size_t threads = std::thread::hardware_concurrency() - 2;
 	};
 
-	configured_fitness_function = new final_fitness_function{ image, stroke_number, !enable_multithreading, canvas_color };
+	configured_fitness_function = final_fitness_function{ image, stroke_number, !enable_multithreading, canvas_color };
 
 	bool enable_detailed_logging = (logging_percentage != 0);
 	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
@@ -232,7 +232,7 @@ void GA_launcher::run ()
 
 	std::cout << "[GA_launcher]: Running GA..." << std::endl;
 
-	std::function<void(const GA::Population&, size_t, GA::logging_type)> logger_storage {logger};
+	// std::function<void(const GA::Population&, size_t, GA::logging_type)> logger_storage {logger};
 
 //	GA::ga_optimize(
 //			*configured_fitness_function,
@@ -243,9 +243,9 @@ void GA_launcher::run ()
 //			&logger_storage
 //	);
 
-	GA::GA_optimizer optimizer(*configured_fitness_function, point_ranges, ga_params);
-	optimizer.set_informer(GA_informer(image));
-	optimizer.plug_logger(logger_storage);
+	GA::GA_optimizer optimizer(configured_fitness_function, point_ranges, ga_params);
+	optimizer.set_informer(GA_informer(image, epoch_num));
+	optimizer.plug_logger(logger);
 
 	////////////////////////////////////////////////////////////////////////
 	optimizer.run_many_iterations(epoch_num, epoch_num);
