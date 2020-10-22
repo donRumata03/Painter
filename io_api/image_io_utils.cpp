@@ -76,7 +76,7 @@ void save_image (const Image &img, const fs::path &filename)
  */
 void show_image_in_system_viewer (const Image &img, const std::string &temp_name)
 {
-	std::string temp_folder = (fs::path(std::string(base_path)) / "resources"s / "temp"s).string();
+	std::string temp_folder = (painter_base_path / "resources"s / "temp"s).string();
 	// std::cout << "temp folder is: " << temp_folder << std::endl;
 
 	auto space_checker = [](const std::string& which_path, const std::string& path_name){
@@ -189,7 +189,7 @@ Image convert_image_from_floating_point (const Image &img)
 
 std::string get_sample_image_path ()
 {
-	return (fs::path(std::string(base_path)) / "resources"s / "test_input_images"s / "coffee.jpg"s).string();
+	return (painter_base_path / "resources"s / "test_input_images"s / "coffee.jpg"s).string();
 }
 
 

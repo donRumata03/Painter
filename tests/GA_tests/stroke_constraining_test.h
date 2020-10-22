@@ -46,7 +46,7 @@ inline void visualize_stroke_constraining(const std::vector<stroke>& strokes_to_
 
 	for (const auto& stroke : strokes_to_show_constraining) show_constrained_stroke(stroke);
 
-	auto this_dir = fs::path(base_path) / "resources" / "constraining_tests" / example_name;
+	auto this_dir = fs::path(painter_base_path) / "resources" / "constraining_tests" / example_name;
 	fs::create_directory(this_dir);
 
 	save_image(before, (this_dir / "before.png").string());

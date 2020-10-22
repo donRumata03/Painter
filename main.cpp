@@ -69,14 +69,15 @@ int main ()
 	// generate_stoke_image_example();
 
 	/// The actual GA:
-	std::string coffee_path = (fs::path(base_path) / "images_for_testing" / "brown_coffee.png").string();
-	std::string van_gogh_path = (fs::path(base_path) / "images_for_testing" / "van-gogh.jpg").string();
+	std::string coffee_path = (fs::path(painter_base_path) / "images_for_testing" / "brown_coffee.png").string();
+	std::string van_gogh_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.jpg").string();
 
-	std::string one_stroke_path = (fs::path(base_path) / "images_for_testing" / "one_stroke.png").string();
+	std::string one_stroke_path = (fs::path(painter_base_path) / "images_for_testing" / "one_stroke.png").string();
 
-	std::string circle_path = (fs::path(base_path) / "images_for_testing" / "circle.png").string();
-	std::string moon_path = (fs::path(base_path) / "images_for_testing" / "moon.png").string();
-	std::string cutted_moon_path = (fs::path(base_path) / "images_for_testing" / "cutted_moon.png").string();
+	std::string circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle.png").string();
+	std::string moon_path = (fs::path(painter_base_path) / "images_for_testing" / "moon.png").string();
+	std::string cutted_moon_path = (fs::path(painter_base_path) / "images_for_testing" / "cutted_moon.png").string();
+	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
 
 	// const auto& image_path = coffee_path;
 	// const auto& image_path = van_gogh_path;
@@ -86,6 +87,7 @@ int main ()
 	const auto& image_path = circle_path;
 	// const auto& image_path = moon_path;
 	// const auto& image_path = cutted_moon_path;
+	// const auto& image_path = half_ring_path;
 
 	launch_the_GA(image_path);
 

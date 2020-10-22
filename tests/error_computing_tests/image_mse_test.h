@@ -9,7 +9,7 @@
 
 inline void test_image_mse()
 {
-	std::filesystem::path input_path = fs::path(base_path) / "resources" / "image_mse_test";
+	std::filesystem::path input_path = fs::path(painter_base_path) / "resources" / "image_mse_test";
 
 
 	// Open the images:
@@ -33,7 +33,7 @@ inline void test_image_mse()
 inline void test_parallel_image_mse()
 {
 	// Comparing Original vs. Faraway: with standard and with parallel algorithms:
-	std::filesystem::path input_path = fs::path(base_path) / "resources" / "image_mse_test";
+	std::filesystem::path input_path = fs::path(painter_base_path) / "resources" / "image_mse_test";
 
 
 	Image original_image = open_image((input_path / "brown_coffee.png").string());
@@ -49,7 +49,7 @@ inline void compare_image_mse_performance_parallel() {
 	// Comparing Original vs. Faraway: with standard and with parallel algorithms:
 	size_t times_of_execution = 30;
 
-	std::filesystem::path input_path = fs::path(base_path) / "resources" / "image_mse_test";
+	std::filesystem::path input_path = fs::path(painter_base_path) / "resources" / "image_mse_test";
 
 
 	Image original_image = open_image((input_path / "brown_coffee.png").string());

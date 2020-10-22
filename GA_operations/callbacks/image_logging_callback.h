@@ -42,7 +42,7 @@ public:
 	}
 
 
-	void operator ()(const GA::population & population, size_t epoch_index, GA::logging_type this_logging_type) {
+	void operator ()(const GA::Population & population, size_t epoch_index, GA::logging_type this_logging_type) {
 
 		if (this_logging_type == GA::logging_type::best_genome) {
 			assert(population.size() == 1);

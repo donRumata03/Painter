@@ -31,7 +31,7 @@ void complicatedThreshold(byte_Pixel &pixel)
 }
 
 inline void test_opencv() {
-	// auto image_path = fs::path(std::string(base_path)) / "resources"s / "test_input_images"s / "coffee.jpg"s; // std::string(base_path);
+	// auto image_path = fs::path(std::string(painter_base_path)) / "resources"s / "test_input_images"s / "coffee.jpg"s; // std::string(painter_base_path);
 
 	cv::Mat image = cv::imread(get_sample_image_path()); // cv::Mat::zeros(100, 100, CV_8U);
 

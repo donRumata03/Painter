@@ -15,7 +15,7 @@ public:
 	std::vector<double> operator ()(const std::pair<std::vector<double>*, std::vector<double>*>& parents, const normalizer& normalizer, const GA::crossover_mode mode) {
 		// todo: exchange some close stroke's points
 
-		return (random() >= 0.5) ? (*parents.first) : (*parents.second);
+		return (pythonic_random() >= 0.5) ? (*parents.first) : (*parents.second);
 	}
 };
 

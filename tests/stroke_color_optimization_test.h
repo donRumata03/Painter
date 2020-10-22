@@ -12,7 +12,7 @@ inline void test_stroke_color_optimization_with_displaying() {
 	std::string image_name = "brown_coffee.png";
 	// std::string image_name = "blue_coffee.png";
 
-	std::string input_path = (fs::path(base_path) / "resources" / "stroke_color_optimization_test" / "input" / image_name).string();
+	std::string input_path = (fs::path(painter_base_path) / "resources" / "stroke_color_optimization_test" / "input" / image_name).string();
 
 	Image image = open_image(input_path);
 
@@ -32,7 +32,7 @@ inline void test_stroke_color_optimization_with_displaying() {
 	// Display the stroke:
 	rasterize_stroke(image, colored_stroke{colorless_stroke, optimal_color});
 
-	auto out_path = (fs::path(base_path) / ("resources/stroke_color_optimization_test/output"s + image_name)).string();
+	auto out_path = (fs::path(painter_base_path) / ("resources/stroke_color_optimization_test/output"s + image_name)).string();
 
 	// save_image(image, out_path);
 	// system(out_path); // -> Show image in system viewer

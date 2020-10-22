@@ -179,29 +179,48 @@ void GA_launcher::configure_GA_operation_helpers ()
 
 
 	ga_params = {
-			.population_size = population_size,
-			.epoch_num = epoch_num,
+			epoch_num,
+			population_size,
 			/// numeric params
-//		double hyper_elite_fit_pow = 5;
-//		double elite_fit_pow = 2;
-//		double parent_fit_pow = 0.3;
-			.hazing_percent = 0.8,
-			/// Mutation:
-			.mutation_percent_sigma = -1,
-			.target_gene_mutation_number = stroke_number * 4., // Out of `stroke_number * 7`
-			.cut_mutations = true,
-			.individual_mutation_sigmas = mutation_sigmas,
-			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;
-			// 	std::optional<double> exiting_fitness_value = {};
-			.custom_operations = ga_operations,
-			.allow_multithreading = enable_multithreading,
+
+			GA::hazing_GA_params {
+				.hazing_percent = 0.8,
+			},
+			GA::mutation_GA_params {
+				.mutation_percent_sigma = -1,
+				.target_gene_mutation_number = stroke_number * 4., // Out of `stroke_number * 7`
+				.cut_mutations = true,
+				.individual_mutation_sigmas = mutation_sigmas,
+			},
+			GA::crossover_mode::low_variance_genetic,
+			std::optional<double> {},
+			GA::threading_GA_params {
+				.allow_multithreading = false,
+				.threads = std::thread::hardware_concurrency() - 2
+			},
+
+			ga_operations,
+
+			GA::exception_policy::catch_and_log_fact,
+
+
+//			.hazing_percent = 0.8,
+//			/// Mutation:
+//			.mutation_percent_sigma = -1,
+//			.target_gene_mutation_number = stroke_number * 4., // Out of `stroke_number * 7`
+//			.cut_mutations = true,
+//			.individual_mutation_sigmas = mutation_sigmas,
+//			// 	GA::crossover_mode crossover_mode = GA::crossover_mode::low_variance_genetic;
+//			// 	std::optional<double> exiting_fitness_value = {};
+//			.custom_operations = ga_operations,
+//			.allow_multithreading = enable_multithreading,
 //		size_t threads = std::thread::hardware_concurrency() - 2;
 	};
 
 	configured_fitness_function = new final_fitness_function{ image, stroke_number, !enable_multithreading, canvas_color };
 
 	bool enable_detailed_logging = (logging_percentage != 0);
-	logger = image_logging_callback(image, (fs::path{base_path} / "log/_latest").string(), "",
+	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
 			logging_percentage, enable_detailed_logging);
 
 	std::cout << "[GA_launcher]: successfully initialized GA-specific parameters" << std::endl;
@@ -213,7 +232,7 @@ void GA_launcher::run ()
 
 	std::cout << "[GA_launcher]: Running GA..." << std::endl;
 
-	std::function<void(const GA::population&, size_t, GA::logging_type)> logger_storage {logger};
+	std::function<void(const GA::Population&, size_t, GA::logging_type)> logger_storage {logger};
 
 	GA::ga_optimize(
 			*configured_fitness_function,

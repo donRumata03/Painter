@@ -6,7 +6,7 @@
 
 // My libraries:
 #include <pythonic.h>
-#include <GA/GA.h>
+#include <GA/GA_optimizer.h>
 
 // OpenCV:
 #include <opencv2/core/core.hpp>
@@ -14,5 +14,7 @@
 #include <opencv2/imgproc.hpp>
 
 // My constants:
-inline constexpr const char* base_path = "D:/Projects/Painter";
-// inline constexpr const char* base_path = "/home/vova/dev/Robots/Painter";
+
+#include "utils_constexpr/stringing.h"
+inline constexpr const char* painter_pch_file_path = __FILE__;
+inline std::filesystem::path painter_base_path = get_path_folder(painter_pch_file_path);

@@ -41,7 +41,7 @@ inline void generate_stoke_image_example() {
 	Image image = make_default_image(w, h);
 	rasterize_stroke(image, generated_stroke);
 
-	fs::path output_path = fs::path{base_path} / "resources" / "generated_strokes" / "one_stroke.png";
+	fs::path output_path = fs::path{ painter_base_path} / "resources" / "generated_strokes" / "one_stroke.png";
 	show_image_in_system_viewer(image);
 	save_image(image, output_path);
 }

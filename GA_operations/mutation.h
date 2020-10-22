@@ -27,14 +27,14 @@ public:
 	void operator()(std::vector<double>& stroke_data_buffer, const std::vector<double>& sigmas, double target_gene_number, const normalizer& normaaa) const {
 		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
 
-		if (random() < move_probability) {
+		if (pythonic_random() < move_probability) {
 			assert(sizeof(stroke) / sizeof(double) == 7);
 			assert(stroke_data_buffer.size() == sigmas.size());
 
 			double per_gene_move_probability = target_gene_number / double(stroke_data_buffer.size());
 
 			for(auto& this_stroke : strokes) {
-				bool move_or_not_to_move = random() < per_gene_move_probability;
+				bool move_or_not_to_move = pythonic_random() < per_gene_move_probability;
 				if (!move_or_not_to_move) {
 					// std::cout << "Not Move" << std::endl;
 					return;

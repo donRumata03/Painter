@@ -21,6 +21,10 @@
 
 #include "common_operations/basic_constraining.h"
 
+
+
+#include "GA/old_GA.h"
+
 class GA_launcher
 {
 
@@ -64,7 +68,7 @@ private:
 	/// stroke_typical_length * sqrt(stroke_param_relative_range)
 	double stroke_param_relative_range = 3;
 
-	bool enable_multithreading = false;
+	bool enable_multithreading = true;
 
 	std::string filename;
 
@@ -99,7 +103,7 @@ private:
 	image_logging_callback logger {};
 
 	GA::GA_operation_set ga_operations;
-	GA::GA_params ga_params {};
+	GA::single_run_GA_params ga_params {};
 
 	std::vector<std::pair<double, double>> point_ranges;
 	std::vector<double> mutation_sigmas;
