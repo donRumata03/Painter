@@ -9,17 +9,18 @@ set(is_notebook OFF)
 # They are different configurations
 if (is_computer)
     set(current_opencv_dir D:/OpenCV4/build)
+    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+
     set(current_GA_dir D:/Projects/Utilities/GA)
     set(current_pythonic_dir D:/pythonic)
-    set(current_boost_dir D:/lib/boost_1_72_0)
 
 elseif(is_notebook)
-    set(current_opencv_dir D:/opencv/opencv4)
-#    set(current_GA_dir D:/Projects/Downloaded/PowerfulGA)
-#    set(current_pythonic_dir D:/Projects/Downloaded/pythonic)
-    set(current_GA_dir D:/Projects/Utilities/GA)
-    set(current_pythonic_dir D:/pythonic)
-    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+    set(current_opencv_dir DOESNT_MATTER)
+    set(current_boost_dir D:/lib/boost_1_72_0)
+
+    set(current_GA_dir /home/vova/dev/PowerfulGA)
+    set(current_pythonic_dir /home/vova/dev/pythonic)
+
 
 # User code for other platforms:
 # elseif(...)
@@ -87,9 +88,11 @@ include_directories(/)
 ## Add libraries to the project:
 
 # Find OpenCV:
+if (NOT ${current_opencv_dir} STREQUAL DOESNT_MATTER)
 set(OpenCV_DIR ${current_opencv_dir})
+endif()
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-message(${OpenCV_DIR})
+# message(${OpenCV_DIR})
 find_package(OpenCV REQUIRED)
 
 # Add OpenCV

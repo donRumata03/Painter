@@ -1,3 +1,7 @@
+cmake-build-debug/
+cmake-build-release/
+.idea/
+
 /resources/temp/
 /log/
 !/log/.gitkeep
