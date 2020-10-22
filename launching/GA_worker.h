@@ -10,15 +10,15 @@
 #include "io_api/image_io_utils.h"
 #include "rasterization/stroke_rasterizer.h"
 
-#include "GA_operations/util.h"
+#include "GA_operations/all.h"
 
 
 struct GA_launching_params
 {
 	/// Main params (computation time is almost proportional to their «product»):
-	size_t stroke_number;
-	size_t population_size;
-	size_t epoch_num;
+	size_t stroke_number = 0;
+	size_t population_size = 0;
+	size_t epoch_num = 0;
 
 
 
@@ -51,6 +51,8 @@ public:
 	void run_one_iteration();
 	void run_remaining_iterations();
 
+	void show_fitness_dynamic ();
+
 private:
 	// Image
 	Image initial_image;
@@ -65,7 +67,20 @@ private:
 	stroke_limit_descriptor limits{};
 
 	/// GA operations:
+	final_fitness_function  configured_fitness_function {};
+	final_constrainer       configured_constrainer{};
+	final_generator         configured_generator{};
+	final_crossover         configured_crossover{};
+	mutator                 configured_mutator{};
 
+	image_logging_callback logger {};
+
+	/// GA init data:
+	GA::GA_operation_set ga_operations;
+	GA::continuous_GA_params ga_params {};
+
+	std::vector<std::pair<double, double>> point_ranges;
+	std::vector<double> mutation_sigmas;
 
 	/// Optimizer itself:
 	std::optional<GA::GA_optimizer> optimizer;

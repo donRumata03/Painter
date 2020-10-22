@@ -4,23 +4,12 @@
 
 #pragma once
 
-#include <GA_operations/population_generator.h>
-#include <GA_operations/callbacks/image_logging_callback.h>
-#include <GA_operations/final_crossover.h>
 #include "painter_pch.h"
 
 #include "optimization/error/error_computing.h"
 #include "optimization/stroke_color_optimizing.h"
 
-#include "GA_operations/util.h"
-#include "GA_operations/mutation.h"
-#include "GA_operations/final_constrainer.h"
-#include "GA_operations/final_fitness_function.h"
-#include "GA_operations/stroke_range_generator.h"
-
-
-#include "common_operations/basic_constraining.h"
-
+#include "GA_operations/all.h"
 
 
 #include "GA/old_GA.h"

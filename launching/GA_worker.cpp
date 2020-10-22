@@ -34,6 +34,68 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 
 			.image_rectangle = get_image_range_limits<double>(image)
 	};
+
+	/// Init GA operation performers:
+	configured_constrainer = final_constrainer(limits);
+	configured_generator = final_generator(limits, launch_params.stroke_number);
+	configured_crossover = final_crossover();
+	configured_mutator = mutator(limits, params.move_mutation_probability);
+
+	ga_operations.genome_constraint = configured_constrainer;
+	ga_operations.population_generation = configured_generator;
+	ga_operations.parents_matting = configured_crossover;
+	ga_operations.mutation = configured_mutator;
+
+
+	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
+
+	bool enable_detailed_logging = (launch_params.logging_percentage != 0);
+	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
+	                                launch_params.logging_percentage, enable_detailed_logging);
+
+
+	/// GA data:
+	point_ranges = generate_point_ranges_for_stroke_genome(
+			params.stroke_number,
+			{ double(image_w), double(image_h) },
+			{ stroke_typical_width / param_half_range, stroke_typical_width * param_half_range }
+	);
+
+	mutation_sigmas = generate_point_sigmas_for_stroke_genome(
+			params.stroke_number,
+			{ double(image_w), double(image_h) },
+			stroke_coord_mutation_sigma,
+			stroke_width_mutation_sigma
+	);
+
+
+	ga_params = {
+			launch_params.population_size,
+			/// numeric params
+
+			GA::hazing_GA_params {
+					.hazing_percent = 0.8,
+			},
+			GA::mutation_GA_params {
+					.mutation_percent_sigma = -1,
+					.target_gene_mutation_number = launch_params.stroke_number * 4., // Out of `stroke_number * 7`
+					.cut_mutations = true,
+					.individual_mutation_sigmas = mutation_sigmas,
+			},
+			GA::crossover_mode::low_variance_genetic,
+			std::optional<double> {},
+			GA::threading_GA_params {
+					.allow_multithreading = true,
+					.threads = std::thread::hardware_concurrency() - 2
+			},
+
+			ga_operations,
+
+			GA::exception_policy::catch_and_log_fact,
+	};
+
+	optimizer.emplace(configured_fitness_function, point_ranges, ga_params);
+	std::cout << "[GA_launcher]: successfully initialized and ready to run" << std::endl;
 }
 
 void GA_worker::run_one_iteration ()
@@ -47,4 +109,19 @@ void GA_worker::run_remaining_iterations ()
 			launch_params.epoch_num - optimizer->iterations_processed(),
 			launch_params.epoch_num
 	);
+}
+
+
+
+void GA_worker::show_fitness_dynamic ()
+{
+	auto fhist = optimizer->get_fitness_history();
+	std::cout << "GA fitness dynamic: " << fhist << std::endl;
+
+	std::vector<double> xs_for_fitnesses(fhist.size());
+	for (size_t x_index = 0; x_index < xs_for_fitnesses.size(); ++x_index) {
+		xs_for_fitnesses[x_index] = double(x_index);
+	}
+	add_vectors_to_plot(xs_for_fitnesses, fhist);
+	show_plot({ .window_title = "Fitness Dynamic" });
 }
