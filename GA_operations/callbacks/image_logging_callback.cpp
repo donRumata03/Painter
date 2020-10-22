@@ -4,9 +4,4 @@
 
 #include "image_logging_callback.h"
 
-image_logging_callback::~image_logging_callback ()
-{
-	// TODO: copy!
-}
-
 

@@ -19,7 +19,6 @@ struct final_constrainer
 	}
 
 	void operator ()(GA::Population& population, const std::vector<std::pair<double, double>>& constraints) const {
-		std::cout << "Constraining" << std::endl;
 		// Ignore given constraints
 		for (auto& genome : population) {
 			auto strokes = unpack_stroke_data_buffer(genome);

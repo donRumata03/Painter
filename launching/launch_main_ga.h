@@ -47,7 +47,7 @@ public:
 private:
 	/// Constants:
 	size_t stroke_number = 30;
-	size_t population_size = 2'500;
+	size_t population_size = 2'50;
 	size_t epoch_num = 400;
 
 	color canvas_color = { 0., 0., 0. };
@@ -103,7 +103,7 @@ private:
 	image_logging_callback logger {};
 
 	GA::GA_operation_set ga_operations;
-	GA::single_run_GA_params ga_params {};
+	GA::continuous_GA_params ga_params {};
 
 	std::vector<std::pair<double, double>> point_ranges;
 	std::vector<double> mutation_sigmas;

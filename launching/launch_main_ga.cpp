@@ -179,7 +179,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 
 
 	ga_params = {
-			epoch_num,
+			// epoch_num,
 			population_size,
 			/// numeric params
 
@@ -195,7 +195,7 @@ void GA_launcher::configure_GA_operation_helpers ()
 			GA::crossover_mode::low_variance_genetic,
 			std::optional<double> {},
 			GA::threading_GA_params {
-				.allow_multithreading = false,
+				.allow_multithreading = true,
 				.threads = std::thread::hardware_concurrency() - 2
 			},
 
@@ -234,14 +234,26 @@ void GA_launcher::run ()
 
 	std::function<void(const GA::Population&, size_t, GA::logging_type)> logger_storage {logger};
 
-	GA::ga_optimize(
-			*configured_fitness_function,
-			point_ranges,
-			ga_params,
-			GA_informer(image),
-			&GA_fitnesses,
-			&logger_storage
-	);
+//	GA::ga_optimize(
+//			*configured_fitness_function,
+//			point_ranges,
+//			ga_params,
+//			GA_informer(image),
+//			&GA_fitnesses,
+//			&logger_storage
+//	);
+
+	GA::GA_optimizer optimizer(*configured_fitness_function, point_ranges, ga_params);
+	optimizer.set_informer(GA_informer(image));
+	optimizer.plug_logger(logger_storage);
+
+	////////////////////////////////////////////////////////////////////////
+	optimizer.run_many_iterations(epoch_num, epoch_num);
+	////////////////////////////////////////////////////////////////////////
+
+	// Get best fitness and genome: ... = optimizer.get_current_fitness(), ... = ...
+	// Get fitness history:
+	GA_fitnesses = optimizer.get_fitness_history();
 
 	std::cout << "[GA_launcher]: Finished GA" << std::endl;
 }

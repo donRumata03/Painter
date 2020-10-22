@@ -47,34 +47,38 @@ public:
 		if (this_logging_type == GA::logging_type::best_genome) {
 			assert(population.size() == 1);
 			fs::path filename = path_for_best_genomes / (std::to_string(epoch_index) + ".png");
-			std::cout << "Saving best genome image to " << filename << std::endl;
+			std::cout << "Saving best genome image to " << filename.string() << std::endl;
 			save_stroke_buffer_as_image(population[0], image, filename);
 
 			return;
 		}
 
-		if (!detalized_logging) return;
-
-
+		/// Determine operation:
 		std::string this_operation_name;
 		auto operation_index = size_t(-1);
 		switch(this_logging_type) {
 			case GA::logging_type::new_epoch:
 				this_operation_name = "new_epoch";
 				operation_index = 1;
+				std::cout << "[logger]: Generated new population..." << std::endl;
 				break;
 			case GA::logging_type::after_mutation:
 				this_operation_name = "after_mutation";
 				operation_index = 2;
+				std::cout << "[logger]: Mutated..." << std::endl;
 				break;
 			case GA::logging_type::after_constraining:
 				this_operation_name = "after_constraining";
 				operation_index = 3;
+				std::cout << "[logger]: Constrained..." << std::endl;
 				break;
 			default:
 				assert(false);
 		}
 
+		if (!detalized_logging) return;
+
+		/// Render and save images:
 		fs::path this_root_path = path_for_logging / std::to_string(epoch_index);
 
 		fs::path this_path_by_operation = this_root_path / this_operation_name;
@@ -102,7 +106,7 @@ public:
 		}
 	}
 
-	~image_logging_callback(); // todo
+	~image_logging_callback() = default;
 };
 
 
