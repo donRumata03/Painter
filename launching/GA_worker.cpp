@@ -35,25 +35,6 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 			.image_rectangle = get_image_range_limits<double>(image)
 	};
 
-	/// Init GA operation performers:
-	configured_constrainer = final_constrainer(limits);
-	configured_generator = final_generator(limits, launch_params.stroke_number);
-	configured_crossover = final_crossover();
-	configured_mutator = mutator(limits, params.move_mutation_probability);
-
-	ga_operations.genome_constraint = configured_constrainer;
-	ga_operations.population_generation = configured_generator;
-	ga_operations.parents_matting = configured_crossover;
-	ga_operations.mutation = configured_mutator;
-
-
-	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
-
-	bool enable_detailed_logging = (launch_params.logging_percentage != 0);
-	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
-	                                launch_params.logging_percentage, enable_detailed_logging);
-
-
 	/// GA data:
 	point_ranges = generate_point_ranges_for_stroke_genome(
 			params.stroke_number,
@@ -68,7 +49,31 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 			stroke_width_mutation_sigma
 	);
 
+	std::cout << "[GA_worker]: made GA data" << std::endl;
 
+	/// Init GA operation performers:
+	configured_constrainer = final_constrainer(limits);
+	configured_generator = final_generator(limits, launch_params.stroke_number);
+	configured_crossover = final_crossover();
+	configured_mutator = mutator(limits, params.move_mutation_probability);
+
+	ga_operations.genome_constraint = configured_constrainer;
+	ga_operations.population_generation = configured_generator;
+	ga_operations.parents_matting = configured_crossover;
+	ga_operations.mutation = configured_mutator;
+
+	std::cout << "[GA_worker]: GA operations ready" << std::endl;
+
+	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
+
+	bool enable_detailed_logging = (launch_params.logging_percentage != 0);
+	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
+	                                launch_params.logging_percentage, enable_detailed_logging);
+
+	std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
+
+
+	/// GA params:
 	ga_params = {
 			launch_params.population_size,
 			/// numeric params
@@ -94,12 +99,21 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 			GA::exception_policy::catch_and_log_fact,
 	};
 
+	std::cout << "[GA_worker]: GA params ready" << std::endl;
+
+
 	optimizer.emplace(configured_fitness_function, point_ranges, ga_params);
 
+	std::cout << "[GA_worker]: inited optimizer" << std::endl;
+
+
 	optimizer->plug_logger(logger);
+	std::cout << "[GA_worker]: plugged logger" << std::endl;
+
+
 	optimizer->set_informer(GA_informer(image, launch_params.epoch_num));
 
-	std::cout << "[GA_launcher]: successfully initialized and ready to run" << std::endl;
+	std::cout << "[GA_worker]: successfully initialized and ready to run" << std::endl;
 }
 
 void GA_worker::run_one_iteration ()

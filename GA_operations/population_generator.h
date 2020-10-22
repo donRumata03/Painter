@@ -35,6 +35,8 @@ public:
 			res[image_index] = std::move(packed_strokes);
 		}
 
+		// std::cout << "S" << res[0].size() << std::endl;
+
 		return res;
 	}
 

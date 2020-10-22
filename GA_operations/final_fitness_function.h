@@ -10,8 +10,8 @@
 #include "util.h"
 
 struct RunTimeCounter {
-	std::shared_ptr<std::atomic<size_t>> total_runs = nullptr;
-	std::shared_ptr<std::atomic<double>> total_time_seconds = nullptr;
+	std::shared_ptr<std::atomic<size_t>> total_runs = std::make_shared<std::atomic<size_t>>(0);
+	std::shared_ptr<std::atomic<double>> total_time_seconds = std::make_shared<std::atomic<double>>(0.);
 };
 
 struct final_fitness_function
@@ -108,6 +108,10 @@ struct final_fitness_function
 		rt_counter.total_runs->operator++();
 
 		return 1 / MSE;
+	}
+
+	double average_computation_time_seconds() const {
+		return (*rt_counter.total_time_seconds) / (*rt_counter.total_time_seconds);
 	}
 
 };

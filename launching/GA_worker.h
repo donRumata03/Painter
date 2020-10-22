@@ -52,6 +52,7 @@ public:
 	void run_remaining_iterations();
 
 	void show_fitness_dynamic ();
+	double average_computation_time_seconds() const { return configured_fitness_function.average_computation_time_seconds(); }
 
 private:
 	// Image

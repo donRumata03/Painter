@@ -28,6 +28,7 @@ public:
 		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
 
 		if (pythonic_random() < move_probability) {
+			// std::cout << stroke_data_buffer.size() << " " << sigmas.size() << std::endl;
 			assert(sizeof(stroke) / sizeof(double) == 7);
 			assert(stroke_data_buffer.size() == sigmas.size());
 
