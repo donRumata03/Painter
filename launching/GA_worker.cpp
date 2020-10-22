@@ -95,6 +95,10 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 	};
 
 	optimizer.emplace(configured_fitness_function, point_ranges, ga_params);
+
+	optimizer->plug_logger(logger);
+	optimizer->set_informer(GA_informer(image, launch_params.epoch_num));
+
 	std::cout << "[GA_launcher]: successfully initialized and ready to run" << std::endl;
 }
 
