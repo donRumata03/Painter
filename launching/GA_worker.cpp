@@ -90,7 +90,7 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 			GA::crossover_mode::low_variance_genetic,
 			std::optional<double> {},
 			GA::threading_GA_params {
-					.allow_multithreading = true,
+					.allow_multithreading = launch_params.allow_multithreading,
 					.threads = std::thread::hardware_concurrency() - 2
 			},
 
