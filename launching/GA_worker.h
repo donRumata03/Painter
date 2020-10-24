@@ -70,7 +70,7 @@ private:
 	stroke_limit_descriptor limits{};
 
 	/// GA operations:
-	final_fitness_function  configured_fitness_function {};
+	final_fitness_function  configured_fitness_function;
 	final_constrainer       configured_constrainer{};
 	final_generator         configured_generator{};
 	final_crossover         configured_crossover{};

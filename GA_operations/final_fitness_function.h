@@ -14,7 +14,50 @@ struct RunTimeCounter {
 	std::shared_ptr<std::atomic<double>> total_time_seconds = std::make_shared<std::atomic<double>>(0.);
 };
 
-struct final_fitness_function
+class BufferBank
+{
+public:
+	Image get_buffer_for_thread (size_t w, size_t h, const color& canvas_color) {
+		size_t thread_id = get_thread_id();
+
+		// NOT Allocate the buffer if there is one:
+		{
+			// Lock while copying all useful data:
+			std::lock_guard<std::mutex> lock(buffer_map_realloc_mutex);
+
+			auto proposed_container = buffer_map.find(thread_id);
+			if(proposed_container == buffer_map.end()) {
+				// Allocate new buffer:
+				auto [iterator, some_bool] = buffer_map.insert({ thread_id, make_default_image(w, h, canvas_color) });
+				std::cout << "Allocated new buffer for thread " << thread_id << std::endl;
+				return iterator->second;
+			}
+			else {
+				// Use existing buffer:
+				return proposed_container->second;
+			}
+		}
+	}
+
+private:
+	std::mutex buffer_map_realloc_mutex;
+	mutable std::map<size_t, Image> buffer_map;
+
+
+	static size_t get_thread_id() {
+		size_t res;
+		std::stringstream id_receiver;
+
+		id_receiver << std::this_thread::get_id();
+		id_receiver >> res;
+
+		return res;
+	}
+
+
+};
+
+class final_fitness_function
 {
 	Image initial_image {};
 
@@ -24,10 +67,13 @@ struct final_fitness_function
 	bool is_run_sequentially {};
 	mutable Image personal_buffer {};
 
+	std::shared_ptr<BufferBank> buffer_holder = std::make_shared<BufferBank>();
+
 	color canvas_color {};
 
 	RunTimeCounter rt_counter;
 
+public:
 	final_fitness_function() = default;
 
 	/**
@@ -54,38 +100,20 @@ struct final_fitness_function
 	{
 		assert(total_stroke_number * 7 == stroke_data_buffer.size()); // Should be dividable by 7 and the result should be equal to 7 * this->total_stroke_number (one double for each stuff)
 
-		// Parse the stroke set and compute the colors for them:
-/*
-		std::vector<colored_stroke> strokes;
-
-		for (size_t stroke_index = 0; stroke_index < total_stroke_number; ++stroke_index) {
-			size_t stroke_value_initial_index = 7 * stroke_index;
-
-			auto& unpacked_colored_stroke = strokes.emplace_back(
-					stroke{
-							{ stroke_data_buffer[stroke_value_initial_index], stroke_data_buffer[stroke_value_initial_index + 1] },
-							{ stroke_data_buffer[stroke_value_initial_index + 2], stroke_data_buffer[stroke_value_initial_index +3] },
-							{ stroke_data_buffer[stroke_value_initial_index + 4], stroke_data_buffer[stroke_value_initial_index +5] },
-							stroke_data_buffer[stroke_value_initial_index + 6]
-					},
-					double {} // <- The stroke color is undefined at this moment
-			);
-
-			find_stroke_color(unpacked_colored_stroke, initial_image);
-		}
-*/
 		Timer computation_timer;
 
+		// Parse the stroke set and compute the colors for them:
 		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
 		for (auto& stroke : strokes) find_stroke_color(stroke, initial_image);
 
 
 		// Compute MSE; OpenCV reference counting system manages the memory properly:
+
 		Image this_buffer = personal_buffer;
 
 		if (!is_run_sequentially) {
-			// Allocate the buffer:
-			this_buffer = make_default_image(w, h, canvas_color);
+			/// Parallel:
+			this_buffer = buffer_holder->get_buffer_for_thread(w, h, canvas_color);
 		}
 
 		// Rasterize strokes:
@@ -94,25 +122,26 @@ struct final_fitness_function
 		double MSE = image_mse(initial_image, this_buffer);
 
 
+		// Clean-up the buffer for this thread:
 		auto this_canvas_color = canvas_color;
-		if (is_run_sequentially) {
-			// Clean-up the buffer:
-			personal_buffer.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
+
+		auto clean_up_image = [this_canvas_color](Image& image_to_clean_up){
+			cv::setNumThreads(0);
+			image_to_clean_up.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
 				pixel.x = this_canvas_color.r;
 				pixel.y = this_canvas_color.g;
 				pixel.z = this_canvas_color.b;
 			});
-		}
+		};
 
-		// std::cout << "Sec: " << *rt_counter.total_time_seconds << ", Runs: " << *rt_counter.total_runs << std::endl;
+		clean_up_image(this_buffer);
 
 		rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));
 		rt_counter.total_runs->operator++();
 
-		// std::cout << "Sec: " << *rt_counter.total_time_seconds << ", Runs: " << *rt_counter.total_runs << std::endl;
-
 		return 1 / MSE;
 	}
+
 
 	double computations_performed() const {
 		return *rt_counter.total_runs;

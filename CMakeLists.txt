@@ -118,7 +118,7 @@ set(Pythonic_DIR ${current_pythonic_dir})
 find_package(Pythonic REQUIRED)
 
 include_directories(${pythonic_include_directories})
-target_link_libraries(Painter ${pythonic_static_library})
+target_link_libraries(Painter ${pythonic_static_libraries})
 
 # Add GA:
 set(PowerfulGA_DIR ${current_GA_dir})
