@@ -82,9 +82,9 @@ int main ()
 	// const auto& image_path = coffee_path;
 	// const auto& image_path = van_gogh_path;
 
-	// const auto& image_path = one_stroke_path;
+	const auto& image_path = one_stroke_path;
 
-	const auto& image_path = circle_path;
+	// const auto& image_path = circle_path;
 	// const auto& image_path = moon_path;
 	// const auto& image_path = cutted_moon_path;
 	// const auto& image_path = half_ring_path;

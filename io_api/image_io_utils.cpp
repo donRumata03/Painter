@@ -94,7 +94,7 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 	std::string filename;
 	if (temp_name.empty()) {
 		// Generate random (chronological) path:
-		auto prev_temp_files = lsdir(temp_folder);
+		auto prev_temp_files = lsdir<given_filename_encoding::utf8>(temp_folder);
 
 		// std::string last_file_identifier = "0";
 		size_t last_file_identifier = 0;

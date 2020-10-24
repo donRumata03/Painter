@@ -104,14 +104,28 @@ struct final_fitness_function
 			});
 		}
 
+		// std::cout << "Sec: " << *rt_counter.total_time_seconds << ", Runs: " << *rt_counter.total_runs << std::endl;
+
 		rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));
 		rt_counter.total_runs->operator++();
+
+		// std::cout << "Sec: " << *rt_counter.total_time_seconds << ", Runs: " << *rt_counter.total_runs << std::endl;
 
 		return 1 / MSE;
 	}
 
+	double computations_performed() const {
+		return *rt_counter.total_runs;
+	}
+
 	double average_computation_time_seconds() const {
-		return (*rt_counter.total_time_seconds) / (*rt_counter.total_time_seconds);
+		return (*rt_counter.total_time_seconds) / (*rt_counter.total_runs);
+	}
+
+	double average_computation_time_per_pixel_seconds() const {
+		double area = double(w) * double(h);
+
+		return average_computation_time_seconds() / area;
 	}
 
 };

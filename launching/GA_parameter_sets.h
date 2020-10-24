@@ -26,9 +26,9 @@ inline auto circle_30stroke_params = GA_launching_params {
 
 
 inline auto one_stroke_params = GA_launching_params {
-		.stroke_number = 1,
-		.population_size = 5'000,
-		.epoch_num = 300,
+		.stroke_number = 3,
+		.population_size = 2'000,
+		.epoch_num = 10,
 
 		.stroke_length_to_image_size_fraction = 0.4,
 		.stroke_width_to_length_factor = 0.2,
@@ -42,7 +42,7 @@ inline auto one_stroke_params = GA_launching_params {
 
 		.canvas_color = { 0., 0., 0. },
 
-		.allow_multithreading = false,
+		.allow_multithreading = true,
 };
 
 

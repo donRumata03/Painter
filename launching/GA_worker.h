@@ -53,6 +53,8 @@ public:
 
 	void show_fitness_dynamic ();
 	double average_computation_time_seconds() const { return configured_fitness_function.average_computation_time_seconds(); }
+	double average_computation_time_per_pixel_seconds() const { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
+	double computations_performed() { return configured_fitness_function.computations_performed(); }
 
 private:
 	// Image

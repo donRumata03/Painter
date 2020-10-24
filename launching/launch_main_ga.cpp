@@ -26,7 +26,24 @@ void launch_the_GA (const std::string &filename)
 
 	GA_worker worker(image, this_params);
 	worker.run_remaining_iterations();
-	std::cout << "Average computational time: " << worker.average_computation_time_seconds() << " s" << std::endl;
+
+	// For one thread:
+	// Average computational time: 1.96496ms
+	// Computational time per pixel: 13.0997 (ns/pix)
+	// => Speed is 77 MegaPix / (sec * thread)
+
+	// For many threads:
+	// Average computational time: 8.70384ms
+	// Computational time per pixel: 58.0256ns
+	// => Computational speed: 17 MegaPixel / (sec * thread)
+
+	std::cout
+		<< "Computations performed: " << worker.computations_performed() << "(" << this_params.epoch_num * this_params.population_size << " expected)" << std::endl
+		<< "Average computational time: " << worker.average_computation_time_seconds() * 1e+3 << "ms" << std::endl
+		<< "Computational time per pixel: " << worker.average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
+		<< "=> Computational speed: " << size_t(std::round(1 / worker.average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+	<< std::endl;
+
 	worker.show_fitness_dynamic();
 }
 
