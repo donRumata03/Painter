@@ -42,7 +42,7 @@ inline auto one_stroke_params = GA_launching_params {
 
 		.canvas_color = { 0., 0., 0. },
 
-		.allow_multithreading = true,
+		.allow_multithreading = false,
 };
 
 

@@ -27,15 +27,21 @@ void launch_the_GA (const std::string &filename)
 	GA_worker worker(image, this_params);
 	worker.run_remaining_iterations();
 
-	// For one thread:
+	/// For one thread:
 	// Average computational time: 1.96496ms
 	// Computational time per pixel: 13.0997 (ns/pix)
 	// => Speed is 77 MegaPix / (sec * thread)
 
-	// For many threads:
+	/// For many threads without memory allocation saving system:
 	// Average computational time: 8.70384ms
 	// Computational time per pixel: 58.0256ns
 	// => Computational speed: 17 MegaPixel / (sec * thread)
+
+	/// For many threads with memory allocation saving system (measured WITH buffer getting):
+	// 31 MegaPixel / (sec * thread)
+
+	/// For many threads with memory allocation saving system (measured WITHOUT buffer getting):
+	// 31 MegaPixel / (sec * thread)
 
 	std::cout
 		<< "Computations performed: " << worker.computations_performed() << "(" << this_params.epoch_num * this_params.population_size << " expected)" << std::endl
