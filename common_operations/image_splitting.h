@@ -38,5 +38,7 @@ private:
 	mutable std::optional<std::vector<ImageCell>> cells_1d;
 };
 
-ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h, );
+ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h,
+												 size_t x_cells, size_t y_cells,
+												 double relative_cell_overlay_size);
 

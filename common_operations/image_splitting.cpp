@@ -29,6 +29,11 @@ auto ImageZoneRepresentation::get_1d_cells() const {
 ////////////////////////////////////////////////////////////////////////
 
 
-ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h) {
+ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h,
+                                                 size_t x_cells, size_t y_cells,
+                                                 double relative_cell_overlay_size)
+{
+	std::vector<std::pair<size_t, size_t>> xs_distribution, ys_distribution;
+
 
 }
