@@ -38,7 +38,7 @@ struct stroke_limit_descriptor
 		double min_x_found = std::numeric_limits<double>::max(), min_y_found = std::numeric_limits<double>::max(),
 			   max_x_found = std::numeric_limits<double>::min(), max_y_found = std::numeric_limits<double>::min();
 
-		auto process_point = [&](const stroke::point& p) {
+		auto process_point = [&](const stroke::Point& p) {
 			min_x_found = std::min(min_x_found, p.x);
 			min_y_found = std::min(min_y_found, p.y);
 
@@ -70,8 +70,8 @@ struct stroke_limit_descriptor
 */
 /*
 
-		auto constrain_point = [&](stroke::point& point){
-			point.x = std::clamp(point.x, min_);
+		auto constrain_point = [&](stroke::Point& Point){
+			Point.x = std::clamp(Point.x, min_);
 		};
 */
 

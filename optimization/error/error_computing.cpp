@@ -63,14 +63,14 @@ double stroke_mse (const Image &image, const colored_stroke &stroke, size_t step
 	return stroke_mse(image, stroke.get_points(step_number, get_image_range_limits(image)), stroke.background_color, parallel);
 }
 
-double stroke_mse (const Image &image, const std::vector<stroke::point> &stroke_points, const color &stroke_color, bool parallel)
+double stroke_mse (const Image &image, const std::vector<stroke::Point> &stroke_points, const color &stroke_color, bool parallel)
 {
 	auto stroke_color_vec = stroke_color.to_OpenCV_Vec3();
 
 	double total_diff_sum = 0;
 	size_t points_in_stroke = 0;
 
-	auto point_handler = [&](const stroke::point& point_xy){
+	auto point_handler = [&](const stroke::Point& point_xy){
 		size_t x = point_xy.x;
 		size_t y = point_xy.y;
 		const auto& image_pixel_color = image.at<cv::Vec3d>(y, x);

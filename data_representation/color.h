@@ -20,7 +20,7 @@ class RGB_Vec {}; // A tag type
 
 /**
  * Color class with rgb color model.
- * r, g, b are from 0 to 1 if T is floating point type
+ * r, g, b are from 0 to 1 if T is floating Point type
  *
  * For T == uint8_t there are 256 * 256 * 256 possible values, which is 16_777_216 (≈ 17 millions)
  */
@@ -78,7 +78,7 @@ template < class T >
 rgb_color<T>::rgb_color (const cv::Point3_<T> &cv_point) : r(cv_point.x), g(cv_point.y), b(cv_point.z) {}
 
 
-/// RGB_color floating point convertors:
+/// RGB_color floating Point convertors:
 template<class F, class I>
 rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>>
 to_floating_point(const rgb_color<std::enable_if_t<std::is_integral_v<I>, I>>& initial_color);
@@ -88,7 +88,7 @@ rgb_color<std::enable_if_t<std::is_integral_v<I>, I>>
 from_floating_point(const rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color);
 
 template<class E, class T> auto convert_color(rgb_color<T>& initial_color) {
-	static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>, "Exactly one of the types should be floating point!");
+	static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>, "Exactly one of the types should be floating Point!");
 	if constexpr(std::is_floating_point_v<T>) {
 		return from_floating_point<E, T>(initial_color);
 	}

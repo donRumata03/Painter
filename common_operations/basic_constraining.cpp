@@ -12,12 +12,12 @@ bool fits_into (const stroke &stroke, const RangeRectangle<double> &rectangle)
 		   rectangle.point_satisfies_requirements(stroke.p2);
 }
 
-void shift_point (stroke::point& point, const stroke::point& shifting_vector) {
+void shift_point (stroke::Point& point, const stroke::Point& shifting_vector) {
 	point.x += shifting_vector.x;
 	point.y += shifting_vector.y;
 }
 
-void shift_stroke (stroke &stroke, const stroke::point &shifting_vector)
+void shift_stroke (stroke &stroke, const stroke::Point &shifting_vector)
 {
 	shift_point(stroke.p0, shifting_vector);
 	shift_point(stroke.p1, shifting_vector);

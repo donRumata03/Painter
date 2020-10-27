@@ -16,27 +16,27 @@
  * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
 */
 struct stroke {
-	// using point = std::pair<double, double>;
-	using point = point;
+	// using Point = std::pair<double, double>;
+	using Point = point;
 
-	point p0{}, p1{}, p2{};
+	Point p0{}, p1{}, p2{};
 	double width = -1;
 
 	// stroke() = default;
 	// colorless_stroke(
-	// 		const point& point1, const point& point2, const point& point3, double width) = default;
+	// 		const Point& point1, const Point& point2, const Point& point3, double width) = default;
 
-	[[nodiscard]] point coords_at(double t) const; // Count the point of Bezier curve corresponding to t value given as the argument
-	[[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time point t
-	[[nodiscard]] point derivative_at(double t) const; // Returns pair of dx/dt and dy/dt
-	[[nodiscard]] double t_at(const point& point_in_stroke) const;
+	[[nodiscard]] Point coords_at(double t) const; // Count the Point of Bezier curve corresponding to t value given as the argument
+	[[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time Point t
+	[[nodiscard]] Point derivative_at(double t) const; // Returns pair of dx/dt and dy/dt
+	[[nodiscard]] double t_at(const Point& point_in_stroke) const;
 	[[nodiscard]] double length() const;
 
 	/**
 	 * Width isn`t used to determine the rectangle
 	 */
 	[[nodiscard]] RangeRectangle<double> get_bounding_box() const;
-	[[nodiscard]] point center() const { return (p0 + p1 + p2) / 3; }
+	[[nodiscard]] Point center() const { return (p0 + p1 + p2) / 3; }
 	void scale_x_from_center(double scale_factor);
 	void scale_y_from_center(double scale_factor);
 	void scale_from_center(double scale_factor);
@@ -53,7 +53,7 @@ struct stroke {
 	// ^^^ TODO: Measure and ...make it parallel?
 
 
-	[[nodiscard]] std::vector<point> get_points(
+	[[nodiscard]] std::vector<Point> get_points(
 			size_t step_number = 10000, std::optional<RangeRectangle<lint>> range_limits = std::nullopt
 	) const;
 
@@ -114,7 +114,7 @@ struct colored_stroke : stroke
 
 	/*
 	colored_stroke() = default;
-	colored_stroke(const point &point1, const point &point2, const point &point3, double _width, color _color);
+	colored_stroke(const Point &point1, const Point &point2, const Point &point3, double _width, color _color);
 	colored_stroke(const stroke& colorless_stroke, const color& bg_color) :
 		stroke(colorless_stroke), background_color(bg_color) {}
 	*/

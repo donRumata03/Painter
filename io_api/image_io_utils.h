@@ -46,11 +46,11 @@ void convert_image_between_RGB_and_BGR (Image &img)
 	});
 }
 
-template <class Pixel_type>
+template <class PixelType>
 Image convert_image_between_RGB_and_BGR (const Image &img)
 {
 	auto new_image = img.clone();
-	convert_image_between_RGB_and_BGR(new_image);
+	convert_image_between_RGB_and_BGR<PixelType>(new_image);
 	return new_image;
 }
 

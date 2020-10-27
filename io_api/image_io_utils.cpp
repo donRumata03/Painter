@@ -24,7 +24,7 @@ Image make_default_image (size_t w, size_t h, double grey_brightness)
 
 
 /*
- * Input-output paying respect to floating point and RGB <-> BGR:
+ * Input-output paying respect to floating Point and RGB <-> BGR:
  */
 
 Image open_image (const std::string &filename)
@@ -170,7 +170,7 @@ Image convert_from_hsv_to_rgb (const Image &img)
 
 
 /*
- * Floating point conversions:
+ * Floating Point conversions:
  */
 
 Image convert_image_to_floating_point (const Image &img)

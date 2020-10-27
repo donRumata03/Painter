@@ -27,7 +27,9 @@ int main ()
 {
 	signal(SIGSEGV, posix_death_signal);
 
-	system(("chcp "s + std::to_string(CP_UTF8)).c_str());
+    // system(("chcp "s + std::to_string(CP_UTF8)).c_str());
+
+    set_utf8_in_console();
 
 	/// IO tests:
 

@@ -6,19 +6,19 @@
 
 /*
 
-colored_stroke::colored_stroke (const point &point1, const point &point2, const point &point3, double _width, color _color)
+colored_stroke::colored_stroke (const Point &point1, const Point &point2, const Point &point3, double _width, color _color)
 			: stroke{point1, point2, point3, _width},
 			  background_color(_color)
 {}
 */
 
 
-stroke::point stroke::coords_at (double t) const
+stroke::Point stroke::coords_at (double t) const
 {
 	assert(t >= 0 && t <= 1);
 
 /*
-	point result;
+	Point result;
 	for (size_t coord_index = 0; coord_index < 2; ++coord_index) {
 		result[coord_index] =
 				p1[coord_index]
@@ -43,24 +43,24 @@ double stroke::height_at (double t) const
 
 point stroke::derivative_at (double t) const
 {
-	point res = 2 * (t - 1) * (p0 - p1) + 2 * t * (p2 - p1);
+	Point res = 2 * (t - 1) * (p0 - p1) + 2 * t * (p2 - p1);
 	return res;
 }
 
 
 
-double stroke::t_at (const point& point_in_stroke) const
+double stroke::t_at (const Point& point_in_stroke) const
 {
 	auto is_good_t = [](double t_candidate) -> bool { return t_candidate >= 0 and t_candidate <= 1; };
 
-	point the_result;
+	Point the_result;
 
 	if ((p0 - 2 * p1 + p2).is_zero()) {
 		if (p0 != p1) {
 			the_result = (point_in_stroke - p0) / (2 * (p1 - p0));
 		}
 		else { // p0 == p1 != p2
-			point for_sqrt = (point_in_stroke - p0) / (p2 - p1);
+			Point for_sqrt = (point_in_stroke - p0) / (p2 - p1);
 			assert(for_sqrt.x != 0 and for_sqrt.y != 0);
 			the_result = sqrt(for_sqrt);
 		}
@@ -70,13 +70,13 @@ double stroke::t_at (const point& point_in_stroke) const
 		return the_result.y;
 	}
 	else { // p0 - 2p1 + p2 != 0
-		point for_sqrt = (p0 - 2 * p1 + p2) * point_in_stroke + p1 * p1 - p0 * p2;
+		Point for_sqrt = (p0 - 2 * p1 + p2) * point_in_stroke + p1 * p1 - p0 * p2;
 		assert(for_sqrt.x != 0 and for_sqrt.y != 0);
-		point the_sqr = sqrt(for_sqrt);
+		Point the_sqr = sqrt(for_sqrt);
 
 
-		point solution1 = (p0 - p1 + the_sqr) / (p0 - 2 * p1 + p2);
-		point solution2 = (p0 - p1 - the_sqr) / (p0 - 2 * p1 + p2);
+		Point solution1 = (p0 - p1 + the_sqr) / (p0 - 2 * p1 + p2);
+		Point solution2 = (p0 - p1 - the_sqr) / (p0 - 2 * p1 + p2);
 
 		// std::cout << "Solutions: " << solution1 << " " << solution2 << std::endl;
 
@@ -111,8 +111,8 @@ double stroke::length () const
 {
 	// For formula derivation visit https://malczak.linuxpl.com/blog/quadratic-bezier-curve-length/
 
-	point a = p0 - 2 * p1 + p2;
-	point b = 2 * (p1 - p0);
+	Point a = p0 - 2 * p1 + p2;
+	Point b = 2 * (p1 - p0);
 
 	double A = 4 * squared_abs(a);
 	double B = 4 * (a.x * b.x + a.y * b.y);
@@ -137,7 +137,7 @@ double stroke::length () const
 std::vector<point> stroke::get_points (
 		size_t step_number, std::optional<RangeRectangle<lint>> range_limits) const
 {
-	std::vector<point> res;
+	std::vector<Point> res;
 
 	this->for_each(
 	[&](lint x, lint y){
@@ -175,7 +175,7 @@ void stroke::scale_y_from_center (double scale_factor)
 
 void stroke::scale_from_center (double scale_factor)
 {
-	point center = this->center();
+	Point center = this->center();
 
 	p0.scale_from(center, scale_factor);
 	p1.scale_from(center, scale_factor);
@@ -191,7 +191,7 @@ RangeRectangle<double> stroke::get_bounding_box () const
 	res.max_x = std::numeric_limits<double>::min();
 	res.max_y = std::numeric_limits<double>::min();
 
-	auto process_point = [&](const stroke::point& p) {
+	auto process_point = [&](const stroke::Point& p) {
 		res.min_x = std::min(res.min_x, p.x);
 		res.min_y = std::min(res.min_y, p.y);
 

@@ -84,7 +84,7 @@ inline void test_stroke_derivative_counting() {
 	double step = 1. / n;
 
 	stroke test_stroke { { 5, 1 }, { 6, 7 }, { 0, 10 }, 1 };
-	// point accumulator = test_stroke.coords_at(0);
+	// Point accumulator = test_stroke.coords_at(0);
 
 	std::vector<point> true_path;
 	true_path.reserve(n + 1);
