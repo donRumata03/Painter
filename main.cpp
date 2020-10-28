@@ -67,7 +67,9 @@ int main ()
 	// test_stroke_color_optimization_with_displaying();
 
 	/// Splitting:
-	test_zone_scheduling();
+	// test_zone_scheduling();
+	test_image_segregation();
+
 
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();

@@ -12,8 +12,8 @@ endif()
 ################################################################################
 # Set dependency directories:
 
-set(is_computer OFF)
-set(is_notebook ON)
+set(is_computer ON)
+set(is_notebook OFF)
 
 # They are different configurations
 if (is_computer)
@@ -89,7 +89,7 @@ tests/draw_test.h
 tests/test_base.h
 tests/error_computing_tests/image_mse_test.h
 
-        GA_operations/mutation.cpp GA_operations/mutation.h common_operations/stroke_limits.h GA_operations/final_fitness_function.h GA_operations/util.h data_representation/range_rectangle.h common_operations/basic_constraining.cpp common_operations/basic_constraining.h GA_operations/final_constrainer.h tests/GA_tests/stroke_constraining_test.h launching/launch_main_ga.cpp launching/launch_main_ga.h GA_operations/stroke_range_generator.h tests/GA_tests/population_generation_tests.h GA_operations/callbacks/image_logging_callback.cpp GA_operations/callbacks/image_logging_callback.h GA_operations/callbacks/GA_informer.h GA_operations/population_generator.h common_operations/stroke_generation.cpp common_operations/stroke_generation.h GA_operations/final_crossover.cpp GA_operations/final_crossover.h tests/example_stroke_image_generation.h launching/GA_worker.cpp launching/GA_worker.h GA_operations/all.h launching/GA_parameter_sets.h common_operations/image_splitting.cpp common_operations/image_splitting.h tests/image_splitting_test.h)
+        GA_operations/mutation.cpp GA_operations/mutation.h common_operations/stroke_limits.h GA_operations/final_fitness_function.h GA_operations/util.h data_representation/range_rectangle.h common_operations/basic_constraining.cpp common_operations/basic_constraining.h GA_operations/final_constrainer.h tests/GA_tests/stroke_constraining_test.h launching/launch_main_ga.cpp launching/launch_main_ga.h GA_operations/stroke_range_generator.h tests/GA_tests/population_generation_tests.h GA_operations/callbacks/image_logging_callback.cpp GA_operations/callbacks/image_logging_callback.h GA_operations/callbacks/GA_informer.h GA_operations/population_generator.h common_operations/stroke_generation.cpp common_operations/stroke_generation.h GA_operations/final_crossover.cpp GA_operations/final_crossover.h tests/example_stroke_image_generation.h launching/GA_worker.cpp launching/GA_worker.h GA_operations/all.h launching/GA_parameter_sets.h common_operations/image_splitting_scheduling.cpp common_operations/image_splitting_scheduling.h tests/image_splitting_test.h common_operations/image_segregation.cpp common_operations/image_segregation.h)
 
 
 include_directories(./)

@@ -21,24 +21,29 @@ struct ImageCell {
 
 	ImageCell(size_t bottom, size_t upper, size_t left, size_t right);
 
-	size_t bottom;
-	size_t upper;
+	size_t min_y;
+	size_t max_y;
 
-	size_t left;
-	size_t right;
+	size_t min_x;
+	size_t max_x;
 };
 
 class ImageZoneRepresentation {
 public:
     ImageZoneRepresentation() = delete;
 
-    explicit ImageZoneRepresentation(std::vector<std::vector<ImageCell>> cells);
+    explicit ImageZoneRepresentation(std::vector<std::vector<ImageCell>> cells, size_t _image_w, size_t _image_h);
 
     // Getters:
-    [[nodiscard]] std::vector<std::vector<ImageCell>> get_2d_cells() const;
-	std::vector<ImageCell> get_1d_cells() const;
+    [[nodiscard]] const std::vector<std::vector<ImageCell>>& get_2d_cells() const;
+	const std::vector<ImageCell> & get_1d_cells() const;
+
+	size_t get_image_w () const;
+	size_t get_image_h () const;
 
 private:
+	size_t image_w, image_h;
+
 	std::vector<std::vector<ImageCell>> cells_2d;
 	mutable std::optional<std::vector<ImageCell>> cells_1d;
 };

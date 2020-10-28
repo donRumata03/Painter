@@ -2,26 +2,31 @@
 // Created by vova on 27.10.2020.
 //
 
-#include "image_splitting.h"
+#include "image_splitting_scheduling.h"
 
 
 std::ostream &operator<<(std::ostream &os, const ImageCell &cell) {
 	os << "ImageCell { "
-		<< "bottom: " << cell.bottom << " upper: " << cell.upper
-		<< " left: " << cell.left << " right: " << cell.right << " }";
+	   << "min_y: " << cell.min_y << " max_y: " << cell.max_y
+	   << " min_x: " << cell.min_x << " max_x: " << cell.max_x << " }";
 	return os;
 }
 
 ImageCell::ImageCell(size_t bottom, size_t upper, size_t left, size_t right)
-			: bottom(bottom), upper(upper), left(left), right(right) {}
+			: min_y(bottom), max_y(upper), min_x(left), max_x(right) {}
 
 ////////////////////////////////////////////////
 
-ImageZoneRepresentation::ImageZoneRepresentation(std::vector<std::vector<ImageCell>> cells) : cells_2d(std::move(cells)) {}
+ImageZoneRepresentation::ImageZoneRepresentation(std::vector<std::vector<ImageCell>> cells, size_t _image_w, size_t _image_h)
+									: cells_2d(std::move(cells)), image_w(_image_w), image_h(_image_h)
+{
 
-std::vector<std::vector<ImageCell>> ImageZoneRepresentation::get_2d_cells() const { return cells_2d; }
+}
 
-std::vector<ImageCell> ImageZoneRepresentation::get_1d_cells() const {
+const std::vector<std::vector<ImageCell>>& ImageZoneRepresentation::get_2d_cells() const { return cells_2d; }
+
+const std::vector<ImageCell>& ImageZoneRepresentation::get_1d_cells() const
+{
 	if (!cells_1d) {
 		cells_1d.emplace();
 		cells_1d->reserve(cells_2d.size() * cells_2d.at(0).size());
@@ -37,11 +42,22 @@ std::vector<ImageCell> ImageZoneRepresentation::get_1d_cells() const {
 	return *cells_1d;
 }
 
+size_t ImageZoneRepresentation::get_image_w () const
+{
+	return image_w;
+}
+
+size_t ImageZoneRepresentation::get_image_h () const
+{
+	return image_h;
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 
 static ImageZoneRepresentation construct_cells(const std::vector<std::pair<size_t, size_t>>& xs,
-                                        const std::vector<std::pair<size_t, size_t>>& ys
+                                        const std::vector<std::pair<size_t, size_t>>& ys,
+                                        size_t image_w, size_t image_h
                                         )
 {
 	std::vector<std::vector<ImageCell>> res;
@@ -52,16 +68,16 @@ static ImageZoneRepresentation construct_cells(const std::vector<std::pair<size_
 		this_col.reserve(ys.size());
 		for (const auto & y : ys) {
 			this_col.emplace_back(
-					y.first,     // bottom;
-					y.second,    // upper;
+					y.first,     // min_y;
+					y.second,    // max_y;
 
-					x.first,     // left;
-					x.second     // right;
+					x.first,     // min_x;
+					x.second     // max_x;
 					); // ImageCell { ... };
 		}
 	}
 
-	return ImageZoneRepresentation(std::move(res));
+	return ImageZoneRepresentation(std::move(res), image_w, image_h);
 }
 
 static void extend_middle_borders(std::vector<std::pair<size_t, size_t>>& values, double relative_cell_overlay_size) {
@@ -71,12 +87,12 @@ static void extend_middle_borders(std::vector<std::pair<size_t, size_t>>& values
 	double average_value = count_average(cell_sizes);
 	auto shifting_value = size_t(std::round(average_value * relative_cell_overlay_size));
 
-	for (int border_index = 0; border_index < values.size(); ++border_index) {
+	for (size_t border_index = 0; border_index < values.size(); ++border_index) {
 		if (border_index != 0) {
 			values[border_index].first -= shifting_value;
 		}
 		if (border_index != values.size() - 1) {
-			values[border_index].first += shifting_value;
+			values[border_index].second += shifting_value;
 		}
 	}
 }
@@ -89,13 +105,17 @@ ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h,
 		xs_distribution = distribute_task_ranges(image_w, x_cells),
 		ys_distribution = distribute_task_ranges(image_h, y_cells);
 
-//	std::cout << "Xs: " << xs_distribution << std::endl;
-//	std::cout << "Ys: " << ys_distribution << std::endl;
+	std::cout << "Xs before extending: " << xs_distribution << std::endl;
+	std::cout << "Ys before extending: " << ys_distribution << std::endl;
 
 	// Extend xs:
 	extend_middle_borders(xs_distribution, relative_cell_overlay_size);
 	extend_middle_borders(ys_distribution, relative_cell_overlay_size);
 
-	return construct_cells(xs_distribution, ys_distribution);
+	std::cout << "Xs after extending: " << xs_distribution << std::endl;
+	std::cout << "Ys after extending: " << ys_distribution << std::endl;
+
+
+	return construct_cells(xs_distribution, ys_distribution, image_w, image_h);
 	// return ImageZoneRepresentation{std::vector<std::vector<ImageCell>>()};
 }
