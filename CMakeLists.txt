@@ -12,8 +12,16 @@ endif()
 ################################################################################
 # Set dependency directories:
 
-set(is_computer ON)
-set(is_notebook OFF)
+if (UNIX)
+    set(is_computer OFF)
+    set(is_notebook ON)
+endif()
+
+if (WIN32)
+    set(is_computer ON)
+    set(is_notebook OFF)
+endif()
+
 
 # They are different configurations
 if (is_computer)
