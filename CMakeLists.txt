@@ -22,6 +22,10 @@ if (WIN32)
     set(is_notebook OFF)
 endif()
 
+# Override if tou want:
+# set(is_computer ...)
+# set(is_notebook ...)
+
 
 # They are different configurations
 if (is_computer)

@@ -14,18 +14,18 @@
 
 #include "GA/old_GA.h"
 
-class GA_launcher
+class multizone_GA_launcher
 {
 
 public:
-	explicit GA_launcher(std::string filename);
+	explicit multizone_GA_launcher(Image image, size_t zones_x, size_t zones_y);
 
-	GA_launcher(const GA_launcher&) = delete;
-	GA_launcher(GA_launcher&&) = delete;
-	GA_launcher operator= (const GA_launcher&) = delete;
-	GA_launcher operator= (GA_launcher&&) = delete;
+	multizone_GA_launcher(const multizone_GA_launcher&) = delete;
+	multizone_GA_launcher(multizone_GA_launcher&&) = delete;
+	multizone_GA_launcher operator= (const multizone_GA_launcher&) = delete;
+	multizone_GA_launcher operator= (multizone_GA_launcher&&) = delete;
 
-	~GA_launcher() = default;
+	~multizone_GA_launcher() = default;
 
 
 	void configure_common_helpers();
@@ -34,46 +34,12 @@ public:
 	void show_fitness_dynamic();
 
 private:
-	/// Constants:
-	size_t stroke_number = 30;
-	size_t population_size = 2'50;
-	size_t epoch_num = 400;
-
-	color canvas_color = { 0., 0., 0. };
-
-	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
-	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor
-	double stroke_coord_mutation_to_stroke_length_factor = 0.5;
-	double stroke_width_mutation_to_stroke_width_factor = 0.5; // 0.1;
-
-	double move_mutation_probability = 0.2;
-
-	// double logging_percentage = 0.01;
-	double logging_percentage = 0.00;
-
-	/// For example, stroke sizes may vary from
-	/// stroke_typical_length / sqrt(stroke_param_relative_range)
-	///              to
-	/// stroke_typical_length * sqrt(stroke_param_relative_range)
-	double stroke_param_relative_range = 3;
-
-	bool enable_multithreading = true;
-
-	std::string filename;
+	std::vector<>
 
 	/// Run-time constants:
 	size_t image_w = size_t(-1);
 	size_t image_h = size_t(-1);
 
-	double typical_coord = -1;
-	double stroke_typical_length = -1;
-	double stroke_typical_width = -1;
-	double param_half_range = -1;
-
-	double stroke_coord_mutation_sigma = -1;
-	double stroke_width_mutation_sigma = -1;
-
-	stroke_limit_descriptor limits{};
 
 	/// Data:
 	Image image;
