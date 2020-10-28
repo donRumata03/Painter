@@ -14,8 +14,13 @@
 #include <painter_pch.h>
 
 #include <utility>
+#include <ostream>
 
 struct ImageCell {
+	friend std::ostream &operator<<(std::ostream &os, const ImageCell &cell);
+
+	ImageCell(size_t bottom, size_t upper, size_t left, size_t right);
+
 	size_t bottom;
 	size_t upper;
 
@@ -30,8 +35,8 @@ public:
     explicit ImageZoneRepresentation(std::vector<std::vector<ImageCell>> cells);
 
     // Getters:
-    [[nodiscard]] auto get_2d_cells() const;
-	auto get_1d_cells() const;
+    [[nodiscard]] std::vector<std::vector<ImageCell>> get_2d_cells() const;
+	std::vector<ImageCell> get_1d_cells() const;
 
 private:
 	std::vector<std::vector<ImageCell>> cells_2d;

@@ -13,6 +13,7 @@
 #include <launching/launch_main_ga.h>
 #include <tests/GA_tests/population_generation_tests.h>
 #include <tests/example_stroke_image_generation.h>
+#include <tests/image_splitting_test.h>
 #include "tests/opencv_test.h"
 
 
@@ -30,6 +31,7 @@ int main ()
     // system(("chcp "s + std::to_string(CP_UTF8)).c_str());
 
     set_utf8_in_console();
+	std::cout << "Using " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
 
 	/// IO tests:
 
@@ -64,6 +66,9 @@ int main ()
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();
 
+	/// Splitting:
+	test_zone_scheduling();
+
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
@@ -91,7 +96,7 @@ int main ()
 	// const auto& image_path = cutted_moon_path;
 	// const auto& image_path = half_ring_path;
 
-	launch_the_GA(image_path);
+	// launch_the_GA(image_path);
 
 
 
