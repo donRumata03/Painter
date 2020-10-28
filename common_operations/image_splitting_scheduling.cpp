@@ -52,6 +52,16 @@ size_t ImageZoneRepresentation::get_image_h () const
 	return image_h;
 }
 
+size_t ImageZoneRepresentation::get_x_zones () const
+{
+	return cells_2d.size();
+}
+
+size_t ImageZoneRepresentation::get_y_zones () const
+{
+	return cells_2d[0].size();
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 

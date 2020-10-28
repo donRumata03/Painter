@@ -22,7 +22,7 @@ inline void test_image_segregation() {
 	Image image = open_image(path_to_example_image.string());
 
 	auto splitting_plan = schedule_image_splitting(
-			image.cols, image.rows, 2, 2, 0.1
+			image.cols, image.rows, 3, 3, 0.1
 			);
 
 	for (auto& col : splitting_plan.get_2d_cells()) {

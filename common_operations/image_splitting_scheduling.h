@@ -41,6 +41,9 @@ public:
 	size_t get_image_w () const;
 	size_t get_image_h () const;
 
+	size_t get_x_zones () const;
+	size_t get_y_zones () const;
+
 private:
 	size_t image_w, image_h;
 
