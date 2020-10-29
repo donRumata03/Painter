@@ -12,7 +12,7 @@ void launch_single_zone_GA (const std::string &filename)
 {
 	Image image = open_image(filename);
 
-	GA_launching_params this_params = one_stroke_params;
+	GA_launching_params this_params = van_gogh_params;
 
 	GA_worker worker(image, this_params);
 	worker.run_remaining_iterations();
@@ -33,13 +33,7 @@ void launch_single_zone_GA (const std::string &filename)
 	/// For many threads with memory allocation saving system (measured WITHOUT buffer getting):
 	// 31 MegaPixel / (sec * thread)
 
-	std::cout
-		<< "Computations performed: " << worker.computations_performed() << "(" << this_params.epoch_num * this_params.population_size << " expected)" << std::endl
-		<< "Average computational time: " << worker.average_computation_time_seconds() * 1e+3 << "ms" << std::endl
-		<< "Computational time per pixel: " << worker.average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
-		<< "=> Computational speed: " << size_t(std::round(1 / worker.average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
-	<< std::endl;
-
+	worker.print_diagnostic_information();
 	worker.show_fitness_dynamic();
 }
 
@@ -128,12 +122,17 @@ bool multizone_GA_launcher::process_one_cell ()
 		std::cout << "[multizone_GA_launcher]: Didn't find any non-processed cells => finishing..." << std::endl;
 		return false;
 	}
+
+	std::cout << "_____________________________________________" << std::endl;
 	std::cout << "[multizone_GA_launcher]: processing new cell: x = " << cell_x << ", y = " << cell_y
 		<< ": " << zones.zone_descriptor.get_2d_cells()[cell_x][cell_y]
 	<< std::endl;
 
 	auto& worker = workers[cell_x][cell_y];
 	worker->run_remaining_iterations();
+
+	worker->print_diagnostic_information();
+	std::cout << "_____________________________________________" << std::endl;
 
 	workers_ready[cell_x][cell_y] = true;
 

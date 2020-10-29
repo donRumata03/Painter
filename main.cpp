@@ -80,6 +80,7 @@ int main ()
 	/// The actual GA:
 	std::string coffee_path = (fs::path(painter_base_path) / "images_for_testing" / "brown_coffee.png").string();
 	std::string van_gogh_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.jpg").string();
+	std::string van_gogh_beard_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh-beard.png").string();
 
 	std::string one_stroke_path = (fs::path(painter_base_path) / "images_for_testing" / "one_stroke.png").string();
 
@@ -89,7 +90,8 @@ int main ()
 	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
 
 	// const auto& image_path = coffee_path;
-	const auto& image_path = van_gogh_path;
+	// const auto& image_path = van_gogh_path;
+	const auto& image_path = van_gogh_beard_path;
 
 	// const auto& image_path = one_stroke_path;
 
@@ -100,10 +102,10 @@ int main ()
 
 
 	/// Single zone:
-	// launch_single_zone_GA(image_path);
+	launch_single_zone_GA(image_path);
 
 	/// Multizone:
-	launch_multizone_GA(image_path);
+	// launch_multizone_GA(image_path);
 
 
 	return 0;

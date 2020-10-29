@@ -58,6 +58,16 @@ public:
 
 	const std::vector<double>& get_best_genome();
 
+	void print_diagnostic_information() {
+		std::cout
+				<< "Computations performed: " << computations_performed() << "(" << launch_params.epoch_num * launch_params.population_size << " expected)" << std::endl
+				<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
+				<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
+				<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+				<< std::endl;
+	}
+
+
 private:
 	// Image
 	Image initial_image;

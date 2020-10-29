@@ -48,14 +48,14 @@ inline auto one_stroke_params = GA_launching_params {
 ///////////
 
 inline auto van_gogh_params = GA_launching_params {
-		.stroke_number = 10,
-		.population_size = 5'0,
-		.epoch_num = 5,
+		.stroke_number = 100,
+		.population_size = 100,
+		.epoch_num = 20,
 
-		.stroke_length_to_image_size_fraction = 0.4,
-		.stroke_width_to_length_factor = 0.2,
-		.stroke_coord_mutation_to_stroke_length_factor = 0.2,
-		.stroke_width_mutation_to_stroke_width_factor = 0.2,
+		.stroke_length_to_image_size_fraction = 0.4, // 0.2,
+		.stroke_width_to_length_factor = 0.3,
+		.stroke_coord_mutation_to_stroke_length_factor = 0.4,
+		.stroke_width_mutation_to_stroke_width_factor = 0.4,
 
 		.stroke_param_relative_range = 3,
 
