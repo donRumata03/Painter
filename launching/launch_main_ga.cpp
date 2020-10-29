@@ -74,6 +74,9 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 
 	// std::cout << std::endl << zones.zone_descriptor << std::endl;
 
+	std::vector<bool> worker_ready_mask(zones_y, false);
+	workers_ready.assign(zones_x, worker_ready_mask);
+
 	/// Init workers:
 	workers.reserve(zones_x);
 
@@ -96,25 +99,41 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 }
 
 
-void multizone_GA_launcher::run_one_iteration ()
+bool multizone_GA_launcher::run_one_cell ()
 {
-	for(auto& col : workers) {
-		for(auto& worker : col) {
-			worker.run_one_iteration();
+	// Determine cell number:
+	bool found_incomplete_cell = false;
+	size_t cell_x = 0, cell_y = 0;
+
+	for (size_t x = 0; x < zones_x; ++x) {
+		for (size_t y = 0; y < zones_y; ++y) {
+			if (!workers_ready[x][y]) {
+				found_incomplete_cell = true;
+				cell_x = x;
+				cell_y = y;
+			}
 		}
 	}
 
-	logger.operator()({ glue_best_genomes() }, epochs_performed, GA::logging_type::best_genome);
 
-	epochs_performed++;
+	if (!found_incomplete_cell) {
+		std::cout << "[multizone_GA_launcher]: Didn't find any non-processed cells => finishing..." << std::endl;
+		return false;
+	}
+	std::cout << "[multizone_GA_launcher]: processing new cell: x = " << cell_x << ", y = " << cell_y << std::endl;
+
+	auto& worker = workers[cell_x][cell_y];
+	worker.run_one_iteration();
+
+	workers_ready[cell_x][cell_y] = true;
+
+	return true;
 }
 
 
 void multizone_GA_launcher::run ()
 {
-	for (size_t i = 0; i < 100; ++i) {
-		run_one_iteration();
-	}
+	while(run_one_cell()) {}
 }
 
 std::vector<double> multizone_GA_launcher::glue_best_genomes ()
@@ -126,16 +145,45 @@ std::vector<double> multizone_GA_launcher::glue_best_genomes ()
 
 	res.reserve(total_buffer_size);
 
+	size_t x_index = 0;
 	for(auto& col : workers) {
+		size_t y_index = 0;
 		for (auto& worker : col) {
-			std::copy(worker.get_best_genome().begin(), worker.get_best_genome().end(),
-			                    std::back_inserter(res));
+			const auto& this_cell_descriptor = zones.zone_descriptor.get_2d_cells()[x_index][y_index];
+
+			size_t this_x_shift = this_cell_descriptor.min_x;
+			size_t this_y_shift = this_cell_descriptor.min_y;
+
+			auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
+
+			std::for_each(strokes.begin(), strokes.end(),
+			              [this_x_shift, this_y_shift](stroke& stroke){
+				              shift_stroke(stroke, { double(this_x_shift), double(this_y_shift) });
+			              });
+
+			auto shifted_buffer = pack_stroke_data(strokes);
+
+			std::copy(shifted_buffer.begin(), shifted_buffer.end(), std::back_inserter(res));
+
+			y_index++;
 		}
+		x_index++;
 	}
 
 	assert(res.size() == total_buffer_size);
 
 	return res;
+}
+
+
+Image multizone_GA_launcher::get_resultant_image ()
+{
+	return stroke_buffer_to_image(glue_best_genomes(), image);
+}
+
+void multizone_GA_launcher::save_result (const fs::path& filename)
+{
+	save_image(get_resultant_image(), filename);
 }
 
 
