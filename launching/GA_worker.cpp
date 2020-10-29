@@ -5,7 +5,8 @@
 #include "GA_worker.h"
 
 
-GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : launch_params(params) {
+GA_worker::GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path)
+		: launch_params(params) {
 	image.copyTo(initial_image);
 
 	image_w = image.cols;
@@ -67,7 +68,7 @@ GA_worker::GA_worker (const Image &image, const GA_launching_params &params) : l
 	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
 
 	bool enable_detailed_logging = (launch_params.logging_percentage != 0);
-	logger = image_logging_callback(image, (fs::path{ painter_base_path} / "log/_latest").string(),
+	logger = image_logging_callback(image, logging_path.string(),
 	                                launch_params.logging_percentage, enable_detailed_logging);
 
 	std::cout << "[GA_worker]: fitness and logger ready" << std::endl;

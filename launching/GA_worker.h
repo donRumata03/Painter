@@ -46,7 +46,7 @@ class GA_worker
 {
 public:
 
-	GA_worker(const Image& image, const GA_launching_params& params);
+	GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path = fs::path{ painter_base_path} / "log/latest");
 
 	void run_one_iteration();
 	void run_remaining_iterations();

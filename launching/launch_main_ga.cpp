@@ -45,15 +45,21 @@ void launch_single_zone_GA (const std::string &filename)
 
 void launch_multizone_GA (const std::string& filename)
 {
+	GA_launching_params this_params = one_stroke_params;
+	image_splitting_params this_splitting_params = van_gogh_splitting_params;
+
 	Image image = open_image(filename);
+	multizone_GA_launcher launcher(image,
+								this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
+								this_params);
+	std::cout << "Performed initialization. Running.." << std::endl;
 
-	multizone_GA_launcher launcher(image, 2, 2, 0.1);
-
-
+	launcher.run();
 }
 
 
-multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y, double overlay_percent)
+multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y,
+                                              double overlay_percent, GA_launching_params params)
 							: zones(
 									split_image_into_zones(
 											_image,
@@ -76,10 +82,25 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 		worker_col.reserve(zones_y);
 
 		for (size_t worker_y_index = 0; worker_y_index < zones_y; ++worker_y_index) {
-			workers.emplace_back();
+			std::string this_filename = "x_index=" + std::to_string(worker_x_index) + ",y_index=" + std::to_string(worker_y_index) + ".png";
+
+			GA_worker w(zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_filename);
+
+			worker_col.emplace_back(zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_filename);
 		}
 	}
 }
+
+void multizone_GA_launcher::run ()
+{
+	for(auto& col : workers) {
+		for(auto& worker : col) {
+			worker.run_remaining_iterations();
+		}
+	}
+}
+
+
 
 
 
