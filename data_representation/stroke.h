@@ -60,6 +60,9 @@ struct stroke {
 	friend std::ostream &operator<< (std::ostream &os, const stroke &stroke);
 };
 
+/// For json:
+void to_json(json& j, const stroke& stroke);
+void from_json(const json& j, stroke& stroke);
 
 /// Template function implementations:
 

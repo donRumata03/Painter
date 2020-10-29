@@ -14,6 +14,7 @@
 #include <tests/GA_tests/population_generation_tests.h>
 #include <tests/example_stroke_image_generation.h>
 #include <tests/image_splitting_test.h>
+#include <tests/strokes_to_json_tests.h>
 #include "tests/opencv_test.h"
 
 
@@ -70,6 +71,8 @@ int main ()
 	// test_zone_scheduling();
 	// test_image_segregation();
 
+	/// Json
+	test_stroke_to_json();
 
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
@@ -102,7 +105,7 @@ int main ()
 
 
 	/// Single zone:
-	launch_single_zone_GA(image_path);
+	// launch_single_zone_GA(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

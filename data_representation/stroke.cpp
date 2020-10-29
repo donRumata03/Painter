@@ -221,3 +221,30 @@ std::ostream &operator<< (std::ostream &os, const colored_stroke &stroke)
 	os << reinterpret_cast<const struct stroke &>(stroke) << " background_color: " << stroke.background_color;
 	return os;
 }
+
+
+/// Json
+
+void to_json (json& j, const stroke& stroke)
+{
+	j["type"] = "bezier_curve";
+
+
+	j["point_0"] = stroke.p0;
+	j["point_1"] = stroke.p1;
+	j["point_2"] = stroke.p2;
+
+	j["width"] = stroke.width;
+}
+
+void from_json (const json& j, stroke& stroke)
+{
+	assert(j["type"] == "bezier_curve");
+
+
+	stroke.p0 = j["point_0"].get<point>();
+	stroke.p1 = j["point_1"].get<point>();
+	stroke.p2 = j["point_2"].get<point>();
+
+	stroke.width = j["width"].get<double>();
+}
