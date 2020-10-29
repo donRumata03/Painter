@@ -21,6 +21,7 @@ public:
 	explicit multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y,
 	                                double overlay_percent, GA_launching_params params);
 
+	void run_one_iteration();
 	void run();
 
 	/// Memory managements stuff:
@@ -32,10 +33,18 @@ public:
 	~multizone_GA_launcher() = default;
 
 private:
+
+private:
+	std::vector<double> glue_best_genomes();
+
+
 	ImageZones zones;
 	std::vector<std::vector<GA_worker>> workers;
 
+	Image image;
 
+	image_logging_callback logger;
+	size_t epochs_performed = 0;
 
 	/// Run-time constants:
 	size_t image_w = size_t(-1);
@@ -43,10 +52,6 @@ private:
 
 	size_t zones_x = size_t(-1);
 	size_t zones_y = size_t(-1);
-
-	/// Data:
-	Image image;
-
 };
 
 

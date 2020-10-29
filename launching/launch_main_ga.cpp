@@ -89,16 +89,55 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 			worker_col.emplace_back(zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_filename);
 		}
 	}
+
+	logger = image_logging_callback(
+			image,
+			(painter_base_path / "log" / "latest").string(), 0, false);
 }
 
-void multizone_GA_launcher::run ()
+
+void multizone_GA_launcher::run_one_iteration ()
 {
 	for(auto& col : workers) {
 		for(auto& worker : col) {
-			worker.run_remaining_iterations();
+			worker.run_one_iteration();
 		}
 	}
+
+	logger.operator()({ glue_best_genomes() }, epochs_performed, GA::logging_type::best_genome);
+
+	epochs_performed++;
 }
+
+
+void multizone_GA_launcher::run ()
+{
+	for (size_t i = 0; i < 100; ++i) {
+		run_one_iteration();
+	}
+}
+
+std::vector<double> multizone_GA_launcher::glue_best_genomes ()
+{
+	std::vector<double> res;
+	size_t total_buffer_size = zones_x * zones_y * workers[0][0].get_best_genome().size();
+
+	std::cout << "Copying " << total_buffer_size << " doubles" << std::endl;
+
+	res.reserve(total_buffer_size);
+
+	for(auto& col : workers) {
+		for (auto& worker : col) {
+			std::copy(worker.get_best_genome().begin(), worker.get_best_genome().end(),
+			                    std::back_inserter(res));
+		}
+	}
+
+	assert(res.size() == total_buffer_size);
+
+	return res;
+}
+
 
 
 

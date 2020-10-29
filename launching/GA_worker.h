@@ -56,6 +56,8 @@ public:
 	double average_computation_time_per_pixel_seconds() const { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
 	double computations_performed() { return configured_fitness_function.computations_performed(); }
 
+	const std::vector<double>& get_best_genome();
+
 private:
 	// Image
 	Image initial_image;

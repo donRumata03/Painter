@@ -144,3 +144,8 @@ void GA_worker::show_fitness_dynamic ()
 	add_vectors_to_plot(xs_for_fitnesses, fhist);
 	show_plot({ .window_title = "Fitness Dynamic" });
 }
+
+const std::vector<double>& GA_worker::get_best_genome ()
+{
+	return optimizer->get_best_genome();
+}
