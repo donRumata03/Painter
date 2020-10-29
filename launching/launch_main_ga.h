@@ -21,7 +21,7 @@ public:
 	explicit multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y,
 	                                double overlay_percent, GA_launching_params params);
 
-	bool run_one_cell();
+	bool process_one_cell();
 	void run();
 
 	Image get_resultant_image();

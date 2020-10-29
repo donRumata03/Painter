@@ -49,8 +49,8 @@ inline auto one_stroke_params = GA_launching_params {
 
 inline auto van_gogh_params = GA_launching_params {
 		.stroke_number = 10,
-		.population_size = 5'00,
-		.epoch_num = 20,
+		.population_size = 5'0,
+		.epoch_num = 5,
 
 		.stroke_length_to_image_size_fraction = 0.4,
 		.stroke_width_to_length_factor = 0.2,
@@ -79,9 +79,9 @@ struct image_splitting_params {
 };
 
 inline image_splitting_params van_gogh_splitting_params {
-	.zones_x = 2,
-	.zones_y = 2,
-	.overlay_percent = 0.1
+	.zones_x = 5,
+	.zones_y = 10,
+	.overlay_percent = 0.3
 };
 
 

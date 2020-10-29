@@ -36,9 +36,12 @@ public:
 		if (fs::exists(this->path_for_logging)) fs::remove_all(this->path_for_logging);
 
 		fs::create_directories(this->path_for_logging);
+		save_image(this->image, this->path_for_logging / "original.png");
 
 		path_for_best_genomes = this->path_for_logging / "best_genomes";
 		fs::create_directories(path_for_best_genomes);
+
+		// std::cout << "Initialized logger with path to best genomes: " << path_for_best_genomes << std::endl;
 	}
 
 

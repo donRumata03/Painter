@@ -74,12 +74,16 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 
 	image = std::move(_image);
 
-	// std::cout << std::endl << zones.zone_descriptor << std::endl;
+	/// Init logger:
+	logger = image_logging_callback(
+			image,
+			(painter_base_path / "log" / "latest").string(), 0, false);
 
+
+	/// Init workers:
 	std::vector<bool> worker_ready_mask(zones_y, false);
 	workers_ready.assign(zones_x, worker_ready_mask);
 
-	/// Init workers:
 	workers.reserve(zones_x);
 
 	for (size_t worker_x_index = 0; worker_x_index < zones_x; ++worker_x_index) {
@@ -97,13 +101,11 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 		}
 	}
 
-	logger = image_logging_callback(
-			image,
-			(painter_base_path / "log" / "latest").string(), 0, false);
+
 }
 
 
-bool multizone_GA_launcher::run_one_cell ()
+bool multizone_GA_launcher::process_one_cell ()
 {
 	// Determine cell number:
 	bool found_incomplete_cell = false;
@@ -131,7 +133,7 @@ bool multizone_GA_launcher::run_one_cell ()
 	<< std::endl;
 
 	auto& worker = workers[cell_x][cell_y];
-	worker->run_one_iteration();
+	worker->run_remaining_iterations();
 
 	workers_ready[cell_x][cell_y] = true;
 
@@ -141,7 +143,7 @@ bool multizone_GA_launcher::run_one_cell ()
 
 void multizone_GA_launcher::run ()
 {
-	while(run_one_cell()) {}
+	while(process_one_cell()) {}
 }
 
 std::vector<double> multizone_GA_launcher::glue_best_genomes ()
