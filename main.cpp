@@ -89,9 +89,9 @@ int main ()
 	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
 
 	// const auto& image_path = coffee_path;
-	// const auto& image_path = van_gogh_path;
+	const auto& image_path = van_gogh_path;
 
-	const auto& image_path = one_stroke_path;
+	// const auto& image_path = one_stroke_path;
 
 	// const auto& image_path = circle_path;
 	// const auto& image_path = moon_path;

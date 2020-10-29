@@ -20,16 +20,16 @@ public:
 	Image get_buffer_for_thread (size_t w, size_t h, const color& canvas_color) {
 		size_t thread_id = get_thread_id();
 
-		// NOT Allocate the buffer if there is one:
+		/// NOT Allocate the buffer if there is one:
 		{
-			// Lock while copying all useful data:
+			/// Lock while copying all useful data:
 			std::lock_guard<std::mutex> lock(buffer_map_realloc_mutex);
 
 			auto proposed_container = buffer_map.find(thread_id);
 			if(proposed_container == buffer_map.end()) {
-				// Allocate new buffer:
+				/// Allocate new buffer:
 				auto [iterator, some_bool] = buffer_map.insert({ thread_id, make_default_image(w, h, canvas_color) });
-				std::cout << "Allocated new buffer for thread " << thread_id << std::endl;
+				// std::cout << "Allocated new buffer for thread " << thread_id << std::endl;
 				return iterator->second;
 			}
 			else {

@@ -122,15 +122,15 @@ ImageZoneRepresentation schedule_image_splitting(size_t image_w, size_t image_h,
 		xs_distribution = distribute_task_ranges(image_w, x_cells),
 		ys_distribution = distribute_task_ranges(image_h, y_cells);
 
-	std::cout << "Xs before extending: " << xs_distribution << std::endl;
-	std::cout << "Ys before extending: " << ys_distribution << std::endl;
+	// std::cout << "Xs before extending: " << xs_distribution << std::endl;
+	// std::cout << "Ys before extending: " << ys_distribution << std::endl;
 
 	// Extend xs:
 	extend_middle_borders(xs_distribution, relative_cell_overlay_size);
 	extend_middle_borders(ys_distribution, relative_cell_overlay_size);
 
-	std::cout << "Xs after extending: " << xs_distribution << std::endl;
-	std::cout << "Ys after extending: " << ys_distribution << std::endl;
+	// std::cout << "Xs after extending: " << xs_distribution << std::endl;
+	// std::cout << "Ys after extending: " << ys_distribution << std::endl;
 
 
 	return construct_cells(xs_distribution, ys_distribution, image_w, image_h);

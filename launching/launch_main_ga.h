@@ -41,7 +41,7 @@ private:
 
 private:
 	ImageZones zones;
-	std::vector<std::vector<GA_worker>> workers;
+	std::vector<std::vector<std::shared_ptr<GA_worker>>> workers;
 	std::vector<std::vector<bool>> workers_ready;
 
 	Image image;

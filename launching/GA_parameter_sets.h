@@ -48,8 +48,8 @@ inline auto one_stroke_params = GA_launching_params {
 ///////////
 
 inline auto van_gogh_params = GA_launching_params {
-		.stroke_number = 3,
-		.population_size = 5'000,
+		.stroke_number = 10,
+		.population_size = 5'00,
 		.epoch_num = 20,
 
 		.stroke_length_to_image_size_fraction = 0.4,
@@ -64,7 +64,7 @@ inline auto van_gogh_params = GA_launching_params {
 
 		.canvas_color = { 0., 0., 0. },
 
-		.allow_multithreading = false,
+		.allow_multithreading = true,
 };
 
 //////////

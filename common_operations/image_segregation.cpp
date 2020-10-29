@@ -14,7 +14,7 @@ static Image crop_image(const Image& image, const ImageCell& cell) {
 			static_cast<int>(cell.max_y - cell.min_y),
 	};
 
-	std::cout << cell << " -> " << cropping_rect << std::endl;
+	// std::cout << cell << " -> " << cropping_rect << std::endl;
 
 	Image cropped = image(cropping_rect);
 	Image res;

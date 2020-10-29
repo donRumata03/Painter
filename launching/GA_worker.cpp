@@ -50,7 +50,7 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 			stroke_width_mutation_sigma
 	);
 
-	std::cout << "[GA_worker]: made GA data" << std::endl;
+	// std::cout << "[GA_worker]: made GA data" << std::endl;
 
 	/// Init GA operation performers:
 	configured_constrainer = final_constrainer(limits);
@@ -63,7 +63,7 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 	ga_operations.parents_matting = configured_crossover;
 	ga_operations.mutation = configured_mutator;
 
-	std::cout << "[GA_worker]: GA operations ready" << std::endl;
+	// std::cout << "[GA_worker]: GA operations ready" << std::endl;
 
 	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
 
@@ -71,7 +71,7 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 	logger = image_logging_callback(image, logging_path.string(),
 	                                launch_params.logging_percentage, enable_detailed_logging);
 
-	std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
+	// std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
 
 
 	/// GA params:
@@ -100,16 +100,16 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 			GA::exception_policy::catch_and_log_fact,
 	};
 
-	std::cout << "[GA_worker]: GA params ready" << std::endl;
+	// std::cout << "[GA_worker]: GA params ready" << std::endl;
 
 
 	optimizer.emplace(configured_fitness_function, point_ranges, ga_params);
 
-	std::cout << "[GA_worker]: inited optimizer" << std::endl;
+	// std::cout << "[GA_worker]: inited optimizer" << std::endl;
 
 
 	optimizer->plug_logger(logger);
-	std::cout << "[GA_worker]: plugged logger" << std::endl;
+	// std::cout << "[GA_worker]: plugged logger" << std::endl;
 
 
 	optimizer->set_informer(GA_informer(image, launch_params.epoch_num));

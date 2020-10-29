@@ -45,16 +45,18 @@ void launch_single_zone_GA (const std::string &filename)
 
 void launch_multizone_GA (const std::string& filename)
 {
-	GA_launching_params this_params = one_stroke_params;
+	GA_launching_params this_params = van_gogh_params;
 	image_splitting_params this_splitting_params = van_gogh_splitting_params;
 
 	Image image = open_image(filename);
 	multizone_GA_launcher launcher(image,
 								this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
 								this_params);
-	std::cout << "Performed initialization. Running.." << std::endl;
+	std::cout << "[main launching function]: Performed initialization. Running.." << std::endl;
 
 	launcher.run();
+
+	launcher.save_result(painter_base_path / "log" / "latest" / "result.png");
 }
 
 
@@ -85,11 +87,13 @@ multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, siz
 		worker_col.reserve(zones_y);
 
 		for (size_t worker_y_index = 0; worker_y_index < zones_y; ++worker_y_index) {
-			std::string this_filename = "x_index=" + std::to_string(worker_x_index) + ",y_index=" + std::to_string(worker_y_index) + ".png";
+			std::string this_path = "x_index=" + std::to_string(worker_x_index) + ",y_index=" + std::to_string(worker_y_index);
 
-			GA_worker w(zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_filename);
+			std::shared_ptr<GA_worker> this_worker = std::make_shared<GA_worker>(
+					zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_path
+					);
 
-			worker_col.emplace_back(zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_filename);
+			worker_col.emplace_back(std::move(this_worker));
 		}
 	}
 
@@ -111,8 +115,10 @@ bool multizone_GA_launcher::run_one_cell ()
 				found_incomplete_cell = true;
 				cell_x = x;
 				cell_y = y;
+				break;
 			}
 		}
+		if (found_incomplete_cell) break;
 	}
 
 
@@ -120,10 +126,12 @@ bool multizone_GA_launcher::run_one_cell ()
 		std::cout << "[multizone_GA_launcher]: Didn't find any non-processed cells => finishing..." << std::endl;
 		return false;
 	}
-	std::cout << "[multizone_GA_launcher]: processing new cell: x = " << cell_x << ", y = " << cell_y << std::endl;
+	std::cout << "[multizone_GA_launcher]: processing new cell: x = " << cell_x << ", y = " << cell_y
+		<< ": " << zones.zone_descriptor.get_2d_cells()[cell_x][cell_y]
+	<< std::endl;
 
 	auto& worker = workers[cell_x][cell_y];
-	worker.run_one_iteration();
+	worker->run_one_iteration();
 
 	workers_ready[cell_x][cell_y] = true;
 
@@ -139,7 +147,7 @@ void multizone_GA_launcher::run ()
 std::vector<double> multizone_GA_launcher::glue_best_genomes ()
 {
 	std::vector<double> res;
-	size_t total_buffer_size = zones_x * zones_y * workers[0][0].get_best_genome().size();
+	size_t total_buffer_size = zones_x * zones_y * workers[0][0]->get_best_genome().size();
 
 	std::cout << "Copying " << total_buffer_size << " doubles" << std::endl;
 
@@ -154,7 +162,7 @@ std::vector<double> multizone_GA_launcher::glue_best_genomes ()
 			size_t this_x_shift = this_cell_descriptor.min_x;
 			size_t this_y_shift = this_cell_descriptor.min_y;
 
-			auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
+			auto strokes = unpack_stroke_data_buffer(worker->get_best_genome());
 
 			std::for_each(strokes.begin(), strokes.end(),
 			              [this_x_shift, this_y_shift](stroke& stroke){
