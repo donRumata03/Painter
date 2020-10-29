@@ -62,6 +62,13 @@ size_t ImageZoneRepresentation::get_y_zones () const
 	return cells_2d[0].size();
 }
 
+std::ostream& operator<< (std::ostream& os, const ImageZoneRepresentation& zones)
+{
+	os << "image_w: " << zones.image_w << " image_h: " << zones.image_h << " cells_2d: "
+	   << zones.cells_2d;
+	return os;
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 

@@ -68,7 +68,7 @@ int main ()
 
 	/// Splitting:
 	// test_zone_scheduling();
-	test_image_segregation();
+	// test_image_segregation();
 
 
 	/// GA util tests:
@@ -98,8 +98,12 @@ int main ()
 	// const auto& image_path = cutted_moon_path;
 	// const auto& image_path = half_ring_path;
 
-	// launch_the_GA(image_path);
 
+	/// Single zone:
+	// launch_single_zone_GA(image_path);
+
+	/// Multizone:
+	launch_multizone_GA(image_path);
 
 
 	return 0;

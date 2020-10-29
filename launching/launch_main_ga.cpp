@@ -8,18 +8,8 @@
 
 #include "GA_parameter_sets.h"
 
-void launch_the_GA (const std::string &filename)
+void launch_single_zone_GA (const std::string &filename)
 {
-/*
-
-	multizone_GA_launcher ga_launcher(filename);
-	ga_launcher.configure_common_helpers();
-	ga_launcher.configure_GA_operation_helpers();
-
-	ga_launcher.run();
-	ga_launcher.show_fitness_dynamic();
-
-*/
 	Image image = open_image(filename);
 
 	GA_launching_params this_params = one_stroke_params;
@@ -53,9 +43,43 @@ void launch_the_GA (const std::string &filename)
 	worker.show_fitness_dynamic();
 }
 
-
-
-multizone_GA_launcher::multizone_GA_launcher (Image image, size_t zones_x, size_t zones_y)
+void launch_multizone_GA (const std::string& filename)
 {
+	Image image = open_image(filename);
+
+	multizone_GA_launcher launcher(image, 2, 2, 0.1);
+
 
 }
+
+
+multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y, double overlay_percent)
+							: zones(
+									split_image_into_zones(
+											_image,
+											schedule_image_splitting(_image.cols, _image.rows, _zones_x, _zones_y, overlay_percent)
+											)
+										), zones_x(_zones_x), zones_y(_zones_y)
+{
+	image_w = this->image.cols;
+	image_h = this->image.rows;
+
+	image = std::move(_image);
+
+	// std::cout << std::endl << zones.zone_descriptor << std::endl;
+
+	/// Init workers:
+	workers.reserve(zones_x);
+
+	for (size_t worker_x_index = 0; worker_x_index < zones_x; ++worker_x_index) {
+		auto& worker_col = workers.emplace_back();
+		worker_col.reserve(zones_y);
+
+		for (size_t worker_y_index = 0; worker_y_index < zones_y; ++worker_y_index) {
+			workers.emplace_back();
+		}
+	}
+}
+
+
+

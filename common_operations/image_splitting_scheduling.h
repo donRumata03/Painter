@@ -44,6 +44,8 @@ public:
 	size_t get_x_zones () const;
 	size_t get_y_zones () const;
 
+	friend std::ostream& operator<< (std::ostream& os, const ImageZoneRepresentation& representation);
+
 private:
 	size_t image_w, image_h;
 

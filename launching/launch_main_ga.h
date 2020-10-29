@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <common_operations/image_segregation.h>
 #include "painter_pch.h"
 
 #include "optimization/error/error_computing.h"
@@ -11,14 +12,13 @@
 
 #include "GA_operations/all.h"
 
-
-#include "GA/old_GA.h"
+#include "GA_worker.h"
 
 class multizone_GA_launcher
 {
 
 public:
-	explicit multizone_GA_launcher(Image image, size_t zones_x, size_t zones_y);
+	explicit multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y, double overlay_percent);
 
 	multizone_GA_launcher(const multizone_GA_launcher&) = delete;
 	multizone_GA_launcher(multizone_GA_launcher&&) = delete;
@@ -27,42 +27,24 @@ public:
 
 	~multizone_GA_launcher() = default;
 
-
-	void configure_common_helpers();
-	void configure_GA_operation_helpers();
-	void run();
-	void show_fitness_dynamic();
-
 private:
-	std::vector<>
+	ImageZones zones;
+	std::vector<std::vector<GA_worker>> workers;
+
+
 
 	/// Run-time constants:
 	size_t image_w = size_t(-1);
 	size_t image_h = size_t(-1);
 
+	size_t zones_x = size_t(-1);
+	size_t zones_y = size_t(-1);
 
 	/// Data:
 	Image image;
-	std::vector<double> GA_fitnesses;
 
-	/// Common helpers:
-
-
-	/// GA-specific data / actors:
-	final_fitness_function configured_fitness_function;
-	final_constrainer configured_constrainer{};
-	final_generator configured_generator{};
-	final_crossover configured_crossover{};
-	mutator configured_mutator{};
-
-	image_logging_callback logger {};
-
-	GA::GA_operation_set ga_operations;
-	GA::continuous_GA_params ga_params {};
-
-	std::vector<std::pair<double, double>> point_ranges;
-	std::vector<double> mutation_sigmas;
 };
 
 
-void launch_the_GA (const std::string &filename);
+void launch_single_zone_GA (const std::string &filename);
+void launch_multizone_GA (const std::string &filename);
