@@ -146,7 +146,8 @@ set(PowerfulGA_DIR ${current_GA_dir})
 find_package(PowerfulGA REQUIRED)
 
 include_directories(${PowerfulGA_include_directories})
-target_link_libraries(Painter ${PowerfulGA_static_library})
+target_link_libraries(Painter ${PowerfulGA_static_libraries})
+
 
 # Add boost:
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
