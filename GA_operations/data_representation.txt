@@ -1,6 +1,0 @@
-The parameters of a stroke set are:
-For each stroke:
-    Its three points, 2 doubles for each (x and y), both from 0 to picture «w / h»
-    Its width: one double
-
-P. S. color is optimized independently and automatically for each error function computing
