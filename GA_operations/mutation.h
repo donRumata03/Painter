@@ -38,7 +38,7 @@ public:
 				bool move_or_not_to_move = pythonic_random() < per_gene_move_probability;
 				if (!move_or_not_to_move) {
 					// std::cout << "Not Move" << std::endl;
-					return;
+					continue;
 				}
 				// std::cout << "Move" << std::endl;
 

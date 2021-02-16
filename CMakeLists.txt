@@ -137,7 +137,7 @@ tests/error_computing_tests/image_mse_test.h
         launching/single_zone_workers/single_zone_worker.h
         launching/multizoner.cpp
         launching/multizoner.h
-        )
+        launching/single_zone_workers/annealing_worker.cpp launching/single_zone_workers/annealing_worker.h)
 
 
 include_directories(./)
