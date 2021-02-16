@@ -59,49 +59,86 @@ project(Painter)
 set(CMAKE_CXX_STANDARD 20)
 
 # Add source files:
-add_executable(       Painter
+add_executable(Painter
 
-main.cpp
+        main.cpp
 
         data_representation/stroke.cpp
         data_representation/stroke.h
 
-# painter_pch.h
-
+        # painter_pch.h
 
         data_representation/color.cpp
         data_representation/color.h
 
+        data_representation/range_rectangle.h
+
         io_api/image_io_utils.cpp
         io_api/image_io_utils.h
 
-tests/opencv_test.h
-tests/cv_io_test.h
-tests/color_test.h
-tests/stroke_rasterization_test.h
+        tests/opencv_test.h
+        tests/cv_io_test.h
+        tests/color_test.h
+        tests/stroke_rasterization_test.h
+        tests/stroke_counting_test.h
+        tests/draw_test.h
+        tests/test_base.h
+        tests/error_computing_tests/image_mse_test.h
+        tests/GA_tests/stroke_constraining_test.h
+        tests/GA_tests/population_generation_tests.h
+        tests/example_stroke_image_generation.h
+        tests/stroke_color_optimization_test.h
+        tests/image_splitting_test.h
+        tests/strokes_to_json_tests.h
 
-rasterization/stroke_rasterizer.cpp
-rasterization/stroke_rasterizer.h
+        rasterization/stroke_rasterizer.cpp
+        rasterization/stroke_rasterizer.h
 
-rasterization/drawer.cpp
-rasterization/drawer.h
+        rasterization/drawer.cpp
+        rasterization/drawer.h
 
         optimization/error/error_computing.cpp
         optimization/error/error_computing.h
 
-optimization/stroke_color_optimizing.cpp
-optimization/stroke_color_optimizing.h
+        optimization/stroke_color_optimizing.cpp
+        optimization/stroke_color_optimizing.h
 
-optimization/image_stroke_optimization.cpp
-optimization/image_stroke_optimization.h
-tests/stroke_color_optimization_test.h
+        optimization/image_stroke_optimization.cpp
+        optimization/image_stroke_optimization.h
 
-tests/stroke_counting_test.h
-tests/draw_test.h
-tests/test_base.h
-tests/error_computing_tests/image_mse_test.h
+        GA_operations/mutation.cpp
+        GA_operations/mutation.h
+        GA_operations/final_fitness_function.h
+        GA_operations/util.h
+        GA_operations/final_constrainer.h
 
-        GA_operations/mutation.cpp GA_operations/mutation.h common_operations/stroke_limits.h GA_operations/final_fitness_function.h GA_operations/util.h data_representation/range_rectangle.h common_operations/basic_constraining.cpp common_operations/basic_constraining.h GA_operations/final_constrainer.h tests/GA_tests/stroke_constraining_test.h launching/launch_main_ga.cpp launching/launch_main_ga.h GA_operations/stroke_range_generator.h tests/GA_tests/population_generation_tests.h GA_operations/callbacks/image_logging_callback.cpp GA_operations/callbacks/image_logging_callback.h GA_operations/callbacks/GA_informer.h GA_operations/population_generator.h common_operations/stroke_generation.cpp common_operations/stroke_generation.h GA_operations/final_crossover.cpp GA_operations/final_crossover.h tests/example_stroke_image_generation.h launching/GA_worker.cpp launching/GA_worker.h GA_operations/all.h launching/GA_parameter_sets.h common_operations/image_splitting_scheduling.cpp common_operations/image_splitting_scheduling.h tests/image_splitting_test.h common_operations/image_segregation.cpp common_operations/image_segregation.h tests/strokes_to_json_tests.h)
+        common_operations/stroke_limits.h
+        common_operations/basic_constraining.cpp
+        common_operations/basic_constraining.h
+        common_operations/stroke_generation.cpp
+        common_operations/stroke_generation.h
+        common_operations/image_splitting_scheduling.cpp
+        common_operations/image_splitting_scheduling.h
+        common_operations/image_segregation.cpp
+        common_operations/image_segregation.h
+
+        GA_operations/all.h
+        GA_operations/stroke_range_generator.h
+        GA_operations/callbacks/image_logging_callback.cpp
+        GA_operations/callbacks/image_logging_callback.h
+        GA_operations/callbacks/GA_informer.h
+        GA_operations/population_generator.h
+        GA_operations/final_crossover.cpp
+        GA_operations/final_crossover.h
+
+        launching/launch_main_ga.cpp
+        launching/launch_main_ga.h
+        launching/GA_worker.cpp
+        launching/GA_worker.h
+        launching/GA_parameter_sets.h
+
+        vector_graphics/SVG_service.cpp
+        vector_graphics/SVG_service.h)
 
 
 include_directories(./)
