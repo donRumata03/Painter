@@ -26,32 +26,6 @@ endif()
 # set(is_computer ...)
 # set(is_notebook ...)
 
-
-# They are different configurations
-if (is_computer)
-    set(current_opencv_dir D:/OpenCV4/build)
-    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
-
-    set(current_GA_dir D:/Projects/Utilities/GA)
-    set(current_pythonic_dir D:/pythonic)
-
-elseif(is_notebook)
-    set(current_opencv_dir DOESNT_MATTER)
-    set(current_boost_dir D:/lib/boost_1_72_0)
-
-    set(current_GA_dir /home/vova/dev/PowerfulGA)
-    set(current_pythonic_dir /home/vova/dev/pythonic)
-
-
-# User code for other platforms:
-# elseif(...)
-    # ...
-
-else()
-    message(FATAL_ERROR "Specify your platform name!")
-
-endif()
-
 ################################################################################
 
 project(Painter)
@@ -142,15 +116,40 @@ add_executable(Painter
 
 
 include_directories(./)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 
 ## Add libraries to the project:
 
+
+# They are different configurations
+set(PROJECT_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/dependencies)
+message("Load dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
+if (is_computer)
+    set(current_opencv_dir D:/Workspace/C++/libs/opencv4/build)
+    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+    set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
+
+    set(current_GA_dir D:/Workspace/C++/libs/PowerfulGA)
+    set(current_pythonic_dir D:/Workspace/C++/libs/pythonic)
+elseif(is_notebook)
+    set(current_opencv_dir DOESNT_MATTER)
+    set(current_boost_dir D:/lib/boost_1_72_0)
+    set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
+
+    set(current_GA_dir /home/vova/dev/PowerfulGA)
+    set(current_pythonic_dir /home/vova/dev/pythonic)
+else()
+    message(FATAL_ERROR "Specify your platform name!")
+
+endif()
+# User code for other platforms:
+# elseif(...)
+# ...
+
 # Find OpenCV:
 if (NOT ${current_opencv_dir} STREQUAL DOESNT_MATTER)
-set(OpenCV_DIR ${current_opencv_dir})
+    set(OpenCV_DIR ${current_opencv_dir})
 endif()
-# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-# message(${OpenCV_DIR})
 find_package(OpenCV REQUIRED)
 
 # Add OpenCV
@@ -163,11 +162,28 @@ else()
     target_link_libraries(Painter ${OpenCV_LIBS})
 endif()
 
+# Find LunaSVG
+if (NOT ${current_lunasvg_dir} STREQUAL DOESNT_MATTER)
+    set(LunaSVG_DIR ${current_lunasvg_dir})
+endif()
+
+find_package(LunaSVG REQUIRED)
+
+# Add LunaSVG
+include_directories(${LunaSVG_INCLUDE_DIRS})
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    message("Debug ${LunaSVG_LIBRARY}")
+    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+else()
+    message("Release ${LunaSVG_LIBRARY}")
+    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+endif()
+
+
 
 # ______________________________
 # Add my libraries:
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 # message(${CMAKE_MODULE_PATH})
 
 # Add pythonic:
