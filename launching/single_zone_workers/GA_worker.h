@@ -11,6 +11,7 @@
 #include "rasterization/stroke_rasterizer.h"
 
 #include "GA_operations/all.h"
+#include "single_zone_worker.h"
 
 
 struct GA_launching_params
@@ -42,24 +43,24 @@ struct GA_launching_params
 
 
 
-class GA_worker
+class GA_worker : public SingleZoneWorker
 {
 public:
 	using ParametersType = GA_launching_params;
 
-	GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path = fs::path{ painter_base_path} / "log/latest");
+	GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
-	void run_one_iteration();
-	void run_remaining_iterations();
+	void run_one_iteration() override;
+	void run_remaining_iterations() override;
 
-	void show_fitness_dynamic ();
-	double average_computation_time_seconds() const { return configured_fitness_function.average_computation_time_seconds(); }
-	double average_computation_time_per_pixel_seconds() const { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
-	double computations_performed() const { return configured_fitness_function.computations_performed(); }
+	void show_fitness_dynamic () override;
+	double average_computation_time_seconds() const override { return configured_fitness_function.average_computation_time_seconds(); }
+	double average_computation_time_per_pixel_seconds() const override { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
+	double computations_performed() const override { return configured_fitness_function.computations_performed(); }
 
-	const std::vector<double>& get_best_genome();
+	const std::vector<double>& get_best_genome() override;
 
-	void print_diagnostic_information() {
+	void print_diagnostic_information() override {
 		std::cout
 				<< "Computations performed: " << computations_performed() << "(" << launch_params.epoch_num * launch_params.population_size << " expected)" << std::endl
 				<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl

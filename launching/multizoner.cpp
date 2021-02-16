@@ -38,7 +38,7 @@ MultizoneLaunchWrapper<Worker>::MultizoneLaunchWrapper (Image _image, size_t _zo
 		for (size_t worker_y_index = 0; worker_y_index < zones_y; ++worker_y_index) {
 			std::string this_path = "x_index=" + std::to_string(worker_x_index) + ",y_index=" + std::to_string(worker_y_index);
 
-			std::shared_ptr<GA_worker> this_worker = std::make_shared<GA_worker>(
+			std::shared_ptr<Worker> this_worker = std::make_shared<Worker>(
 					zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_path
 			);
 

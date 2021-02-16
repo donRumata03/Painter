@@ -9,6 +9,8 @@
 
 class SingleZoneWorker
 {
+public:
+
 	/// Run:
 	virtual void run_one_iteration() = 0;
 	virtual void run_remaining_iterations() = 0;
