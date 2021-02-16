@@ -105,7 +105,7 @@ int main ()
 
 
 	/// Single zone:
-	// launch_single_zone_GA(image_path);
+	launch_single_zone_GA(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

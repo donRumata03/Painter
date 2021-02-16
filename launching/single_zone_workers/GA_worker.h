@@ -45,6 +45,7 @@ struct GA_launching_params
 class GA_worker
 {
 public:
+	using ParametersType = GA_launching_params;
 
 	GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path = fs::path{ painter_base_path} / "log/latest");
 
@@ -54,7 +55,7 @@ public:
 	void show_fitness_dynamic ();
 	double average_computation_time_seconds() const { return configured_fitness_function.average_computation_time_seconds(); }
 	double average_computation_time_per_pixel_seconds() const { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
-	double computations_performed() { return configured_fitness_function.computations_performed(); }
+	double computations_performed() const { return configured_fitness_function.computations_performed(); }
 
 	const std::vector<double>& get_best_genome();
 
