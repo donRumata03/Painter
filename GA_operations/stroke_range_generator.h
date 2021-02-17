@@ -110,3 +110,26 @@ stroke_limit_descriptor generate_stroke_limits_by_(CommonStrokingParams params, 
 
 	return limits;
 }
+
+inline std::vector<std::pair<double, double>> generate_point_ranges_by_raw_parameters(CommonStrokingParams params, size_t w, size_t h) {
+	auto applied = apply_stroking_parameters(params, w, h);
+
+	return generate_point_ranges_for_stroke_genome(
+			params.stroke_number,
+			{ double(w), double(h) },
+			{ applied.stroke_typical_width / applied.param_half_range, applied.stroke_typical_width * applied.param_half_range }
+	);
+}
+
+
+inline std::vector<double> generate_point_sigmas_by_raw_parameters (CommonStrokingParams params, size_t w, size_t h)
+{
+	auto applied = apply_stroking_parameters(params, w, h);
+
+	return generate_point_sigmas_for_stroke_genome(
+			params.stroke_number,
+			{ double(w), double(h) },
+			applied.stroke_coord_mutation_sigma,
+			applied.stroke_width_mutation_sigma
+	);
+}
