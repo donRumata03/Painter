@@ -4,5 +4,6 @@ cmake-build-release/
 
 /resources/temp/
 /log/
+/dependencies/
 !/log/.gitkeep
 images_for_testing/Vector

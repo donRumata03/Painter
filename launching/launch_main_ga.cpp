@@ -53,6 +53,18 @@ void launch_multizone_GA (const std::string& filename)
 	launcher.save_result(painter_base_path / "log" / "latest" / "result.png");
 }
 
+void launch_svg_stroking(const std::string &filename) {
+    SVG_service service(filename);
+    service.split_paths();
+
+    Image img;
+    while (service.load_next_image(img))
+    {
+        cv::imshow("1", img);
+        cv::waitKey(0);
+    }
+}
+
 
 multizone_GA_launcher::multizone_GA_launcher (Image _image, size_t _zones_x, size_t _zones_y,
                                               double overlay_percent, GA_launching_params params)

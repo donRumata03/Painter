@@ -14,6 +14,8 @@
 
 #include "GA_worker.h"
 
+#include "vector_graphics/SVG_service.h"
+
 class multizone_GA_launcher
 {
 
@@ -60,3 +62,4 @@ private:
 
 void launch_single_zone_GA (const std::string &filename);
 void launch_multizone_GA (const std::string &filename);
+void launch_svg_stroking(const std::string &filename);
