@@ -27,7 +27,7 @@ public:
 };
 
 
-struct common_stroking_params
+struct CommonStrokingParams
 {
 	size_t stroke_number = 0;
 	/// Fractions:

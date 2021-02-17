@@ -65,7 +65,13 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 
 	// std::cout << "[GA_worker]: GA operations ready" << std::endl;
 
-	configured_fitness_function = final_fitness_function{ image, launch_params.stroke_number, !launch_params.allow_multithreading, launch_params.canvas_color };
+	configured_fitness_function = final_fitness_function{
+					image,
+					launch_params.stroke_number,
+					!launch_params.allow_multithreading,
+					false,
+					launch_params.canvas_color
+	};
 
 	bool enable_detailed_logging = (launch_params.logging_percentage != 0);
 	logger = image_logging_callback(image, logging_path.string(),

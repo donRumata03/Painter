@@ -69,6 +69,7 @@ class final_fitness_function
 
 	std::shared_ptr<BufferBank> buffer_holder = std::make_shared<BufferBank>();
 
+	bool error_or_fitness {};
 	color canvas_color {};
 
 	RunTimeCounter rt_counter;
@@ -84,9 +85,10 @@ public:
 			const Image& image,
 			size_t strokes,
 			bool is_run_sequentially,
+			bool _error_or_fitness = false,
 			const color& canvas_color = { 0., 0., 0. }
 			)
-				: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially), canvas_color(canvas_color)
+				: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially), canvas_color(canvas_color), error_or_fitness(_error_or_fitness)
 	{
 		w = image.cols;
 		h = image.rows;
@@ -139,7 +141,7 @@ public:
 		rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));
 		rt_counter.total_runs->operator++();
 
-		return 1 / MSE;
+		return error_or_fitness ? MSE : (1 / MSE);
 	}
 
 

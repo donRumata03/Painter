@@ -5,12 +5,14 @@
 #pragma once
 
 #include <data_representation/color.h>
+#include <GA_operations/final_fitness_function.h>
+#include <GA_operations/all.h>
 #include "painter_pch.h"
 #include "single_zone_worker.h"
 
 
 
-struct AnnealingImageParams {
+struct AnnealingStrokingParams {
 	size_t iterations = 0;
 
 	double typical_temperature = 1.;
@@ -23,9 +25,9 @@ class AnnealingWorker : public SingleZoneWorker
 {
 public:
 
-	using ParametersType = AnnealingImageParams;
+	using ParametersType = AnnealingStrokingParams;
 
-	AnnealingWorker (const Image& image, const AnnealingImageParams& params, const fs::path& logging_path);
+	AnnealingWorker (const Image& image, const CommonStrokingParams& stroking_params, const AnnealingStrokingParams& annealing_params, const fs::path& logging_path);
 
 
 	/// Run methods:
@@ -43,6 +45,31 @@ public:
 	[[nodiscard]] double computations_performed () const override;
 
 	void print_diagnostic_information () override;
+
+
+
+private:
+	/// Image
+	Image initial_image;
+	size_t image_w;
+	size_t image_h;
+
+	/// Params:
+	CommonStrokingParams common_stroking_params;
+	AnnealingStrokingParams annealing_stroking_params;
+
+	/// Actors:
+	final_fitness_function configured_error_function;
+	mutator configured_mutator;
+
+	/// Results:
+	std::vector<double> best_genome;
+
+	/// Diagnostics:
+	std::vector<double> target_function_dynamic;
+
+
+
 };
 
 
