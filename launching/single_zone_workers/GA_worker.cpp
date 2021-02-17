@@ -13,42 +13,45 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 	image_h = image.rows;
 
 	/// Count typical distances:
-	typical_coord = geometric_mean({ double(image_w), double(image_h) });
+//	typical_coord = geometric_mean({ double(image_w), double(image_h) });
+//
+//	stroke_typical_length       = typical_coord         * launch_params.stroke_length_to_image_size_fraction;
+//	stroke_typical_width        = stroke_typical_length * launch_params.stroke_width_to_length_factor;
+//
+//	stroke_coord_mutation_sigma = stroke_typical_length * launch_params.stroke_coord_mutation_to_stroke_length_factor;
+//	stroke_width_mutation_sigma = stroke_typical_width  * launch_params.stroke_width_mutation_to_stroke_width_factor;
+//
+//	param_half_range = std::sqrt(launch_params.stroke_param_relative_range);
 
-	stroke_typical_length       = typical_coord         * launch_params.stroke_length_to_image_size_fraction;
-	stroke_typical_width        = stroke_typical_length * launch_params.stroke_width_to_length_factor;
-
-	stroke_coord_mutation_sigma = stroke_typical_length * launch_params.stroke_coord_mutation_to_stroke_length_factor;
-	stroke_width_mutation_sigma = stroke_typical_width  * launch_params.stroke_width_mutation_to_stroke_width_factor;
-
-	param_half_range = std::sqrt(launch_params.stroke_param_relative_range);
-
-	limits = stroke_limit_descriptor{
-			.min_dx     = stroke_typical_length / param_half_range,
-			.max_dx     = stroke_typical_length * param_half_range,
-
-			.min_dy     = stroke_typical_length / param_half_range,
-			.max_dy     = stroke_typical_length * param_half_range,
-
-			.min_width  = stroke_typical_width / param_half_range,
-			.max_width  = stroke_typical_width * param_half_range,
-
-			.image_rectangle = get_image_range_limits<double>(image)
-	};
+	limits = generate_stroke_limits_by_raw_parameters(params, image_w, image_h);
+//		stroke_limit_descriptor{
+//			.min_dx     = stroke_typical_length / param_half_range,
+//			.max_dx     = stroke_typical_length * param_half_range,
+//
+//			.min_dy     = stroke_typical_length / param_half_range,
+//			.max_dy     = stroke_typical_length * param_half_range,
+//
+//			.min_width  = stroke_typical_width / param_half_range,
+//			.max_width  = stroke_typical_width * param_half_range,
+//
+//			.image_rectangle = get_image_range_limits<double>(image)
+//	};
 
 	/// GA data:
-	point_ranges = generate_point_ranges_for_stroke_genome(
-			params.stroke_number,
-			{ double(image_w), double(image_h) },
-			{ stroke_typical_width / param_half_range, stroke_typical_width * param_half_range }
-	);
+	point_ranges = generate_point_ranges_by_raw_parameters(params, image_w, image_h);
+//		generate_point_ranges_for_stroke_genome(
+//			params.stroke_number,
+//			{ double(image_w), double(image_h) },
+//			{ stroke_typical_width / param_half_range, stroke_typical_width * param_half_range }
+//	);
 
-	mutation_sigmas = generate_point_sigmas_for_stroke_genome(
-			params.stroke_number,
-			{ double(image_w), double(image_h) },
-			stroke_coord_mutation_sigma,
-			stroke_width_mutation_sigma
-	);
+	mutation_sigmas = generate_point_sigmas_by_raw_parameters(params, image_w, image_h);
+//		generate_point_sigmas_for_stroke_genome(
+//			params.stroke_number,
+//			{ double(image_w), double(image_h) },
+//			stroke_coord_mutation_sigma,
+//			stroke_width_mutation_sigma
+//	);
 
 	// std::cout << "[GA_worker]: made GA data" << std::endl;
 

@@ -92,7 +92,7 @@ AppliedStroking apply_stroking_parameters(CommonStrokingParams params, size_t im
 	return res;
 }
 
-stroke_limit_descriptor generate_stroke_limits_by_(CommonStrokingParams params, size_t w, size_t h) {
+stroke_limit_descriptor generate_stroke_limits_by_raw_parameters(CommonStrokingParams params, size_t w, size_t h) {
 	auto applied = apply_stroking_parameters(params, w, h);
 
 	auto limits = stroke_limit_descriptor{
