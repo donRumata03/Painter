@@ -15,6 +15,8 @@ SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std
 
     if (fs::exists(logging_path)) fs::remove_all(logging_path);
     fs::create_directories(logging_path);
+
+    if (is_logging) std::cout << "[SVG_service] Created" << std::endl;
 }
 
 void SVG_service::split_paths() {
@@ -40,17 +42,27 @@ void SVG_service::split_paths() {
     }
 
     shapes_count = count;
+
+    if (is_logging) std::cout << "[SVG_service] Splited image into " << shapes_count << " parts." << std::endl;
 }
 
-bool SVG_service::load_next_image(cv::Mat &img) {
+bool SVG_service::load_current_image(cv::Mat &img) {
     auto path = get_shape_path(it);
     if (it >= shapes_count || !fs::exists(path)) {
         return false;
     }
 
-    img = cv::imread(path);
-    it++;
+    img = open_image(path);
     return true;
+}
+
+void SVG_service::shift_strokes(std::vector<colored_stroke>& strokes) {
+    point vec(boxes[it].x, boxes[it].y);
+    for (auto& stroke : strokes) {
+        stroke.p0 = stroke.p0 + vec;
+        stroke.p1 = stroke.p1 + vec;
+        stroke.p2 = stroke.p2 + vec;
+    }
 }
 
 cv::Mat SVG_service::get_rastr_image(const lunasvg::SVGDocument& doc) {
