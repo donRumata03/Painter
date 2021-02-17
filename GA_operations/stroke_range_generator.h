@@ -6,7 +6,9 @@
 
 #include "painter_pch.h"
 #include "data_representation/stroke.h"
+#include "launching/single_zone_workers/single_zone_worker.h"
 
+/// For GA
 inline std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_genome (
 		size_t stroke_number, const point& image_size, const std::pair<double, double>& width_range)
 {
@@ -28,6 +30,8 @@ inline std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_g
 	return res;
 }
 
+
+/// For mutation:
 inline std::vector<double> generate_point_sigmas_for_stroke_genome (size_t stroke_number, const point& image_size,
 										double absolute_sigma_for_coords, double absolute_sigma_for_width)
 {
@@ -52,3 +56,57 @@ inline std::vector<double> generate_point_sigmas_for_stroke_genome (size_t strok
 }
 
 
+/// Applying common parameters:
+
+
+/// Generate stroke limits:
+
+struct AppliedStroking {
+	double typical_coord {};
+
+	double stroke_typical_length {};
+	double stroke_typical_width {};
+
+	double stroke_coord_mutation_sigma {};
+	double stroke_width_mutation_sigma {};
+
+	double param_half_range {};
+};
+
+
+
+AppliedStroking apply_stroking_parameters(CommonStrokingParams params, size_t image_w, size_t image_h) {
+	AppliedStroking res;
+
+	/// Count typical distances:
+	res.typical_coord = geometric_mean({ double(image_w), double(image_h) });
+
+	res.stroke_typical_length       = res.typical_coord * params.stroke_length_to_image_size_fraction;
+	res.stroke_typical_width        = res.stroke_typical_length * params.stroke_width_to_length_factor;
+
+	res.stroke_coord_mutation_sigma = res.stroke_typical_length * params.stroke_coord_mutation_to_stroke_length_factor;
+	res.stroke_width_mutation_sigma = res.stroke_typical_width * params.stroke_width_mutation_to_stroke_width_factor;
+
+	res.param_half_range = std::sqrt(params.stroke_param_relative_range);
+
+	return res;
+}
+
+stroke_limit_descriptor generate_stroke_limits_by_(CommonStrokingParams params, size_t w, size_t h) {
+	auto applied = apply_stroking_parameters(params, w, h);
+
+	auto limits = stroke_limit_descriptor{
+			.min_dx     = applied.stroke_typical_length / applied.param_half_range,
+			.max_dx     = applied.stroke_typical_length * applied.param_half_range,
+
+			.min_dy     = applied.stroke_typical_length / applied.param_half_range,
+			.max_dy     = applied.stroke_typical_length * applied.param_half_range,
+
+			.min_width  = applied.stroke_typical_width / applied.param_half_range,
+			.max_width  = applied.stroke_typical_width * applied.param_half_range,
+
+			.image_rectangle = RangeRectangle<double>{ 0., double(w), 0., double(h) } // get_image_range_limits<double>(image)
+	};
+
+	return limits;
+}
