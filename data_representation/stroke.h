@@ -60,10 +60,6 @@ struct stroke {
 	friend std::ostream &operator<< (std::ostream &os, const stroke &stroke);
 };
 
-/// For json:
-void to_json(json& j, const stroke& stroke);
-void from_json(const json& j, stroke& stroke);
-
 /// Template function implementations:
 
 template < class Functor >
@@ -123,5 +119,18 @@ struct colored_stroke : stroke
 	*/
 };
 
+/// For json:
+void to_json(json& j, const stroke& stroke);
+void to_json(json& j, const color& col);
+void to_json(json& j, const colored_stroke& col_stroke);
+void to_json(json& j, const colored_stroke& col_stroke, size_t color_id);
+void to_json(json& j, const std::vector<colored_stroke>& strokes);
+void to_json(json& j, const std::vector<colored_stroke>& strokes, const std::vector<color>& pallete);
+
+void from_json(const json& j, stroke& stroke);
+void from_json(const json& j, color& col);
+void from_json(const json& j, colored_stroke& col_stroke);
+void from_json(const json& j, std::vector<colored_stroke>& strokes);
+void from_json(const json& j, std::vector<colored_stroke>& strokes, std::vector<color>& pallete);
 
 #endif //PAINTER_STROKE_H

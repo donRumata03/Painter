@@ -85,6 +85,19 @@ void launch_svg_stroking(const std::string &filename) {
     rasterize_strokes(image, strokes);
     save_image(image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 
+    // Save strokes
+    std::vector<color> pallete; // TODO: use specific color for strokes
+    for (auto& col_stroke : strokes) {
+        if (std::find(pallete.begin(), pallete.end(), col_stroke.background_color) == std::end(pallete)) {
+            pallete.emplace_back(col_stroke.background_color);
+        }
+    }
+    json j;
+    to_json(j, strokes, pallete);
+    std::ofstream json_file(fs::path(painter_base_path) / "log" / "latest" / "result.json");
+    json_file << j;
+    json_file.close();
+
     // Debug show
     Image result = image.clone();
     convert_image_between_RGB_and_BGR<Pixel>(result);
