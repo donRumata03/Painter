@@ -30,6 +30,7 @@ public:
 struct CommonStrokingParams
 {
 	size_t stroke_number = 0;
+
 	/// Fractions:
 	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
 	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor

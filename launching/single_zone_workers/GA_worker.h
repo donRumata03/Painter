@@ -14,31 +14,41 @@
 #include "single_zone_worker.h"
 
 
-struct GA_launching_params : public CommonStrokingParams
+//struct GA_launching_params
+//{
+//	/// Main params (computation time is almost proportional to their «product»):
+//	size_t stroke_number = 0;
+//	size_t population_size = 0;
+//	size_t epoch_num = 0;
+//
+//
+//
+//	/// Fractions:
+//	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
+//	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor
+//	double stroke_coord_mutation_to_stroke_length_factor = 0.5;
+//	double stroke_width_mutation_to_stroke_width_factor = 0.5; // 0.1;
+//
+//	double stroke_param_relative_range = 3;
+//
+//	double move_mutation_probability = 0.2;
+//	double logging_percentage = 0.00;
+//
+//	///
+//	color canvas_color = { 0., 0., 0. };
+//
+//	bool allow_multithreading = false;
+//
+//};
+
+
+
+struct GA_stroking_parameters
 {
-	/// Main params (computation time is almost proportional to their «product»):
-	size_t stroke_number = 0;
 	size_t population_size = 0;
 	size_t epoch_num = 0;
 
-
-
-	/// Fractions:
-	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
-	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor
-	double stroke_coord_mutation_to_stroke_length_factor = 0.5;
-	double stroke_width_mutation_to_stroke_width_factor = 0.5; // 0.1;
-
-	double stroke_param_relative_range = 3;
-
-	double move_mutation_probability = 0.2;
-	double logging_percentage = 0.00;
-
-	///
-	color canvas_color = { 0., 0., 0. };
-
 	bool allow_multithreading = false;
-
 };
 
 
@@ -46,9 +56,11 @@ struct GA_launching_params : public CommonStrokingParams
 class GA_worker : public SingleZoneWorker
 {
 public:
-	using ParametersType = GA_launching_params;
+	using ParametersType = GA_stroking_parameters;
 
-	GA_worker (const Image& image, const GA_launching_params& params, const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
+	GA_worker (const Image& image,
+			const CommonStrokingParams& common_parameters, const GA_stroking_parameters& ga_stroking_parameters,
+			const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 	void run_one_iteration() override;
 	void run_remaining_iterations() override;
@@ -62,7 +74,7 @@ public:
 
 	void print_diagnostic_information() override {
 		std::cout
-				<< "Computations performed: " << computations_performed() << " (" << launch_params.epoch_num * launch_params.population_size << " expected)" << std::endl
+				<< "Computations performed: " << computations_performed() << " (" << GA_params.epoch_num * GA_params.population_size << " expected)" << std::endl
 				<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
 				<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
 				<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
@@ -77,7 +89,8 @@ private:
 	size_t image_h;
 
 
-	GA_launching_params launch_params;
+	GA_stroking_parameters GA_params;
+	CommonStrokingParams common_params;
 
 
 	/// Helpers:
