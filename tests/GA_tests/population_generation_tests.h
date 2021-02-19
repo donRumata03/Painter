@@ -51,7 +51,7 @@ inline void test_stroke_generation_with_rasterization() {
 			}
 	};
 
-	final_generator generator(limits, 2000);
+	final_population_generator generator(limits, 2000);
 	// std::cout << "Prepared Strokes" << std::endl;
 	// std::cout << generator.operator()({}, 1) << std::endl;
 	std::vector<double> raw_strokes = generator.operator()({}, 1)[0];

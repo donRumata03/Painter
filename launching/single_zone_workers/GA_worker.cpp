@@ -57,7 +57,7 @@ GA_worker::GA_worker (const Image& image, const GA_launching_params& params, con
 
 	/// Init GA operation performers:
 	configured_constrainer = final_constrainer(limits);
-	configured_generator = final_generator(limits, launch_params.stroke_number);
+	configured_generator = final_population_generator(limits, launch_params.stroke_number);
 	configured_crossover = final_crossover();
 	configured_mutator = mutator(limits, params.move_mutation_probability);
 

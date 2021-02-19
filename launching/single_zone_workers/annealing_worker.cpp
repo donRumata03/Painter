@@ -41,6 +41,13 @@ void AnnealingWorker::run_remaining_iterations ()
 {
 	/// Launch annealing:
 	auto annealing_output = annealing_optimize(
+				configured_error_function,
+				AnnealingOptimizeParameters{
+					.iterations = annealing_stroking_params.iterations,
+					.exiting_value = 0.,
+					.typical_temperature = annealing_stroking_params.typical_temperature,
+					.genes_in_genome = common_stroking_params.stroke_number * (sizeof(stroke) / sizeof(double)),
+				},
 
 			);
 }

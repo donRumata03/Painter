@@ -8,14 +8,14 @@
 #include <common_operations/stroke_generation.h>
 #include "util.h"
 
-class final_generator
+class final_population_generator
 {
 	stroke_limit_descriptor limits;
 	size_t stroke_number;
 
 public:
-	final_generator() = default;
-	explicit final_generator(const stroke_limit_descriptor& limits, size_t stroke_number)
+	final_population_generator() = default;
+	explicit final_population_generator(const stroke_limit_descriptor& limits, size_t stroke_number)
 					: limits(limits), stroke_number(stroke_number) {}
 
 	std::vector<std::vector<double>> operator() (const std::vector<std::pair<double, double>>& ranges, size_t amount) const {

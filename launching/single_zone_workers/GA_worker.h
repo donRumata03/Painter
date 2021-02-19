@@ -86,7 +86,7 @@ private:
 	/// GA operations:
 	final_fitness_function  configured_fitness_function;
 	final_constrainer       configured_constrainer{};
-	final_generator         configured_generator{};
+	final_population_generator         configured_generator{};
 	final_crossover         configured_crossover{};
 	mutator                 configured_mutator{};
 
