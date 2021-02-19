@@ -5,8 +5,8 @@
 #include "multizoner.h"
 
 template<class Worker>
-MultizoneLaunchWrapper<Worker>::MultizoneLaunchWrapper (Image _image, size_t _zones_x, size_t _zones_y,
-                                                double overlay_percent, typename Worker::ParametersType params)
+MultizoneLaunchWrapper<Worker>::MultizoneLaunchWrapper (Image _image, size_t _zones_x, size_t _zones_y, double overlay_percent,
+														const CommonStrokingParams& stroking_params, typename Worker::ParametersType custom_params)
 		: zones(
 		split_image_into_zones(
 				_image,
@@ -39,7 +39,7 @@ MultizoneLaunchWrapper<Worker>::MultizoneLaunchWrapper (Image _image, size_t _zo
 			std::string this_path = "x_index=" + std::to_string(worker_x_index) + ",y_index=" + std::to_string(worker_y_index);
 
 			std::shared_ptr<Worker> this_worker = std::make_shared<Worker>(
-					zones.images[worker_x_index][worker_y_index], params, painter_base_path / "log" / "latest" / this_path
+					zones.images[worker_x_index][worker_y_index], stroking_params, custom_params, painter_base_path / "log" / "latest" / this_path
 			);
 
 			worker_col.emplace_back(std::move(this_worker));

@@ -16,15 +16,15 @@
 #include "single_zone_workers/single_zone_worker.h"
 
 
-/// Class that wraps dividing the image into a couple of zones:
+/// Class that wraps dividing the image into a couple of zones and launching :
 
 template<class Worker>
 class MultizoneLaunchWrapper
 {
 
 public:
-	explicit MultizoneLaunchWrapper (Image _image, size_t _zones_x, size_t _zones_y,
-	                                 double overlay_percent, typename Worker::ParametersType params);
+	explicit MultizoneLaunchWrapper (Image _image, size_t _zones_x, size_t _zones_y, double overlay_percent,
+								  const CommonStrokingParams& stroking_params, typename Worker::ParametersType params);
 
 	bool process_one_cell();
 	void run();

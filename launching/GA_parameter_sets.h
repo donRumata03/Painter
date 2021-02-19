@@ -4,6 +4,14 @@
 
 #pragma once
 
+#include <launching/single_zone_workers/annealing_worker.h>
+#include <launching/single_zone_workers/GA_worker.h>
+
+
+inline auto default_annealing_parameters = AnnealingStrokingParams {
+
+};
+
 inline auto default_params = GA_launching_params {
         .stroke_number = 20,
         .population_size = 1000,
