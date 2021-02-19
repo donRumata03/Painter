@@ -98,11 +98,14 @@ void launch_svg_stroking(const std::string &filename) {
     json_file << j;
     json_file.close();
 
+
+    show_image_in_system_viewer(image);
+
     // Debug show
-    Image result = image.clone();
-    convert_image_between_RGB_and_BGR<Pixel>(result);
-    cv::imshow("result", result);
-    cv::waitKey(0);
+//    Image result = image.clone();
+//    convert_image_between_RGB_and_BGR<Pixel>(result);
+//    cv::imshow("result", result);
+//    cv::waitKey(0);
 }
 
 
