@@ -9,11 +9,14 @@
 
 #include "GA_operations/util.h"
 
+#include <GA_operations/genome_generator.h>
 #include <GA_operations/population_generator.h>
+
 #include <GA_operations/final_crossover.h>
 #include "GA_operations/mutation.h"
 #include "GA_operations/final_constrainer.h"
 #include "GA_operations/final_fitness_function.h"
 #include "GA_operations/stroke_range_generator.h"
+
 
 

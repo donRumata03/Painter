@@ -13,28 +13,30 @@
 class FinalGenomeGenerator
 {
 	stroke_limit_descriptor limits;
-	size_t stroke_number;
+	size_t strokes_in_image;
 
 public:
 	FinalGenomeGenerator() = default;
 	explicit FinalGenomeGenerator(const stroke_limit_descriptor& limits, size_t stroke_number)
-			: limits(limits), stroke_number(stroke_number) {}
+			: limits(limits), strokes_in_image(stroke_number) {}
 
-	std::vector<double> operator() (size_t amount) const {
+	std::vector<double> operator() (size_t amount) const
+	{
 		// Amount isn't the the number of strokes, it's the amount of pieces
-		assert(not (amount % (sizeof(stroke) / sizeof(double))));
+		assert(not(amount % (sizeof(stroke) / sizeof(double))));
 
 		size_t number_of_strokes = amount / 7;
-		assert(number_of_strokes == stroke_number);
+		assert(number_of_strokes == strokes_in_image);
 
-		std::vector<stroke> strokes(stroke_number);
-		std::generate(strokes.begin(), strokes.end(), [this](){ return generate_stroke(limits); });
+		std::vector<stroke> strokes(strokes_in_image);
+		std::generate(strokes.begin(), strokes.end(), [this] () { return generate_stroke(limits); });
 //
 //		for (size_t stroke_index = 0; stroke_index < stroke_number; ++stroke_index) {
 //			strokes[stroke_index] = generate_stroke(limits);
 //		}
 
 		return pack_stroke_data(strokes);
+	}
 };
 
 

@@ -5,8 +5,9 @@
 #pragma once
 
 #include <data_representation/color.h>
-#include <GA_operations/final_fitness_function.h>
+
 #include <GA_operations/all.h>
+
 #include <Annealing/annealing_optimize.h>
 #include "painter_pch.h"
 #include "single_zone_worker.h"
