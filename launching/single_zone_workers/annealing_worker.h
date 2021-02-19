@@ -63,6 +63,8 @@ private:
 	/// Actors:
 	final_fitness_function configured_error_function;
 	mutator configured_mutator;
+	FinalGenomeGenerator configured_generator;
+
 
 	/// Results:
 	AnnealingOptimizationOutput<double> result;

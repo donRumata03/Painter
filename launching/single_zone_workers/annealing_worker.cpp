@@ -25,7 +25,11 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 			common_stroking_params.canvas_color
 	);
 
-	configured_mutator = mutator(generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h), stroking_params.move_mutation_probability);
+	auto stroke_limits = generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h);
+
+	configured_mutator = mutator(stroke_limits, stroking_params.move_mutation_probability);
+	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
+
 }
 
 
@@ -40,7 +44,7 @@ void AnnealingWorker::run_one_iteration ()
 void AnnealingWorker::run_remaining_iterations ()
 {
 	/// Launch annealing:
-	auto annealing_output = annealing_optimize(
+	auto annealing_output = annealing_optimize<double, void>( // TODO: develop fast fitness function recounting
 				configured_error_function,
 				AnnealingOptimizeParameters{
 					.iterations = annealing_stroking_params.iterations,
@@ -48,8 +52,10 @@ void AnnealingWorker::run_remaining_iterations ()
 					.typical_temperature = annealing_stroking_params.typical_temperature,
 					.genes_in_genome = common_stroking_params.stroke_number * (sizeof(stroke) / sizeof(double)),
 				},
-
-			);
+				configured_generator,
+				configured_mutator,
+				default_exp_temperature_dynamic
+	);
 }
 
 const std::vector<double>& AnnealingWorker::get_best_genome ()
