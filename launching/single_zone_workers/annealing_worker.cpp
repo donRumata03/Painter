@@ -25,7 +25,7 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 			common_stroking_params.canvas_color
 	);
 
-	configured_mutator = mutator();
+	configured_mutator = mutator(generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h), stroking_params.move_mutation_probability);
 }
 
 
@@ -40,36 +40,49 @@ void AnnealingWorker::run_one_iteration ()
 void AnnealingWorker::run_remaining_iterations ()
 {
 	/// Launch annealing:
-	auto annealing_output = annealing_optimize();
+	auto annealing_output = annealing_optimize(
+
+			);
 }
 
 const std::vector<double>& AnnealingWorker::get_best_genome ()
 {
-	return best_genome;
+	return result.best_genome;
 }
 
 void AnnealingWorker::show_fitness_dynamic ()
 {
+	auto ys_to_plot = result.current_energy_dynamic;
 
+	std::vector<double> xs_to_plot(ys_to_plot.size());
+	std::iota(xs_to_plot.begin(), xs_to_plot.end(), 0.);
+
+	add_vectors_to_plot(xs_to_plot, ys_to_plot);
+	show_plot();
 }
 
 double AnnealingWorker::average_computation_time_seconds () const
 {
-	return 0;
+	return configured_error_function.average_computation_time_seconds();
 }
 
 double AnnealingWorker::average_computation_time_per_pixel_seconds () const
 {
-	return 0;
+	return configured_error_function.average_computation_time_per_pixel_seconds();
 }
 
 double AnnealingWorker::computations_performed () const
 {
-	return 0;
+	return configured_error_function.computations_performed();
 }
 
 void AnnealingWorker::print_diagnostic_information ()
 {
-
+	std::cout
+			<< "Computations performed: " << computations_performed() << " (" << annealing_stroking_params.iterations << " expected)" << std::endl
+			<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
+			<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
+			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+			<< std::endl;
 }
 

@@ -26,7 +26,7 @@ public:
     inline void next() { ++it; }
     inline void restart() { it = 0; }
 private:
-    cv::Mat get_rastr_image(const lunasvg::SVGDocument& doc);
+    cv::Mat get_raster_image(const lunasvg::SVGDocument& doc);
     std::string get_shape_path(size_t i);
 
     cv::Rect get_shape_bounds(const cv::Mat& img);

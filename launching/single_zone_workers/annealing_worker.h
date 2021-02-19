@@ -7,6 +7,7 @@
 #include <data_representation/color.h>
 #include <GA_operations/final_fitness_function.h>
 #include <GA_operations/all.h>
+#include <Annealing/annealing_optimize.h>
 #include "painter_pch.h"
 #include "single_zone_worker.h"
 
@@ -63,10 +64,11 @@ private:
 	mutator configured_mutator;
 
 	/// Results:
-	std::vector<double> best_genome;
+	AnnealingOptimizationOutput<double> result;
+	// std::vector<double> best_genome;
 
 	/// Diagnostics:
-	std::vector<double> target_function_dynamic;
+	// std::vector<double> target_function_dynamic;
 
 
 

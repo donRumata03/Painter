@@ -11,7 +11,7 @@
 SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
     svg.loadFromFile(filepath);
-    borders = get_shape_bounds(get_rastr_image(svg));
+    borders = get_shape_bounds(get_raster_image(svg));
 
     if (fs::exists(logging_path)) fs::remove_all(logging_path);
     fs::create_directories(logging_path);
@@ -31,13 +31,13 @@ void SVG_service::split_paths() {
         path_doc.appendElement(path);
 
         // Setup borders
-        auto full_img = get_rastr_image(path_doc);
+        auto full_img = get_raster_image(path_doc);
         auto box = get_shape_bounds(full_img);
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
         path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
         boxes.emplace_back(box);
 
-        cv::imwrite(get_shape_path(count), get_rastr_image(path_doc));
+        cv::imwrite(get_shape_path(count), get_raster_image(path_doc));
         count++;
     }
 
@@ -65,7 +65,7 @@ void SVG_service::shift_strokes(std::vector<colored_stroke>& strokes) {
     }
 }
 
-cv::Mat SVG_service::get_rastr_image(const lunasvg::SVGDocument& doc) {
+cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc) {
     auto bitmap = doc.renderToBitmap();
     size_t width = bitmap.width(), height = bitmap.height();
     auto data = bitmap.data(); // array of bytes (RGBA)
