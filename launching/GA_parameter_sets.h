@@ -4,6 +4,27 @@
 
 #pragma once
 
+inline auto default_params = GA_launching_params {
+        .stroke_number = 20,
+        .population_size = 1000,
+        .epoch_num = 20,
+
+        .stroke_length_to_image_size_fraction = 0.3, // 0.2,
+        .stroke_width_to_length_factor = 0.25,
+        .stroke_coord_mutation_to_stroke_length_factor = 0.4,
+        .stroke_width_mutation_to_stroke_width_factor = 0.4,
+
+        .stroke_param_relative_range = 3,
+
+        .move_mutation_probability = 0.2,
+        .logging_percentage = 0.00,
+
+        .canvas_color = { 0., 0., 0. },
+
+        .allow_multithreading = true,
+};
+
+/*
 inline auto circle_30stroke_params = GA_launching_params {
 		.stroke_number = 30,
 		.population_size = 1'000,
@@ -66,7 +87,7 @@ inline auto van_gogh_params = GA_launching_params {
 
 		.allow_multithreading = true,
 };
-
+*/
 //////////
 
 /// Splitting params:

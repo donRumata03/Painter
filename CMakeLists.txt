@@ -26,32 +26,6 @@ endif()
 # set(is_computer ...)
 # set(is_notebook ...)
 
-
-# They are different configurations
-if (is_computer)
-    set(current_opencv_dir D:/OpenCV4/build)
-    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
-
-    set(current_GA_dir D:/Projects/Utilities/GA)
-    set(current_pythonic_dir D:/pythonic)
-
-elseif(is_notebook)
-    set(current_opencv_dir DOESNT_MATTER)
-    set(current_boost_dir D:/lib/boost_1_72_0)
-
-    set(current_GA_dir /home/vova/dev/PowerfulGA)
-    set(current_pythonic_dir /home/vova/dev/pythonic)
-
-
-# User code for other platforms:
-# elseif(...)
-    # ...
-
-else()
-    message(FATAL_ERROR "Specify your platform name!")
-
-endif()
-
 ################################################################################
 
 project(Painter)
@@ -59,97 +33,127 @@ project(Painter)
 set(CMAKE_CXX_STANDARD 20)
 
 # Add source files:
-add_executable(       Painter
+add_executable(Painter
 
-main.cpp
+        main.cpp
 
         data_representation/stroke.cpp
         data_representation/stroke.h
 
-# painter_pch.h
-
+        # painter_pch.h
 
         data_representation/color.cpp
         data_representation/color.h
 
+        data_representation/range_rectangle.h
+
         io_api/image_io_utils.cpp
         io_api/image_io_utils.h
 
-tests/opencv_test.h
-tests/cv_io_test.h
-tests/color_test.h
-tests/stroke_rasterization_test.h
+        tests/opencv_test.h
+        tests/cv_io_test.h
+        tests/color_test.h
+        tests/stroke_rasterization_test.h
+        tests/stroke_counting_test.h
+        tests/draw_test.h
+        tests/test_base.h
+        tests/error_computing_tests/image_mse_test.h
+        tests/GA_tests/stroke_constraining_test.h
+        tests/GA_tests/population_generation_tests.h
+        tests/example_stroke_image_generation.h
+        tests/stroke_color_optimization_test.h
+        tests/image_splitting_test.h
+        tests/strokes_to_json_tests.h
 
-rasterization/stroke_rasterizer.cpp
-rasterization/stroke_rasterizer.h
+        rasterization/stroke_rasterizer.cpp
+        rasterization/stroke_rasterizer.h
 
-rasterization/drawer.cpp
-rasterization/drawer.h
+        rasterization/drawer.cpp
+        rasterization/drawer.h
 
         optimization/error/error_computing.cpp
         optimization/error/error_computing.h
 
-optimization/stroke_color_optimizing.cpp
-optimization/stroke_color_optimizing.h
+        optimization/stroke_color_optimizing.cpp
+        optimization/stroke_color_optimizing.h
 
-optimization/image_stroke_optimization.cpp
-optimization/image_stroke_optimization.h
-tests/stroke_color_optimization_test.h
-
-tests/stroke_counting_test.h
-tests/draw_test.h
-tests/test_base.h
-tests/error_computing_tests/image_mse_test.h
+        optimization/image_stroke_optimization.cpp
+        optimization/image_stroke_optimization.h
 
         GA_operations/mutation.cpp
         GA_operations/mutation.h
-        common_operations/stroke_limits.h
         GA_operations/final_fitness_function.h
         GA_operations/util.h
-        data_representation/range_rectangle.h
+        GA_operations/final_constrainer.h
+
+        common_operations/stroke_limits.h
         common_operations/basic_constraining.cpp
         common_operations/basic_constraining.h
-        GA_operations/final_constrainer.h
-        tests/GA_tests/stroke_constraining_test.h
-        launching/launch_main_ga.cpp
-        launching/launch_main_ga.h
+        common_operations/stroke_generation.cpp
+        common_operations/stroke_generation.h
+        common_operations/image_splitting_scheduling.cpp
+        common_operations/image_splitting_scheduling.h
+        common_operations/image_segregation.cpp
+        common_operations/image_segregation.h
+
+        GA_operations/all.h
         GA_operations/stroke_range_generator.h
-        tests/GA_tests/population_generation_tests.h
         GA_operations/callbacks/image_logging_callback.cpp
         GA_operations/callbacks/image_logging_callback.h
         GA_operations/callbacks/GA_informer.h
         GA_operations/population_generator.h
-        common_operations/stroke_generation.cpp
-        common_operations/stroke_generation.h
         GA_operations/final_crossover.cpp
         GA_operations/final_crossover.h
-        tests/example_stroke_image_generation.h
-        launching/single_zone_workers/GA_worker.cpp
-        launching/single_zone_workers/GA_worker.h
-        GA_operations/all.h
+
+        launching/launch_main_ga.cpp
+        launching/launch_main_ga.h
         launching/GA_parameter_sets.h
-        common_operations/image_splitting_scheduling.cpp
-        common_operations/image_splitting_scheduling.h
-        tests/image_splitting_test.h
-        common_operations/image_segregation.cpp
-        common_operations/image_segregation.h
-        tests/strokes_to_json_tests.h
-        launching/single_zone_workers/single_zone_worker.h
         launching/multizoner.cpp
         launching/multizoner.h
-        launching/single_zone_workers/annealing_worker.cpp launching/single_zone_workers/annealing_worker.h)
+        launching/single_zone_workers/GA_worker.cpp
+        launching/single_zone_workers/GA_worker.h
+        launching/single_zone_workers/single_zone_worker.h
+        launching/single_zone_workers/annealing_worker.cpp
+        launching/single_zone_workers/annealing_worker.h
+
+        vector_graphics/SVG_service.cpp
+        vector_graphics/SVG_service.h)
 
 
 include_directories(./)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 
 ## Add libraries to the project:
 
+# They are different configurations
+set(PROJECT_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/dependencies)
+message("Load dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
+if (is_computer)
+    set(current_opencv_dir D:/Workspace/C++/libs/opencv4/build)
+    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
+    set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
+
+    set(current_GA_dir D:/Workspace/C++/libs/PowerfulGA)
+    set(current_pythonic_dir D:/Workspace/C++/libs/pythonic)
+elseif(is_notebook)
+    set(current_opencv_dir DOESNT_MATTER)
+    set(current_boost_dir D:/lib/boost_1_72_0)
+    set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
+
+    set(current_GA_dir /home/vova/dev/PowerfulGA)
+    set(current_pythonic_dir /home/vova/dev/pythonic)
+else()
+    message(FATAL_ERROR "Specify your platform name!")
+
+endif()
+# User code for other platforms:
+# elseif(...)
+# ...
+
 # Find OpenCV:
 if (NOT ${current_opencv_dir} STREQUAL DOESNT_MATTER)
-set(OpenCV_DIR ${current_opencv_dir})
+    set(OpenCV_DIR ${current_opencv_dir})
 endif()
-# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-# message(${OpenCV_DIR})
 find_package(OpenCV REQUIRED)
 
 # Add OpenCV
@@ -161,6 +165,24 @@ else()
     message("Release ${OpenCV_LIBS}")
     target_link_libraries(Painter ${OpenCV_LIBS})
 endif()
+
+# Find LunaSVG
+if (NOT ${current_lunasvg_dir} STREQUAL DOESNT_MATTER)
+    set(LunaSVG_DIR ${current_lunasvg_dir})
+endif()
+
+find_package(LunaSVG REQUIRED)
+
+# Add LunaSVG
+include_directories(${LunaSVG_INCLUDE_DIRS})
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    message("Debug ${LunaSVG_LIBRARY}")
+    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+else()
+    message("Release ${LunaSVG_LIBRARY}")
+    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+endif()
+
 
 
 # ______________________________

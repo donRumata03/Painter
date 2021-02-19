@@ -72,7 +72,7 @@ int main ()
 	// test_image_segregation();
 
 	/// Json
-	test_stroke_to_json();
+	// test_stroke_to_json();
 
 	/// GA util tests:
 	// test_stroke_generation_with_rasterization();
@@ -92,24 +92,19 @@ int main ()
 	std::string cutted_moon_path = (fs::path(painter_base_path) / "images_for_testing" / "cutted_moon.png").string();
 	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
 
-	// const auto& image_path = coffee_path;
-	// const auto& image_path = van_gogh_path;
-	const auto& image_path = van_gogh_beard_path;
+    std::string simple_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "simple.svg").string();
+    std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
 
-	// const auto& image_path = one_stroke_path;
-
-	// const auto& image_path = circle_path;
-	// const auto& image_path = moon_path;
-	// const auto& image_path = cutted_moon_path;
-	// const auto& image_path = half_ring_path;
-
+	const auto& image_path = simple_svg_path;
 
 	/// Single zone:
-	launch_single_zone_GA(image_path);
+	 launch_single_zone_GA(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);
 
+    /// SVG launch:
+    //launch_svg_stroking(image_path);
 
 	return 0;
 }

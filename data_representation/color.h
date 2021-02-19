@@ -59,6 +59,10 @@ struct rgb_color
 	}
 	 */
 	template<class Type> friend bool operator == (const rgb_color<Type>&, const rgb_color<Type>&);
+    template<class Type> friend bool operator < (const rgb_color<Type>&, const rgb_color<Type>&);
+    template<class Type> friend bool operator > (const rgb_color<Type>&, const rgb_color<Type>&);
+    template<class Type> friend bool operator <= (const rgb_color<Type>&, const rgb_color<Type>&);
+    template<class Type> friend bool operator >= (const rgb_color<Type>&, const rgb_color<Type>&);
 };
 
 /// RGB_color Constructors and conversions to other color types:
@@ -71,7 +75,7 @@ std::vector<T> rgb_color<T>::to_vector () const
 template < class T >
 std::array<T, 3> rgb_color<T>::to_array () const
 {
-	return std::array<T, 3>(r, g, g);
+	return std::array<T, 3>(r, g, b);
 }
 
 template < class T >
@@ -168,6 +172,32 @@ bool operator== (const rgb_color<Type> & first, const rgb_color<Type> & second)
 	// return first.represent() == second.represent();
 }
 
+template<class Type>
+bool operator<(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+    if (first.r < second.r) return true;
+    if (first.r > second.r) return false;
+
+    if (first.g < second.g) return true;
+    if (first.g > second.g) return false;
+
+    return first.b < second.b;
+}
+
+template<class Type>
+bool operator>(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+    return second < first;
+}
+
+template<class Type>
+bool operator<=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+    return !(first > second);
+}
+
+template<class Type>
+bool operator>=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+    return !(first < second);
+}
+
 template<class T>
 std::ostream &operator<< (std::ostream &os, const rgb_color<T> &rgb_color)
 {
@@ -194,7 +224,6 @@ const T &rgb_color<T>::operator[] (size_t index) const
 {
 	return const_cast<const T&>(const_cast<rgb_color<T>*>(this)->operator[](index));
 }
-
 
 // To be able to put it into hash tables:
 namespace std
