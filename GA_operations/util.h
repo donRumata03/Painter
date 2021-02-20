@@ -101,3 +101,14 @@ inline void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffe
 	for (auto& filename : filenames)
 		save_image(image, filename);
 }
+
+//////////////////////								Non-unique functionality:		////////////////////////////////////////
+
+inline double transfer_range (double value, std::pair<double, double> from_range, std::pair<double, double> to_range)
+{
+	double size_first = from_range.second - from_range.first;
+	double size_second = to_range.second - to_range.first;
+
+	return to_range.first + (size_second * (value - from_range.first) / size_first);
+}
+

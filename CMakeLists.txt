@@ -123,7 +123,7 @@ add_executable(Painter
         launching/single_zone_workers/annealing_worker.h
 
         vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h GA_operations/genome_generator.h)
+        vector_graphics/SVG_service.h GA_operations/genome_generator.h GA_operations/adjustable_genome_mutation.h)
 
 
 include_directories(./)
