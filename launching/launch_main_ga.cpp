@@ -12,9 +12,10 @@ void launch_single_zone_GA (const std::string &filename)
 {
 	Image image = open_image(filename);
 
-	GA_launching_params this_params = default_params;
+    CommonStrokingParams stroke_params = default_stroking_parameters;
+    GA_stroking_parameters ga_params = default_GA_params;
 
-	GA_worker worker(image, this_params);
+	GA_worker worker(image, stroke_params, ga_params);
 	worker.run_remaining_iterations();
 
 	/// For one thread:
@@ -39,13 +40,14 @@ void launch_single_zone_GA (const std::string &filename)
 
 void launch_multizone_GA (const std::string& filename)
 {
-	GA_launching_params this_params = default_params;
+    CommonStrokingParams stroke_params = default_stroking_parameters;
+    GA_stroking_parameters ga_params = default_GA_params;
 	image_splitting_params this_splitting_params = van_gogh_splitting_params;
 
 	Image image = open_image(filename);
 	MultizoneLaunchWrapper<GA_worker> launcher(image,
 	                                this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
-	                                this_params);
+	                                stroke_params, ga_params);
 	std::cout << "[main launching function]: Performed initialization. Running.." << std::endl;
 
 	launcher.run();
@@ -63,9 +65,10 @@ void launch_svg_stroking(const std::string &filename) {
     std::vector<colored_stroke> strokes;
     while (service.load_current_image(image))
     {
-        GA_launching_params params = default_params;
+        CommonStrokingParams stroke_params = default_stroking_parameters;
+        GA_stroking_parameters ga_params = default_GA_params;
 
-        GA_worker worker(image, params,
+        GA_worker worker(image, stroke_params, ga_params,
                          fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())));
         worker.run_remaining_iterations();
 
