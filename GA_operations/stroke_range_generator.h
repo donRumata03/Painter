@@ -75,7 +75,7 @@ struct AppliedStroking {
 
 
 
-AppliedStroking apply_stroking_parameters(CommonStrokingParams params, size_t image_w, size_t image_h) {
+inline AppliedStroking apply_stroking_parameters(CommonStrokingParams params, size_t image_w, size_t image_h) {
 	AppliedStroking res;
 
 	/// Count typical distances:
@@ -92,7 +92,7 @@ AppliedStroking apply_stroking_parameters(CommonStrokingParams params, size_t im
 	return res;
 }
 
-stroke_limit_descriptor generate_stroke_limits_by_raw_parameters(CommonStrokingParams params, size_t w, size_t h) {
+inline stroke_limit_descriptor generate_stroke_limits_by_raw_parameters(CommonStrokingParams params, size_t w, size_t h) {
 	auto applied = apply_stroking_parameters(params, w, h);
 
 	auto limits = stroke_limit_descriptor{

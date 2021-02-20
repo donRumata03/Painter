@@ -13,7 +13,7 @@
 /**
  * Callable object for mutation, which automatically computes current sigmas and mutation gene number «on-fly» by «mutation amount» (for example, in annealing)
  */
-class SingleGenomeMutator
+class AdjustableGenomeMutator
 {
 	stroke_limit_descriptor limits{};
 
@@ -25,9 +25,9 @@ class SingleGenomeMutator
 	normalizer normaa; // See https://www.youtube.com/watch?v=duvlWEJJmU0
 	mutator m_mutator {};
 
-
-	SingleGenomeMutator() : normaa(10'000) {}
-	SingleGenomeMutator(stroke_limit_descriptor limits,	std::vector<double> max_mutation_sigmas, double max_target_mutation_gene_amount, double move_probability)
+public:
+	AdjustableGenomeMutator() : normaa(10'000) {}
+	AdjustableGenomeMutator(stroke_limit_descriptor limits, std::vector<double> max_mutation_sigmas, double max_target_mutation_gene_amount, double move_probability)
 								: limits(limits), max_mutation_sigmas(std::move(max_mutation_sigmas)),
 								max_target_mutation_gene_amount(max_target_mutation_gene_amount), move_probability(move_probability), normaa(10'000)
 	{

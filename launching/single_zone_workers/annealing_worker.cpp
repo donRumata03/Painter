@@ -27,7 +27,12 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 
 	auto stroke_limits = generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h);
 
-	configured_mutator = mutator(stroke_limits, stroking_params.move_mutation_probability);
+	configured_mutator = AdjustableGenomeMutator(
+			stroke_limits,
+			generate_point_sigmas_by_raw_parameters(stroking_params, image_w, image_h),
+			common_stroking_params.stroke_number * double(sizeof(stroke) / sizeof(double)) * annealing_stroking_params.gene_mutation_fraction,
+			common_stroking_params.move_mutation_probability
+	); // mutator(stroke_limits, stroking_params.move_mutation_probability);
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 
 }

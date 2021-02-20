@@ -36,6 +36,8 @@ inline auto default_annealing_params = AnnealingStrokingParams {
 		.iterations = 10'000,
 
 		.typical_temperature = 1.,
+		.gene_mutation_fraction = 0.1,
+
 };
 
 /*

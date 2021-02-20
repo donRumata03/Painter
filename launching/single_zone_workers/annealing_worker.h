@@ -19,6 +19,8 @@ struct AnnealingStrokingParams {
 
 	double typical_temperature = 1.;
 
+	double gene_mutation_fraction = 0.1;
+
 	/// No multithreading: Single annealing optimization operation can't be performed multithreadingly!
 };
 
@@ -62,7 +64,7 @@ private:
 
 	/// Actors:
 	final_fitness_function configured_error_function;
-	mutator configured_mutator;
+	AdjustableGenomeMutator configured_mutator;
 	FinalGenomeGenerator configured_generator;
 
 
