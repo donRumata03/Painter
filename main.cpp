@@ -10,7 +10,7 @@
 #include <tests/stroke_color_optimization_test.h>
 #include <tests/error_computing_tests/image_mse_test.h>
 #include <tests/GA_tests/stroke_constraining_test.h>
-#include <launching/launch_main_ga.h>
+#include <launching/launch_main.h>
 #include <tests/GA_tests/population_generation_tests.h>
 #include <tests/example_stroke_image_generation.h>
 #include <tests/image_splitting_test.h>

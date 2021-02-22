@@ -2,7 +2,7 @@
 // Created by Vova on 02.10.2020.
 //
 
-#include "launch_main_ga.h"
+#include "launch_main.h"
 #include "launching/single_zone_workers/GA_worker.h"
 
 #include "io_api/image_io_utils.h"

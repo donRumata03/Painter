@@ -111,8 +111,8 @@ add_executable(Painter
         GA_operations/final_crossover.cpp
         GA_operations/final_crossover.h
 
-        launching/launch_main_ga.cpp
-        launching/launch_main_ga.h
+        launching/launch_main.cpp
+        launching/launch_main.h
         launching/GA_parameter_sets.h
         launching/multizoner.cpp
         launching/multizoner.h
