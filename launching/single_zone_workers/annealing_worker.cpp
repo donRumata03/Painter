@@ -48,7 +48,7 @@ void AnnealingWorker::run_one_iteration ()
 void AnnealingWorker::run_remaining_iterations ()
 {
 	/// Launch annealing:
-	auto annealing_output = annealing_optimize<double, void>( // TODO: develop fast fitness function recounting
+	result = annealing_optimize<double, void>( // TODO: develop fast fitness function recounting
 				configured_error_function,
 				AnnealingOptimizeParameters{
 					.iterations = annealing_stroking_params.iterations,

@@ -31,7 +31,8 @@ public:
 
 	using ParametersType = AnnealingStrokingParams;
 
-	AnnealingWorker (const Image& image, const CommonStrokingParams& stroking_params, const AnnealingStrokingParams& annealing_params, const fs::path& logging_path);
+	AnnealingWorker (const Image& image, const CommonStrokingParams& stroking_params, const AnnealingStrokingParams& annealing_params,
+                    const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 
 	/// Run methods:

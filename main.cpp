@@ -95,10 +95,11 @@ int main ()
     std::string simple_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "simple.svg").string();
     std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
 
-	const auto& image_path = simple_svg_path;
+	const auto& image_path = circle_path;
 
 	/// Single zone:
-	launch_single_zone_GA(image_path);
+	//launch_single_zone_GA(image_path);
+    launch_single_zone_annealing(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

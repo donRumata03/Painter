@@ -8,6 +8,23 @@
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
 
+static inline void save_log_json(std::vector<colored_stroke> strokes,
+                                 fs::path filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
+{
+    std::vector<color> pallete; // TODO: use specific color for strokes
+    for (auto& col_stroke : strokes) {
+        if (std::find(pallete.begin(), pallete.end(), col_stroke.background_color) == std::end(pallete)) {
+            pallete.emplace_back(col_stroke.background_color);
+        }
+    }
+
+    json j;
+    to_json(j, strokes, pallete);
+    std::ofstream json_file(filepath);
+    json_file << j;
+    json_file.close();
+}
+
 void launch_single_zone_GA (const std::string &filename)
 {
 	Image image = open_image(filename);
@@ -57,7 +74,27 @@ void launch_multizone_GA (const std::string& filename)
 
 
 void launch_single_zone_annealing(const std::string& filename) {
-	// TODO
+    Image image = open_image(filename);
+
+    CommonStrokingParams this_common_params = default_stroking_parameters;
+    AnnealingStrokingParams this_annealing_params = default_annealing_params;
+
+    AnnealingWorker worker(image, this_common_params, this_annealing_params);
+    worker.run_remaining_iterations();
+
+    auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
+    colorize_strokes(strokes, image); // TODO: Use specific color of image
+
+    Image result = make_default_image(image.cols, image.rows);
+    rasterize_strokes(result, strokes);
+    save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+
+    save_log_json(strokes);
+
+    show_image_in_system_viewer(result);
+
+    worker.print_diagnostic_information();
+    worker.show_fitness_dynamic();
 }
 
 
@@ -101,26 +138,9 @@ void launch_svg_stroking(const std::string &filename) {
     save_image(image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 
     // Save strokes
-    std::vector<color> pallete; // TODO: use specific color for strokes
-    for (auto& col_stroke : strokes) {
-        if (std::find(pallete.begin(), pallete.end(), col_stroke.background_color) == std::end(pallete)) {
-            pallete.emplace_back(col_stroke.background_color);
-        }
-    }
-    json j;
-    to_json(j, strokes, pallete);
-    std::ofstream json_file(fs::path(painter_base_path) / "log" / "latest" / "result.json");
-    json_file << j;
-    json_file.close();
-
+    save_log_json(strokes);
 
     show_image_in_system_viewer(image);
-
-    // Debug show
-//    Image result = image.clone();
-//    convert_image_between_RGB_and_BGR<Pixel>(result);
-//    cv::imshow("result", result);
-//    cv::waitKey(0);
 }
 
 
