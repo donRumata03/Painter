@@ -79,10 +79,15 @@ inline AppliedStroking apply_stroking_parameters(CommonStrokingParams params, si
 	AppliedStroking res;
 
 	/// Count typical distances:
-	res.typical_coord = geometric_mean({ double(image_w), double(image_h) });
+    res.typical_coord = geometric_mean({double(image_w), double(image_h)});
 
-	res.stroke_typical_length       = res.typical_coord * params.stroke_length_to_image_size_fraction;
-	res.stroke_typical_width        = res.stroke_typical_length * params.stroke_width_to_length_factor;
+	if (params.use_absolute_values) {
+        res.stroke_typical_length = std::min({ params.stroke_length, (double)image_w, (double)image_h});
+        res.stroke_typical_width = std::min({ params.stroke_width, (double)image_w, (double)image_h});
+	} else {
+        res.stroke_typical_length = res.typical_coord * params.stroke_length_to_image_size_fraction;
+        res.stroke_typical_width = res.stroke_typical_length * params.stroke_width_to_length_factor;
+    }
 
 	res.stroke_coord_mutation_sigma = res.stroke_typical_length * params.stroke_coord_mutation_to_stroke_length_factor;
 	res.stroke_width_mutation_sigma = res.stroke_typical_width * params.stroke_width_mutation_to_stroke_width_factor;
@@ -96,11 +101,11 @@ inline stroke_limit_descriptor generate_stroke_limits_by_raw_parameters(CommonSt
 	auto applied = apply_stroking_parameters(params, w, h);
 
 	auto limits = stroke_limit_descriptor{
-			.min_dx     = applied.stroke_typical_length / applied.param_half_range,
-			.max_dx     = applied.stroke_typical_length * applied.param_half_range,
+			.min_dx     = std::max(applied.stroke_typical_length / applied.param_half_range, 0.),
+			.max_dx     = std::min(applied.stroke_typical_length * applied.param_half_range, (double)w),
 
-			.min_dy     = applied.stroke_typical_length / applied.param_half_range,
-			.max_dy     = applied.stroke_typical_length * applied.param_half_range,
+			.min_dy     = std::max(applied.stroke_typical_length / applied.param_half_range, 0.),
+			.max_dy     = std::min(applied.stroke_typical_length * applied.param_half_range, (double)h),
 
 			.min_width  = applied.stroke_typical_width / applied.param_half_range,
 			.max_width  = applied.stroke_typical_width * applied.param_half_range,
@@ -109,6 +114,19 @@ inline stroke_limit_descriptor generate_stroke_limits_by_raw_parameters(CommonSt
 	};
 
 	return limits;
+}
+
+inline CommonStrokingParams switch_to_absolute_values(const CommonStrokingParams& params, size_t w, size_t h) {
+    CommonStrokingParams new_params = params;
+
+    auto apply_params = apply_stroking_parameters(params, w, h);
+
+    new_params.stroke_width = apply_params.stroke_typical_width;
+    new_params.stroke_length = apply_params.stroke_typical_length;
+
+    new_params.use_absolute_values = true;
+
+    return new_params;
 }
 
 inline std::vector<std::pair<double, double>> generate_point_ranges_by_raw_parameters(CommonStrokingParams params, size_t w, size_t h) {

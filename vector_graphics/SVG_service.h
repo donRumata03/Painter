@@ -5,7 +5,7 @@
 #ifndef PAINTER_SVG_SERVICE_H
 #define PAINTER_SVG_SERVICE_H
 
-#include "svgdocument.h"
+#include <svgdocument.h>
 
 #include "painter_pch.h"
 #include "data_representation/stroke.h"
@@ -20,6 +20,7 @@ public:
 
     void shift_strokes(std::vector<colored_stroke>& strokes);
 
+    inline cv::Mat get_raster_original_image() { return get_raster_image(svg); }
     [[nodiscard]] inline cv::Rect get_borders() const { return borders; }
 
     [[nodiscard]] inline size_t get_it() const { return it; }

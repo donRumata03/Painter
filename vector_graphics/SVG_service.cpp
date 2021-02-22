@@ -2,11 +2,14 @@
 // Created by Elementarno on 17.02.2021.
 //
 
-#include "SVG_service.h"
+#include <svgelementiter.h>
 
+#include "SVG_service.h"
 #include "io_api/image_io_utils.h"
 
 #define PATH_BOX_GOMOTHETY 1.1
+#define CRITICAL_WIDTH 20
+#define CRITICAL_HEIGHT 20
 
 SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
@@ -23,16 +26,17 @@ void SVG_service::split_paths() {
     auto root = svg.rootElement();
 
     // Split paths & render
-    lunasvg::SVGElement *path = NULL;
     size_t count = 0;
-    while ((path = root->getElementByTag("path", count)) != NULL) {
+    lunasvg::SVGElementIter iter(root, "", "path");
+    while (iter.next()) {
         lunasvg::SVGDocument path_doc;
         path_doc.rootElement()->setAttribute("viewBox", root->getAttribute("viewBox"));
-        path_doc.appendElement(path);
+        path_doc.appendElement(iter.currentElement());
 
         // Setup borders
-        auto full_img = get_raster_image(path_doc);
-        auto box = get_shape_bounds(full_img);
+        auto box = get_shape_bounds(get_raster_image(path_doc));
+        if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) continue; // TODO: find better solution
+
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
         path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
         boxes.emplace_back(box);

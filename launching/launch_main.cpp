@@ -110,19 +110,22 @@ void launch_svg_stroking(const std::string &filename) {
     SVG_service service(filename);
     service.split_paths();
 
+    Image original = service.get_raster_original_image();
+    save_image(original, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
+
+    CommonStrokingParams common_params = switch_to_absolute_values(default_stroking_parameters,
+                                                                   original.cols, original.rows);
+    GA_stroking_parameters ga_params = default_GA_params;
+
     Image image;
     std::vector<colored_stroke> strokes;
     while (service.load_current_image(image))
     {
-	    CommonStrokingParams this_common_params = default_stroking_parameters;
-	    GA_stroking_parameters this_ga_params = default_GA_params;
-
-        GA_worker worker(image, this_common_params, this_ga_params,
+        GA_worker worker(image, common_params, ga_params,
                          fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())));
         worker.run_remaining_iterations();
 
-        worker.print_diagnostic_information();
-        // worker.show_fitness_dynamic();
+        // worker.print_diagnostic_information();
 
         auto cur_strokes = unpack_stroke_data_buffer(worker.get_best_genome());
         colorize_strokes(cur_strokes, image); // TODO: Use specific color of image
@@ -133,14 +136,15 @@ void launch_svg_stroking(const std::string &filename) {
     }
 
     // View result
-    image = make_default_image(service.get_borders().width, service.get_borders().height);
-    rasterize_strokes(image, strokes);
-    save_image(image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+    Image result = make_default_image(original.cols, original.rows);
+    rasterize_strokes(result, strokes);
+    save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+    std::cout << "Result: " << strokes.size() << " strokes." << std::endl;
 
     // Save strokes
     save_log_json(strokes);
 
-    show_image_in_system_viewer(image);
+    show_image_in_system_viewer(result);
 }
 
 

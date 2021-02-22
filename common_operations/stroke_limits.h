@@ -23,8 +23,8 @@ struct stroke_limit_descriptor
 	[[nodiscard]] bool validate_self() const {
 		if (min_dx >= max_dx) return false;
 		if (min_dy >= max_dy) return false;
-		if (image_dx() <= max_dx) return false;
-		if (image_dy() <= max_dy) return false;
+		if (image_dx() < max_dx) return false;
+		if (image_dy() < max_dy) return false;
 
 		return true;
 	}

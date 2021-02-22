@@ -65,10 +65,20 @@ void cv_show_image (const Image &img, const std::string &image_name)
 
 void save_image (const Image &img, const fs::path &filename)
 {
-	auto char_image = convert_image_from_floating_point(img);
-	convert_image_between_RGB_and_BGR<byte_Pixel>(char_image);
+    Image output;
+    switch (img.type()) {
+        case CV_8UC3: // Nothing to do
+            output = img;
+            break;
+        case CV_64FC3:
+            output = convert_image_from_floating_point(img);
+            convert_image_between_RGB_and_BGR<byte_Pixel>(output);
+            break;
+        default:
+            assert(false);
+    }
 
-	cv::imwrite(filename.string(), char_image);
+	cv::imwrite(filename.string(), output);
 }
 
 /**

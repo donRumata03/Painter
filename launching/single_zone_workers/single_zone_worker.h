@@ -6,7 +6,6 @@
 
 #include "painter_pch.h"
 
-
 class SingleZoneWorker
 {
 public:
@@ -32,6 +31,13 @@ struct CommonStrokingParams
 	size_t stroke_number = 0;
 
 	/// Fractions:
+	bool use_absolute_values = false; // Switch between values
+
+	/// Absolute values:
+	double stroke_length = 0;
+	double stroke_width = 0;
+
+	/// Relative values:
 	double stroke_length_to_image_size_fraction = 0.15; // 0.05;
 	double stroke_width_to_length_factor = 0.5; // 0.4; // Width = length * stroke_width_to_length_factor
 	double stroke_coord_mutation_to_stroke_length_factor = 0.5;
