@@ -101,6 +101,8 @@ add_executable(Painter
         common_operations/image_splitting_scheduling.h
         common_operations/image_segregation.cpp
         common_operations/image_segregation.h
+        common_operations/image_adaptive_params.cpp
+        common_operations/image_adaptive_params.h
 
         GA_operations/all.h
         GA_operations/stroke_range_generator.h
@@ -110,6 +112,8 @@ add_executable(Painter
         GA_operations/population_generator.h
         GA_operations/final_crossover.cpp
         GA_operations/final_crossover.h
+        GA_operations/genome_generator.h
+        GA_operations/adjustable_genome_mutation.h
 
         launching/launch_main.cpp
         launching/launch_main.h
@@ -123,7 +127,7 @@ add_executable(Painter
         launching/single_zone_workers/annealing_worker.h
 
         vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h GA_operations/genome_generator.h GA_operations/adjustable_genome_mutation.h)
+        vector_graphics/SVG_service.h)
 
 
 include_directories(./)

@@ -7,6 +7,7 @@
 
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
+#include "common_operations/image_adaptive_params.h"
 
 static inline void save_log_json(std::vector<colored_stroke> strokes,
                                  fs::path filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
@@ -116,16 +117,18 @@ void launch_svg_stroking(const std::string &filename) {
     CommonStrokingParams common_params = switch_to_absolute_values(default_stroking_parameters,
                                                                    original.cols, original.rows);
     GA_stroking_parameters ga_params = default_GA_params;
+    cv::Size original_size(original.rows, original.cols);
 
     Image image;
     std::vector<colored_stroke> strokes;
     while (service.load_current_image(image))
     {
-        GA_worker worker(image, common_params, ga_params,
+        auto cur_params = common_params;
+        cur_params.stroke_number = calc_strokes_count(image, original_size, common_params.stroke_number);
+        std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation (" << cur_params.stroke_number << " strokes)" << std::endl;
+        GA_worker worker(image, cur_params, ga_params,
                          fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())));
         worker.run_remaining_iterations();
-
-        // worker.print_diagnostic_information();
 
         auto cur_strokes = unpack_stroke_data_buffer(worker.get_best_genome());
         colorize_strokes(cur_strokes, image); // TODO: Use specific color of image
@@ -139,7 +142,7 @@ void launch_svg_stroking(const std::string &filename) {
     Image result = make_default_image(original.cols, original.rows);
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
-    std::cout << "Result: " << strokes.size() << " strokes." << std::endl;
+    std::cout << "[Launch] Result: " << strokes.size() << " strokes." << std::endl;
 
     // Save strokes
     save_log_json(strokes);
