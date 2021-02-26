@@ -21,6 +21,8 @@ size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, const size_t
  */
 double estimate_stroke_complexity (ZoneComplexityDescriptor zone_descriptor)
 {
+	// TODO: test
+
 	/// HyperParameters:
 	constexpr double max_perimeter_contribution = 1.75; /// Is essentially an asymptote of the relative perimeter contribution
 
