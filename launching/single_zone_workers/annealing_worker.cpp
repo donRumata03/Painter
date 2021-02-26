@@ -31,7 +31,8 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 			stroke_limits,
 			generate_point_sigmas_by_raw_parameters(stroking_params, image_w, image_h),
 			common_stroking_params.stroke_number * double(sizeof(stroke) / sizeof(double)) * annealing_stroking_params.gene_mutation_fraction,
-			common_stroking_params.move_mutation_probability
+			common_stroking_params.move_mutation_probability,
+			true // It will constrain the strokes before returning result
 	); // mutator(stroke_limits, stroking_params.move_mutation_probability);
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 }

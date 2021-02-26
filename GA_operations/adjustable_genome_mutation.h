@@ -11,7 +11,9 @@
 
 
 /**
- * Callable object for mutation, which automatically computes current sigmas and mutation gene number «on-fly» by «mutation amount» (for example, in annealing)
+ * 			Callable object for mutation,
+ * 			which automatically computes current sigmas and mutation gene number «on-fly» by «mutation amount»
+ * 			(for example, it's used in annealing)
  */
 class AdjustableGenomeMutator
 {
@@ -25,11 +27,13 @@ class AdjustableGenomeMutator
 	normalizer normaa; // See https://www.youtube.com/watch?v=duvlWEJJmU0
 	mutator m_mutator {};
 
+	bool constrain_after_mutation = false;
+
 public:
 	AdjustableGenomeMutator() : normaa(10'000) {}
-	AdjustableGenomeMutator(stroke_limit_descriptor limits, std::vector<double> max_mutation_sigmas, double max_target_mutation_gene_amount, double move_probability)
+	AdjustableGenomeMutator(stroke_limit_descriptor limits, std::vector<double> max_mutation_sigmas, double max_target_mutation_gene_amount, double move_probability, bool _constrain_after_mutation)
 								: limits(limits), max_mutation_sigmas(std::move(max_mutation_sigmas)),
-								max_target_mutation_gene_amount(max_target_mutation_gene_amount), move_probability(move_probability), normaa(10'000)
+								max_target_mutation_gene_amount(max_target_mutation_gene_amount), move_probability(move_probability), normaa(10'000), constrain_after_mutation(_constrain_after_mutation)
 	{
 		m_mutator = mutator(limits, move_probability);
 
@@ -58,10 +62,32 @@ public:
 		std::vector<double> result = stroke_data_buffer;
 		m_mutator(result, stroke_sigmas, target_gene_number, normaa);
 
+		/// Constrain if configured so:
+		if (constrain_after_mutation) {
+			auto strokes = unpack_stroke_data_buffer(result);
+
+			for (auto& stroke : strokes) {
+				limits.constrain_stroke_to_requirements(stroke);
+			}
+
+			result = pack_stroke_data(strokes);
+		}
+
 		return result;
 	}
 
 
 };
+
+
+/// For annealing: mutates and constrains automatically:
+
+class AdjustableConstrainingMutator
+{
+	AdjustableGenomeMutator m_mutator;
+
+
+};
+
 
 
