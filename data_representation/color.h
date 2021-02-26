@@ -160,7 +160,7 @@ cv::Scalar rgb_color<T>::to_OpenCV_Scalar () const
 {
 	return cv::Scalar
 	{
-		r, b, b, 0.
+		r, g, b, 0.
 	};
 }
 
@@ -269,7 +269,7 @@ using byte_Pixel = cv::Point3_<uint8_t>;
 
 
 
-
+color get_color_from_hex(const std::string& hex);
 
 /**
  * Color number reduction functions:

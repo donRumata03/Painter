@@ -139,3 +139,7 @@ void find_stroke_color (colored_stroke &colored_stroke, const Image &image)
 	colored_stroke.background_color = find_stroke_color(reinterpret_cast<const stroke&>(colored_stroke), image);
 }
 
+void find_stroke_color (colored_stroke& colored_stroke, const color& setup_color)
+{
+    colored_stroke.background_color = setup_color;
+}

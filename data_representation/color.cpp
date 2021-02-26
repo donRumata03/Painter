@@ -4,6 +4,19 @@
 
 #include "color.h"
 
+color get_color_from_hex(const std::string& hex)
+{
+    std::stringstream ss("0x");
+    uint32_t x;
+
+    ss << hex;
+    ss >> std::hex >> x;
+
+    return color(((x & 0xFF0000u) >> 16u) / 255.,
+                 ((x & 0x00FF00u) >> 8u) / 255.,
+                 ((x & 0x0000FFu)) / 255.);
+}
+
 std::unordered_set<rgb_color<uint8_t>> get_unique_colors (const Image &img)
 {
 	std::unordered_set<rgb_color<uint8_t>> res;

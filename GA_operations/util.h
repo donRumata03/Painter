@@ -46,6 +46,11 @@ inline void colorize_strokes (std::vector<colored_stroke>& strokes_to_colorize, 
 	for (auto& stroke : strokes_to_colorize) find_stroke_color(stroke, image);
 };
 
+inline void colorize_strokes (std::vector<colored_stroke>& strokes_to_colorize, const color& setup_color)
+{
+    for (auto& stroke : strokes_to_colorize) find_stroke_color(stroke, setup_color);
+};
+
 
 template<
         class ColoredOrNotStroke,

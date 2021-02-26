@@ -11,6 +11,8 @@
 #define CRITICAL_WIDTH 20
 #define CRITICAL_HEIGHT 20
 
+const std::regex SVG_service::color_regex = std::regex("fill:#([a-fA-F0-9]{6})");
+
 SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
     svg.loadFromFile(filepath);
@@ -40,6 +42,7 @@ void SVG_service::split_paths() {
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
         path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
         boxes.emplace_back(box);
+        colors.emplace_back(get_element_color(iter.currentElement()));
 
         cv::imwrite(get_shape_path(count), get_raster_image(path_doc));
         count++;
@@ -108,6 +111,15 @@ cv::Rect SVG_service::from_viewbox(const std::string &vbox) {
 
 cv::Rect SVG_service::from_viewbox(const lunasvg::SVGDocument &doc) {
     return from_viewbox(doc.rootElement()->getAttribute("viewBox"));
+}
+
+color SVG_service::get_element_color(const lunasvg::SVGElement* elem)
+{
+    std::smatch match;
+    std::string property = elem->getAttribute("style");
+    if (std::regex_search(property, match, color_regex)) {
+        return get_color_from_hex(match[1]);
+    } else throw std::runtime_error("Invalid color tried to parse");
 }
 
 cv::Rect SVG_service::gomothety_bounds(const cv::Rect &bounds, double coeff) {
