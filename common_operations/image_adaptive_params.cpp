@@ -19,7 +19,7 @@ size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, const size_t
 /**
  * \note: if the zones are pretty ragged, this might be not an ideal estimator and distributor
  */
-double estimate_stroke_complexity (StrokeComplexityDescriptor stroke_descriptor)
+double estimate_stroke_complexity (ZoneComplexityDescriptor zone_descriptor)
 {
 	/// HyperParameters:
 	constexpr double max_perimeter_contribution = 1.75; /// Is essentially an asymptote of the relative perimeter contribution
@@ -30,21 +30,39 @@ double estimate_stroke_complexity (StrokeComplexityDescriptor stroke_descriptor)
 	std::cout << "[Estimating Stroke Complexity]: k is " << k << std::endl;
 
 
-	/// TODO
 	/// Considering circle the easiest figure of the given area
 
-	double circles_length = 2 * std::sqrt(pi * stroke_descriptor.covered_area); // Length of a circle of the same area
-	if (stroke_descriptor.stroke_perimeter > circles_length + 1e-7) {
+	double circles_length = 2 * std::sqrt(pi * zone_descriptor.covered_area); // Length of a circle of the same area
+	if (zone_descriptor.stroke_perimeter > circles_length + 1e-7) {
 		throw std::range_error("Perimeter can't be so small!");
 	}
 
-	double relative_excess = (stroke_descriptor.stroke_perimeter - circles_length) / circles_length;
+	double relative_excess = (zone_descriptor.stroke_perimeter - circles_length) / circles_length;
+	assert(relative_excess >= -1e-10);
 	// If it's 10 times bigger than the circle's one, it isn't a big difference between it and 9-time-bigger-zone
 	// But it isn't true for 2 and 3 difference
 
 	double perimeter_contribution = max_perimeter_contribution * (1 - std::exp(-relative_excess / k));
 
-	double result = stroke_descriptor.covered_area * (1 + perimeter_contribution);
+	double result = zone_descriptor.covered_area * (1 + perimeter_contribution);
 
 	return result;
+}
+
+
+
+std::vector<size_t> distribute_strokes_between_bezier_zones (const std::vector<ZoneComplexityDescriptor>& zone_descriptors, size_t total_strokes)
+{
+	std::vector<double> complexities(zone_descriptors.size());
+	std::transform(zone_descriptors.begin(), zone_descriptors.end(), complexities.begin(), [](auto zone) { return estimate_stroke_complexity(zone); });
+
+	double overall_complexity = std::accumulate(complexities.begin(), complexities.end(), 0.);
+
+	std::vector<size_t> res;
+	res.reserve(zone_descriptors.size());
+	std::transform(complexities.begin(), complexities.end(), res.begin(), [&total_strokes, &overall_complexity](double local_complexity) -> size_t {
+		return size_t(std::round( double(total_strokes) * local_complexity / overall_complexity ));
+	});
+
+	return res;
 }
