@@ -34,7 +34,10 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 			common_stroking_params.move_mutation_probability,
 			true // It will constrain the strokes before returning result
 	); // mutator(stroke_limits, stroking_params.move_mutation_probability);
+
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
+
+	logger = OnImprovementUpdatingLogger(params.iterations, stroking_params.logging_percentage, logging_path);
 }
 
 
@@ -60,8 +63,8 @@ void AnnealingWorker::run_remaining_iterations ()
 				configured_generator,
 				configured_mutator,
 				default_exp_temperature_dynamic,
-				true
-				// TODO: add logger support and the logger itself!
+				true,
+				logger
 	);
 }
 

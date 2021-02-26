@@ -9,6 +9,7 @@
 #include <GA_operations/all.h>
 
 #include <Annealing/annealing_optimize.h>
+#include <GA_operations/callbacks/on_improvement_updating_logger.h>
 #include "painter_pch.h"
 #include "single_zone_worker.h"
 
@@ -67,6 +68,7 @@ private:
 	final_fitness_function configured_error_function;
 	AdjustableGenomeMutator configured_mutator;
 	FinalGenomeGenerator configured_generator;
+	OnImprovementUpdatingLogger logger;
 
 
 	/// Results:
