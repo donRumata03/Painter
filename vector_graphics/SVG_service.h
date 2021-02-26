@@ -22,6 +22,7 @@ public:
 
     inline cv::Mat get_raster_original_image() { return get_raster_image(svg); }
     [[nodiscard]] inline cv::Rect get_borders() const { return borders; }
+    [[nodiscard]] inline color get_current_color() const { return colors[it]; }
 
     [[nodiscard]] inline size_t get_it() const { return it; }
     inline void next() { ++it; }
@@ -36,10 +37,13 @@ private:
     std::string to_viewbox(const cv::Rect& rect);
     cv::Rect from_viewbox(const lunasvg::SVGDocument& doc);
     cv::Rect from_viewbox(const std::string& vbox);
+    color get_element_color(const lunasvg::SVGElement* elem);
 
+    const static std::regex color_regex;
 
     lunasvg::SVGDocument svg;
     std::vector<cv::Rect> boxes;
+    std::vector<color> colors;
     cv::Rect borders;
 
     bool is_logging;

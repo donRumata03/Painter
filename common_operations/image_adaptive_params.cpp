@@ -9,5 +9,5 @@ size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, const size_t
     cv::threshold(gray, thresh, 0, 1, cv::THRESH_BINARY);
 
     size_t pixels = cv::sum(thresh)[0];
-    return max_strokes * (pixels / (double)(size.width * size.height));
+    return std::max(max_strokes * (pixels / (double)(size.width * size.height)), 1.);
 }

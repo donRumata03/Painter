@@ -125,13 +125,15 @@ void launch_svg_stroking(const std::string &filename) {
     {
         auto cur_params = common_params;
         cur_params.stroke_number = calc_strokes_count(image, original_size, common_params.stroke_number);
-        std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation (" << cur_params.stroke_number << " strokes)" << std::endl;
+        color cur_color = service.get_current_color();
+        std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation ("
+                    << cur_params.stroke_number << " strokes, " << cur_color << " color)" << std::endl;
         GA_worker worker(image, cur_params, ga_params,
                          fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())));
         worker.run_remaining_iterations();
 
         auto cur_strokes = unpack_stroke_data_buffer(worker.get_best_genome());
-        colorize_strokes(cur_strokes, image); // TODO: Use specific color of image
+        colorize_strokes(cur_strokes, cur_color);
         service.shift_strokes(cur_strokes);
         strokes.insert(strokes.end(), cur_strokes.begin(), cur_strokes.end());
 

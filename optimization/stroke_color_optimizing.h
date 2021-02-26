@@ -18,5 +18,6 @@ color find_stroke_color_by_ariphmetic_mean(const stroke& colorless_stroke, const
 
 color find_stroke_color (const stroke& colorless_stroke, const Image& image);
 void find_stroke_color (colored_stroke& colored_stroke, const Image& image);
+void find_stroke_color (colored_stroke& colored_stroke, const color& setup_color);
 
 
