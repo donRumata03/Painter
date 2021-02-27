@@ -45,9 +45,9 @@ public:
 	}
 
 
-	void operator ()(const GA::Population & population, size_t epoch_index, GA::logging_type this_logging_type) {
+	void operator ()(const GA::Population & population, size_t epoch_index, logging_type this_logging_type) {
 
-		if (this_logging_type == GA::logging_type::best_genome) {
+		if (this_logging_type == logging_type::best_genome) {
 			assert(population.size() == 1);
 			fs::path filename = path_for_best_genomes / (std::to_string(epoch_index) + ".png");
 			std::cout << "Saving best genome image to " << filename.string() << std::endl;
@@ -60,17 +60,17 @@ public:
 		std::string this_operation_name;
 		auto operation_index = size_t(-1);
 		switch(this_logging_type) {
-			case GA::logging_type::new_epoch:
+			case logging_type::new_epoch:
 				this_operation_name = "new_epoch";
 				operation_index = 1;
 				std::cout << "[logger]: Generated new population..." << std::endl;
 				break;
-			case GA::logging_type::after_mutation:
+			case logging_type::after_mutation:
 				this_operation_name = "after_mutation";
 				operation_index = 2;
 				std::cout << "[logger]: Mutated..." << std::endl;
 				break;
-			case GA::logging_type::after_constraining:
+			case logging_type::after_constraining:
 				this_operation_name = "after_constraining";
 				operation_index = 3;
 				std::cout << "[logger]: Constrained..." << std::endl;
