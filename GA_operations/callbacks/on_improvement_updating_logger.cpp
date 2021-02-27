@@ -5,7 +5,7 @@
 #include "on_improvement_updating_logger.h"
 
 
-void OnImprovementUpdatingLogger::operator() (const std::vector<double>& stroke_set, size_t this_iteration) const
+void OnImprovementUpdatingLogger::operator() (const std::vector<double>& stroke_set, size_t this_iteration, double error) const
 {
 	// As for now, just have some probability of showing:
 	if (not (pythonic_random() < logging_fraction)) {

@@ -47,7 +47,7 @@ public:
 	}
 
 
-	void operator() (const std::vector<double>& stroke_set, size_t this_iteration) const;
+	void operator() (const std::vector<double>& stroke_set, size_t this_iteration, double error) const;
 };
 
 

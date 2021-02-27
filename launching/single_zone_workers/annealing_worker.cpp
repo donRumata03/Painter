@@ -64,6 +64,9 @@ void AnnealingWorker::run_remaining_iterations ()
 				configured_mutator,
 				default_exp_temperature_dynamic,
 				true,
+				nullptr,
+				nullptr,
+				nullptr,
 				logger
 	);
 }
