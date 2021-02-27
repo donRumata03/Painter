@@ -5,11 +5,14 @@
 #include "on_improvement_updating_logger.h"
 
 
-void OnImprovementUpdatingLogger::operator() (const std::vector<double>&, size_t this_iteration) const
+void OnImprovementUpdatingLogger::operator() (const std::vector<double>& stroke_set, size_t this_iteration) const
 {
+	// As for now, just have some probability of showing:
 	if (not (pythonic_random() < logging_fraction)) {
 		return;
 	}
 
-	// TODO
+	fs::path filename = updating_path / (std::to_string(this_iteration) + ".png");
+	std::cout << "Update logged:  " << filename.string() << std::endl;
+	save_stroke_buffer_as_image(stroke_set, image, filename);
 }

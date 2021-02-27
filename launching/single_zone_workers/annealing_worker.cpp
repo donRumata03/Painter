@@ -37,7 +37,7 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 
-	logger = OnImprovementUpdatingLogger(params.iterations, stroking_params.logging_percentage, logging_path);
+	logger = OnImprovementUpdatingLogger(initial_image, params.iterations, stroking_params.logging_percentage, logging_path);
 }
 
 
