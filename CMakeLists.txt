@@ -234,3 +234,7 @@ target_link_libraries(Painter ${PowerfulGA_static_libraries})
 # Run Cotire on the project in order to speed the build up by deducting precompiled headers:
 include(cotire)
 cotire(Painter)
+
+# Export build command to analyze them in CppDepend:
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
