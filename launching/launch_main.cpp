@@ -75,13 +75,18 @@ void launch_multizone_GA (const std::string& filename)
 
 
 void launch_single_zone_annealing(const std::string& filename) {
-    Image image = open_image(filename);
+    std::cout << "Launching single zone annealing…" << std::endl;
+
+	Image image = open_image(filename);
+	std::cout << "[launch_single_zone_annealing]: Opened image at " << filename << std::endl;
 
     CommonStrokingParams this_common_params = default_stroking_parameters;
     AnnealingStrokingParams this_annealing_params = default_annealing_params;
 
     AnnealingWorker worker(image, this_common_params, this_annealing_params);
+    std::cout << "[launch_single_zone_annealing]: initialized AnnealingWorker => Running the iterations…" << std::endl;
     worker.run_remaining_iterations();
+    std::cout << "[launch_single_zone_annealing]: Have run all the Annealing iterations, just saving the result…" << std::endl;
 
     auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
     colorize_strokes(strokes, image); // TODO: Use specific color of image
@@ -91,6 +96,8 @@ void launch_single_zone_annealing(const std::string& filename) {
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 
     save_log_json(strokes);
+
+    std::cout << "[launch_single_zone_annealing]: Saved everything, showing results and diagnostics…" << std::endl;
 
     show_image_in_system_viewer(result);
 

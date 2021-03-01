@@ -11,3 +11,6 @@ images_for_testing/Vector
 
 # File for indiividual external library configuring:
 CMake/LibraryConfig.cmake
+
+# Actually, all the build directories:
+*cmake-build-*
