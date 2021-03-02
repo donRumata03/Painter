@@ -13,6 +13,7 @@
 
 const std::regex SVG_service::color_regex = std::regex("fill:#([a-fA-F0-9]{6})");
 
+
 SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
     svg.loadFromFile(filepath);

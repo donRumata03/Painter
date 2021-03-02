@@ -127,7 +127,7 @@ add_executable(Painter
         launching/single_zone_workers/annealing_worker.h
 
         vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h GA_operations/callbacks/on_improvement_updating_logger.cpp GA_operations/callbacks/on_improvement_updating_logger.h)
+        vector_graphics/SVG_service.h GA_operations/callbacks/on_improvement_updating_logger.cpp GA_operations/callbacks/on_improvement_updating_logger.h launching/SvgZoneLauncher.h)
 
 
 include_directories(./)

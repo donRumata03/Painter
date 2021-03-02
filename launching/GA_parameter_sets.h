@@ -19,7 +19,7 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 		.stroke_param_relative_range = 3,
 
 		.move_mutation_probability = 0.2,
-		.logging_percentage = 1.0,
+		.logging_percentage = 0.1,
 
 		.canvas_color = { 0., 0., 0. },
 };

@@ -26,7 +26,9 @@ public:
 
     [[nodiscard]] inline size_t get_it() const { return it; }
     inline void next() { ++it; }
+    inline void previous() { --it; }
     inline void restart() { it = 0; }
+
 private:
     cv::Mat get_raster_image(const lunasvg::SVGDocument& doc);
     std::string get_shape_path(size_t i);
