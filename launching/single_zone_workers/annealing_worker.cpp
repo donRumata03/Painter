@@ -78,13 +78,15 @@ const std::vector<double>& AnnealingWorker::get_best_genome ()
 
 void AnnealingWorker::show_fitness_dynamic ()
 {
-	auto ys_to_plot = result.current_energy_dynamic;
+	auto current_ys = result.current_energy_dynamic;
+	auto best_ys = result.best_energy_dynamic;
 
-	std::vector<double> xs_to_plot(ys_to_plot.size());
+	std::vector<double> xs_to_plot(current_ys.size());
 	std::iota(xs_to_plot.begin(), xs_to_plot.end(), 0.);
 
-	add_vectors_to_plot(xs_to_plot, ys_to_plot);
-	show_plot();
+	add_vectors_to_plot(xs_to_plot, current_ys, { .name = "MSE Dynamic of current genome" });
+	add_vectors_to_plot(xs_to_plot, best_ys, { .name = "MSE Dynamic of best genome since the beginning" });
+	show_plot({ .window_title =  "MSE Dynamic" });
 }
 
 double AnnealingWorker::average_computation_time_seconds () const
