@@ -53,6 +53,8 @@ private:
 
 	static_thread_pool thread_pool;
 	std::vector<OptimizerType> zone_optimizers;
+
+	std::mutex common_worker_data_mutex;
 };
 
 /// ________________________________________________________________________________________________________________________________________________

@@ -15,6 +15,7 @@
 #include <tests/example_stroke_image_generation.h>
 #include <tests/image_splitting_test.h>
 #include <tests/strokes_to_json_tests.h>
+#include <tests/svg_service_test.h>
 #include "tests/opencv_test.h"
 
 
@@ -67,7 +68,7 @@ int main ()
 	/// Optimization:
 	// test_stroke_color_optimization_with_displaying();
 
-	/// Splitting:
+	/// Splitting image into rectangular zones:
 	// test_zone_scheduling();
 	// test_image_segregation();
 
@@ -97,9 +98,12 @@ int main ()
 
 	const auto& image_path = circle_path;
 
+	/// SVG management:
+	test_splitting_SVG(van_gogh_svg_path);
+
 	/// Single zone:
-	//launch_single_zone_GA(image_path);
-    launch_single_zone_annealing(image_path);
+	// launch_single_zone_GA(image_path);
+    // launch_single_zone_annealing(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

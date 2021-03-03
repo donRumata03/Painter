@@ -20,14 +20,17 @@ public:
 
     void shift_strokes(std::vector<colored_stroke>& strokes);
 
-    inline cv::Mat get_raster_original_image() { return get_raster_image(svg); }
-    [[nodiscard]] inline cv::Rect get_borders() const { return borders; }
-    [[nodiscard]] inline color get_current_color() const { return colors[it]; }
+    cv::Mat get_raster_original_image() { return get_raster_image(svg); }
+    [[nodiscard]] cv::Rect get_borders() const { return borders; }
+    [[nodiscard]] color get_current_color() const { return colors[it]; }
 
-    [[nodiscard]] inline size_t get_it() const { return it; }
-    inline void next() { ++it; }
-    inline void previous() { --it; }
-    inline void restart() { it = 0; }
+    [[nodiscard]] size_t get_it() const { return it; }
+    [[nodiscard]] size_t get_shape_count() const { return shapes_count; }
+
+    void set_iterator(size_t desired_iterator_value) { it = desired_iterator_value; }
+    void next() { ++it; }
+    void previous() { --it; }
+    void restart() { it = 0; }
 
 private:
     cv::Mat get_raster_image(const lunasvg::SVGDocument& doc);

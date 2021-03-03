@@ -111,6 +111,13 @@ void launch_multizone_annealing(const std::string& filename) {
 }
 
 
+void launch_svg_zonized_stroking()
+{
+	fs::remove_all(painter_base_path / "log" / "latest");
+
+
+}
+
 
 void launch_svg_stroking(const std::string &filename) {
     fs::remove_all(painter_base_path / "log" / "latest");
@@ -128,6 +135,7 @@ void launch_svg_stroking(const std::string &filename) {
 
     Image image;
     std::vector<colored_stroke> strokes;
+    /// Main stroking loop, add new strokes at each iteration:
     while (service.load_current_image(image))
     {
         color cur_color = service.get_current_color();
