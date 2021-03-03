@@ -59,7 +59,7 @@ private:
 
 class final_fitness_function
 {
-	Image initial_image {};
+	ImageStrokingData imageData {};
 
 	size_t total_stroke_number {};
 	size_t w{}, h{};
@@ -82,16 +82,20 @@ public:
 	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
 	 */
 	explicit final_fitness_function(
-			const Image& image,
+			const ImageStrokingData& imageData,
 			size_t strokes,
 			bool is_run_sequentially,
 			bool _error_or_fitness = false,
 			const color& canvas_color = { 0., 0., 0. }
 			)
-				: initial_image(image), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially), canvas_color(canvas_color), error_or_fitness(_error_or_fitness)
+				: imageData(imageData),
+				total_stroke_number(strokes),
+				is_run_sequentially(is_run_sequentially),
+				canvas_color(canvas_color),
+				error_or_fitness(_error_or_fitness)
 	{
-		w = image.cols;
-		h = image.rows;
+		w = imageData.image.cols;
+		h = imageData.image.rows;
 
 		if (is_run_sequentially) {
 			personal_buffer = make_default_image(w, h, canvas_color);
@@ -106,7 +110,10 @@ public:
 
 		// Parse the stroke set and compute the colors for them:
 		auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
-		for (auto& stroke : strokes) find_stroke_color(stroke, initial_image);
+		for (auto& stroke : strokes) {
+		    if (imageData.use_constant_color) find_stroke_color(stroke, imageData.stroke_color);
+		    else find_stroke_color(stroke, imageData.image);
+		}
 
 
 		// Compute MSE; OpenCV reference counting system manages the memory properly:
@@ -121,7 +128,7 @@ public:
 		// Rasterize strokes:
 		rasterize_strokes(this_buffer, strokes);
 
-		double MSE = image_mse(initial_image, this_buffer);
+		double MSE = image_mse(imageData.image, this_buffer);
 
 
 		// Clean-up the buffer for this thread:

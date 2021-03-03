@@ -71,7 +71,7 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 	// std::cout << "[GA_worker]: GA operations ready" << std::endl;
 
 	configured_fitness_function = final_fitness_function{
-			image,
+			ImageStrokingData(image, common_params.use_constant_color, common_params.stroke_color),
 			common_params.stroke_number,
 			!GA_params.allow_multithreading,
 			false,
@@ -79,8 +79,10 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 	};
 
 	bool enable_detailed_logging = (common_params.logging_percentage != 0);
-	logger = image_logging_callback(image, logging_path.string(),
-	                                common_params.logging_percentage, enable_detailed_logging);
+	logger = image_logging_callback(ImageStrokingData(image, common_params.use_constant_color, common_params.stroke_color),
+                                 logging_path.string(),
+                                 common_params.logging_percentage,
+                                 enable_detailed_logging);
 
 	// std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
 

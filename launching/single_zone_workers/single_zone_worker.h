@@ -50,5 +50,8 @@ struct CommonStrokingParams
 
 	///
 	color canvas_color = { 0., 0., 0. };
+
+	bool use_constant_color = false;
+	color stroke_color = { 1., 1., 1.};
 };
 

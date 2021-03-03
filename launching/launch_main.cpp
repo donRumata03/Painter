@@ -130,9 +130,13 @@ void launch_svg_stroking(const std::string &filename) {
     std::vector<colored_stroke> strokes;
     while (service.load_current_image(image))
     {
+        color cur_color = service.get_current_color();
+
         auto cur_params = common_params;
         cur_params.stroke_number = calc_strokes_count(image, original_size, common_params.stroke_number);
-        color cur_color = service.get_current_color();
+        cur_params.use_constant_color = true;
+        cur_params.stroke_color = cur_color;
+
         std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation ("
                     << cur_params.stroke_number << " strokes, " << cur_color << " color)" << std::endl;
         GA_worker worker(image, cur_params, ga_params,
