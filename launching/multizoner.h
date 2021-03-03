@@ -33,7 +33,7 @@ public:
 	void save_result(const fs::path& filename);
 
 
-	/// Memory managements stuff:
+	/// Memory management stuff:
 	MultizoneLaunchWrapper(const MultizoneLaunchWrapper&) = delete;
 	MultizoneLaunchWrapper(MultizoneLaunchWrapper&&) = delete;
 	MultizoneLaunchWrapper operator= (const MultizoneLaunchWrapper&) = delete;
