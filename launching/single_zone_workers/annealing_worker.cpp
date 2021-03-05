@@ -18,7 +18,7 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 	image_h = initial_image.rows;
 
 	configured_error_function = final_fitness_function(
-			image,
+            ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
 			common_stroking_params.stroke_number,
 			true,
 			true,
@@ -37,7 +37,8 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 
-	logger = OnImprovementUpdatingLogger(initial_image, params.iterations, stroking_params.logging_percentage, logging_path);
+	logger = OnImprovementUpdatingLogger(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
+                                      params.iterations, stroking_params.logging_percentage, logging_path);
 }
 
 

@@ -82,7 +82,7 @@ void launch_single_zone_annealing(const std::string& filename) {
     std::cout << "[launch_single_zone_annealing]: Have run all the Annealing iterations, just saving the result…" << std::endl;
 
     auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
-    colorize_strokes(strokes, image); // TODO: Use specific color of image
+    colorize_strokes(strokes, ImageStrokingData(image, this_common_params.use_constant_color, this_common_params.stroke_color));
 
     Image result = make_default_image(image.cols, image.rows);
     rasterize_strokes(result, strokes);

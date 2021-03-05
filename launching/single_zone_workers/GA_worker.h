@@ -59,8 +59,8 @@ public:
 	using ParametersType = GA_stroking_parameters;
 
 	GA_worker (const Image& image,
-			const CommonStrokingParams& common_parameters, const GA_stroking_parameters& ga_stroking_parameters,
-			const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
+               const CommonStrokingParams& stroking_params, const GA_stroking_parameters& ga_stroking_parameters,
+               const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 	void run_one_iteration() override;
 	void run_remaining_iterations() override;
@@ -90,7 +90,7 @@ private:
 
 
 	GA_stroking_parameters GA_params;
-	CommonStrokingParams common_params;
+	CommonStrokingParams stroking_params;
 
 
 	/// Helpers:

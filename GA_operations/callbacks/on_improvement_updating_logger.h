@@ -9,6 +9,8 @@
 #include <rasterization/stroke_rasterizer.h>
 #include <GA_operations/util.h>
 
+#include <utility>
+
 
 /**
  * Logs on some of the updates depending on the given hyperparameters
@@ -26,7 +28,7 @@ class OnImprovementUpdatingLogger
 	size_t total_iterations = 0;
 	double logging_fraction = 0.;
 
-	Image image;
+	ImageStrokingData imageData;
 
 	fs::path base_path;
 	fs::path updating_path;
@@ -34,13 +36,13 @@ class OnImprovementUpdatingLogger
 public:
 
 	OnImprovementUpdatingLogger() = default;
-	OnImprovementUpdatingLogger(Image image, size_t total_iterations, double logging_percentage, fs::path logging_path)
-										: total_iterations(total_iterations), logging_fraction(logging_percentage), base_path(std::move(logging_path)), image(std::move(image))
+	OnImprovementUpdatingLogger(ImageStrokingData imageData, size_t total_iterations, double logging_percentage, fs::path logging_path)
+										: total_iterations(total_iterations), logging_fraction(logging_percentage), base_path(std::move(logging_path)), imageData(std::move(imageData))
 	{
 		if (fs::exists(base_path)) fs::remove_all(base_path);
 
 		fs::create_directories(base_path);
-		save_image(this->image, base_path / "original.png");
+		save_image(this->imageData.image, base_path / "original.png");
 
 		updating_path = base_path / "updates";
 		fs::create_directories(updating_path);

@@ -7,12 +7,13 @@
 
 
 
-GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_parameters, const GA_stroking_parameters& ga_stroking_parameters, const fs::path& logging_path)
-		: common_params(common_parameters), GA_params(ga_stroking_parameters) {
+GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_params, const GA_stroking_parameters& ga_stroking_parameters, const fs::path& logging_path)
+		: stroking_params(stroking_params), GA_params(ga_stroking_parameters) {
 	image.copyTo(initial_image);
 
 	image_w = image.cols;
 	image_h = image.rows;
+
 
 	/// Count typical distances:
 //	typical_coord = geometric_mean({ double(image_w), double(image_h) });
@@ -25,7 +26,7 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 //
 //	param_half_range = std::sqrt(launch_params.stroke_param_relative_range);
 
-	limits = generate_stroke_limits_by_raw_parameters(common_params, image_w, image_h);
+	limits = generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h);
 //		stroke_limit_descriptor{
 //			.min_dx     = stroke_typical_length / param_half_range,
 //			.max_dx     = stroke_typical_length * param_half_range,
@@ -40,14 +41,14 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 //	};
 
 	/// GA data:
-	point_ranges = generate_point_ranges_by_raw_parameters(common_params, image_w, image_h);
+	point_ranges = generate_point_ranges_by_raw_parameters(stroking_params, image_w, image_h);
 //		generate_point_ranges_for_stroke_genome(
 //			params.stroke_number,
 //			{ double(image_w), double(image_h) },
 //			{ stroke_typical_width / param_half_range, stroke_typical_width * param_half_range }
 //	);
 
-	mutation_sigmas = generate_point_sigmas_by_raw_parameters(common_params, image_w, image_h);
+	mutation_sigmas = generate_point_sigmas_by_raw_parameters(stroking_params, image_w, image_h);
 //		generate_point_sigmas_for_stroke_genome(
 //			params.stroke_number,
 //			{ double(image_w), double(image_h) },
@@ -59,9 +60,9 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 
 	/// Init GA operation performers:
 	configured_constrainer = final_constrainer(limits);
-	configured_generator = final_population_generator(limits, common_params.stroke_number);
+	configured_generator = final_population_generator(limits, stroking_params.stroke_number);
 	configured_crossover = final_crossover();
-	configured_mutator = mutator(limits, common_params.move_mutation_probability);
+	configured_mutator = mutator(limits, stroking_params.move_mutation_probability);
 
 	ga_operations.genome_constraint = configured_constrainer;
 	ga_operations.population_generation = configured_generator;
@@ -71,17 +72,17 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 	// std::cout << "[GA_worker]: GA operations ready" << std::endl;
 
 	configured_fitness_function = final_fitness_function{
-			ImageStrokingData(image, common_params.use_constant_color, common_params.stroke_color),
-			common_params.stroke_number,
+			ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
+			stroking_params.stroke_number,
 			!GA_params.allow_multithreading,
 			false,
-			common_params.canvas_color
+			stroking_params.canvas_color
 	};
 
-	bool enable_detailed_logging = (common_params.logging_percentage != 0);
-	logger = image_logging_callback(ImageStrokingData(image, common_params.use_constant_color, common_params.stroke_color),
+	bool enable_detailed_logging = (stroking_params.logging_percentage != 0);
+	logger = image_logging_callback(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
                                  logging_path.string(),
-                                 common_params.logging_percentage,
+                                 stroking_params.logging_percentage,
                                  enable_detailed_logging);
 
 	// std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
@@ -97,7 +98,7 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& common_par
 			},
 			GA::mutation_GA_params {
 					.mutation_percent_sigma = -1,
-					.target_gene_mutation_number = common_params.stroke_number * 4., // Out of `stroke_number * 7`
+					.target_gene_mutation_number = stroking_params.stroke_number * 4., // Out of `stroke_number * 7`
 					.cut_mutations = true,
 					.individual_mutation_sigmas = mutation_sigmas,
 			},
