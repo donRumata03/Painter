@@ -27,6 +27,7 @@ class RGB_Vec {}; // A tag type
 template<class T>
 struct rgb_color
 {
+    using Type = typename T;
 	T r{}, g{}, b{};
 
 	rgb_color() = default;

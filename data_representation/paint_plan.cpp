@@ -1,16 +1,17 @@
 #include "paint_plan.h"
 
 PaintPlan::PaintPlan(std::vector<colored_stroke> strokes)
-    : strokes(std::move(strokes)), pallete(get_pallete<uint8_t>(this->strokes)) { }
+    : strokes(std::move(strokes)), palette(get_palette<byte_color>(this->strokes)) { }
 
 
-template<typename ColorType>
-std::set<rgb_color<ColorType>> get_pallete(const std::vector<colored_stroke>& strokes)
+template<class Color>
+std::set<Color> get_palette(const std::vector<colored_stroke>& strokes)
 {
-    std::set<rgb_color<ColorType>> pallete;
+    static_assert(std::is_base_of_v<rgb_color<typename Color::Type>, Color>, "Pallete is only used for colors!");
+
+    std::set<Color> pallete;
     for (auto& s : strokes) {
-        std::cout << s.background_color << std::endl;
-        pallete.insert(convert_color<ColorType>(s.background_color));
+        pallete.insert(convert_color<typename Color::Type>(s.background_color));
     }
     return pallete;
 }
@@ -18,8 +19,8 @@ std::set<rgb_color<ColorType>> get_pallete(const std::vector<colored_stroke>& st
 void to_json(json& j, const PaintPlan& plan)
 {
     std::map<byte_color, size_t> color_idx;
-    auto it = plan.pallete.begin();
-    for (size_t i = 0; it != plan.pallete.end(); i++, it++) {
+    auto it = plan.palette.begin();
+    for (size_t i = 0; it != plan.palette.end(); i++, it++) {
         color_idx[*it] = i;
     }
 
@@ -28,7 +29,7 @@ void to_json(json& j, const PaintPlan& plan)
         j["strokes"][i]["color_id"] = color_idx[convert_color<uint8_t>(plan.strokes[i].background_color)];
     }
 
-    j["colors"] = plan.pallete;
+    j["colors"] = plan.palette;
 }
 
 void from_json(const json& j, PaintPlan& plan)
@@ -46,6 +47,6 @@ void from_json(const json& j, PaintPlan& plan)
         plan.strokes.emplace_back(col_stroke);
     }
 
-    plan.pallete = std::set<byte_color>(pallete.begin(), pallete.end());
+    plan.palette = std::set<byte_color>(pallete.begin(), pallete.end());
 
 }

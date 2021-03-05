@@ -12,11 +12,11 @@ struct PaintPlan {
     explicit PaintPlan(std::vector<colored_stroke> strokes);
 
     std::vector<colored_stroke> strokes;
-    std::set<byte_color> pallete;
+    std::set<byte_color> palette;
 };
 
-template<typename ColorType>
-std::set<rgb_color<ColorType>> get_pallete(const std::vector<colored_stroke>& strokes);
+template<class Color>
+std::set<Color> get_palette(const std::vector<colored_stroke>& strokes)
 
 void to_json(json& j, const PaintPlan& plan);
 void from_json(const json& j, PaintPlan& plan);
