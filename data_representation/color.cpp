@@ -17,6 +17,20 @@ color get_color_from_hex(const std::string& hex)
                  ((x & 0x0000FFu)) / 255.);
 }
 
+void to_json(json& j, const byte_color& col)
+{
+    j["r"] = col.r;
+    j["g"] = col.g;
+    j["b"] = col.b;
+}
+
+void from_json(const json& j, byte_color& col)
+{
+    // TODO: assert
+
+    col = byte_color(j.at("r"), j.at("g"), j.at("b"));
+}
+
 std::unordered_set<rgb_color<uint8_t>> get_unique_colors (const Image &img)
 {
 	std::unordered_set<rgb_color<uint8_t>> res;

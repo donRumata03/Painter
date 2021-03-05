@@ -91,7 +91,7 @@ template<class I, class F>
 rgb_color<std::enable_if_t<std::is_integral_v<I>, I>>
 from_floating_point(const rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color);
 
-template<class E, class T> auto convert_color(rgb_color<T>& initial_color) {
+template<class E, class T> auto convert_color(const rgb_color<T>& initial_color) {
 	static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>, "Exactly one of the types should be floating Point!");
 	if constexpr(std::is_floating_point_v<T>) {
 		return from_floating_point<E, T>(initial_color);
@@ -122,7 +122,7 @@ template < class I, class F >
 rgb_color<std::enable_if_t<std::is_integral_v<I>, I>>
 from_floating_point (const rgb_color<std::enable_if_t<std::is_floating_point_v<F>, F>> & initial_color)
 {
-	auto range_checker = [](F value){ return F(0) < value && F(1) > value; };
+	auto range_checker = [](F value){ return F(0) <= value && F(1) >= value; };
 	assert(range_checker(initial_color.r));
 	assert(range_checker(initial_color.g));
 	assert(range_checker(initial_color.b));
@@ -270,6 +270,9 @@ using byte_Pixel = cv::Point3_<uint8_t>;
 
 
 color get_color_from_hex(const std::string& hex);
+
+void to_json(json& j, const byte_color& col);
+void from_json(const json& j, byte_color& col);
 
 /**
  * Color number reduction functions:

@@ -8,19 +8,12 @@
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
 #include "common_operations/image_adaptive_params.h"
+#include "data_representation/paint_plan.h"
 
-static inline void save_log_json(std::vector<colored_stroke> strokes,
-                                 fs::path filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
+static inline void save_log_json(const std::vector<colored_stroke>& strokes,
+                                 const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
 {
-    std::vector<color> pallete; // TODO: use specific color for strokes
-    for (auto& col_stroke : strokes) {
-        if (std::find(pallete.begin(), pallete.end(), col_stroke.background_color) == std::end(pallete)) {
-            pallete.emplace_back(col_stroke.background_color);
-        }
-    }
-
-    json j;
-    to_json(j, strokes, pallete);
+    json j = PaintPlan(strokes);
     std::ofstream json_file(filepath);
     json_file << j;
     json_file.close();

@@ -45,9 +45,7 @@ add_executable(Painter
 
         data_representation/stroke.cpp
         data_representation/stroke.h
-
-        # painter_pch.h
-
+        data_representation/paint_plan.cpp
         data_representation/color.cpp
         data_representation/color.h
 
@@ -108,6 +106,8 @@ add_executable(Painter
         GA_operations/stroke_range_generator.h
         GA_operations/callbacks/image_logging_callback.cpp
         GA_operations/callbacks/image_logging_callback.h
+        GA_operations/callbacks/on_improvement_updating_logger.cpp
+        GA_operations/callbacks/on_improvement_updating_logger.h
         GA_operations/callbacks/GA_informer.h
         GA_operations/population_generator.h
         GA_operations/final_crossover.cpp
@@ -120,6 +120,7 @@ add_executable(Painter
         launching/GA_parameter_sets.h
         launching/multizoner.cpp
         launching/multizoner.h
+        launching/SvgZoneLauncher.h
         launching/single_zone_workers/GA_worker.cpp
         launching/single_zone_workers/GA_worker.h
         launching/single_zone_workers/single_zone_worker.h
@@ -127,8 +128,7 @@ add_executable(Painter
         launching/single_zone_workers/annealing_worker.h
 
         vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h GA_operations/callbacks/on_improvement_updating_logger.cpp GA_operations/callbacks/on_improvement_updating_logger.h launching/SvgZoneLauncher.h tests/svg_service_test.h)
-
+        vector_graphics/SVG_service.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
