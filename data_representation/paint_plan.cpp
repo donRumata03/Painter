@@ -47,6 +47,5 @@ void from_json(const json& j, PaintPlan& plan)
         plan.strokes.emplace_back(col_stroke);
     }
 
-    plan.palette = std::set<byte_color>(pallete.begin(), pallete.end());
-
+    plan.palette = std::unordered_set<byte_color>(pallete.begin(), pallete.end());
 }

@@ -12,7 +12,7 @@ struct PaintPlan {
     explicit PaintPlan(std::vector<colored_stroke> strokes);
 
     std::vector<colored_stroke> strokes;
-    std::set<byte_color> palette;
+    std::unordered_set<byte_color> palette;
 };
 
 template<class Color>
