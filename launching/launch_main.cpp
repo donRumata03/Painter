@@ -8,18 +8,11 @@
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
 #include "common_operations/image_adaptive_params.h"
+#include "data_representation/paint_plan.h"
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes, const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
 {
-    std::vector<color> pallete; // TODO: use specific color for strokes
-    for (auto& col_stroke : strokes) {
-        if (std::find(pallete.begin(), pallete.end(), col_stroke.background_color) == std::end(pallete)) {
-            pallete.emplace_back(col_stroke.background_color);
-        }
-    }
-
-    json j;
-    to_json(j, strokes, pallete);
+    json j = PaintPlan(strokes);
     std::ofstream json_file(filepath);
     json_file << j;
     json_file.close();
@@ -88,7 +81,7 @@ void launch_single_zone_annealing(const std::string& filename) {
     std::cout << "[launch_single_zone_annealing]: Have run all the Annealing iterations, just saving the result…" << std::endl;
 
     auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
-    colorize_strokes(strokes, image); // TODO: Use specific color of image
+    colorize_strokes(strokes, ImageStrokingData(image, this_common_params.use_constant_color, this_common_params.stroke_color));
 
     Image result = make_default_image(image.cols, image.rows);
     rasterize_strokes(result, strokes);

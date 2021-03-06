@@ -236,43 +236,17 @@ void to_json(json& j, const stroke& stroke)
 	j["width"] = stroke.width;
 }
 
-void to_json(json& j, const color& col)
-{
-    j["r"] = (int)(col.r * 255);
-    j["g"] = (int)(col.g * 255);
-    j["b"] = (int)(col.b * 255);
-}
-
 void to_json(json& j, const colored_stroke& col_stroke)
 {
-    to_json(j, (stroke)col_stroke);
+    to_json(j, (stroke&)col_stroke);
 
-    to_json(j["color"], col_stroke.background_color);
+    j["color"] = convert_color<uint8_t>(col_stroke.background_color);
 }
 
-void to_json(json& j, const colored_stroke& col_stroke, size_t color_id)
-{
-    to_json(j, (stroke)(col_stroke));
-
-    j["color_id"] = color_id;
-
-}
 
 void to_json(json& j, const std::vector<colored_stroke>& strokes)
 {
-    for (size_t i = 0; i < strokes.size(); i++) to_json(j[i], strokes[i]);
-}
-
-void to_json(json& j, const std::vector<colored_stroke>& strokes, const std::vector<color>& pallete)
-{
-    std::map<color, size_t> color_idx;
-    for (size_t i = 0; i < pallete.size(); i++) {
-        color_idx[pallete[i]] = i;
-    }
-
-    for (size_t i = 0; i < strokes.size(); i++) to_json(j["strokes"][i], strokes[i], color_idx[strokes[i].background_color]);
-
-    for (size_t i = 0; i < pallete.size(); i++) to_json(j["colors"][i], pallete[i]);
+    for (size_t i = 0; i < strokes.size(); i++) j[i] = strokes[i];
 }
 
 void from_json(const json& j, stroke& stroke)
@@ -286,46 +260,16 @@ void from_json(const json& j, stroke& stroke)
 	stroke.width = j["width"].get<double>();
 }
 
-
-void from_json(const json& j, color& col)
-{
-    // TODO: assert
-
-    col = color((double)j["r"] / 255., (double)j["g"] / 255., (double)j["b"] / 255.);
-}
-
 void from_json(const json& j, colored_stroke& col_stroke)
 {
-    assert(!j["color"].empty());
+    assert(!j.at("color").empty());
 
     from_json(j, (stroke&)col_stroke);
-
-    from_json(j["color"], col_stroke.background_color);
+    byte_color col = j.at("color");
+    col_stroke.background_color = convert_color<double>(col);
 }
 
 void from_json(const json& j, std::vector<colored_stroke>& strokes)
 {
-    for (size_t i = 0; i < strokes.size(); i++) from_json(j[i], strokes[i]);
-}
-
-void from_json(const json& j, std::vector<colored_stroke>& strokes, std::vector<color>& pallete)
-{
-    for (const auto &data : j["colors"]) {
-        color col;
-        from_json(data, col);
-        pallete.emplace_back(col);
-    }
-
-    //for (size_t i = 0; i < j["strokes"].size(); i++)
-    for (const auto &data : j["strokes"])
-    {
-        assert(data.contains("color_id") && data["color_id"].is_number());
-        assert(0 <= data["color_id"] && data["color_id"] < pallete.size());
-
-        colored_stroke col_stroke;
-        from_json(data, (stroke&)col_stroke);
-        col_stroke.background_color = pallete[data["color_id"]];
-        strokes.emplace_back(col_stroke);
-    }
-
+    for (size_t i = 0; i < strokes.size(); i++) strokes[i] = j[i];
 }

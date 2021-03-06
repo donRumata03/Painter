@@ -122,6 +122,9 @@ color find_stroke_color_by_ariphmetic_mean (const stroke &colorless_stroke, cons
 		points_in_stroke++;
 	}, 10000, get_image_range_limits(image));
 
+	// TODO: this func has bug: sometimes result is 0/0, hotfix is there
+	points_in_stroke = std::max(points_in_stroke, (size_t)1);
+
 	return color(
 			r_sum / points_in_stroke,
 			g_sum / points_in_stroke,
