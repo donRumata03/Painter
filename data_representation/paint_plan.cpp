@@ -7,11 +7,11 @@ PaintPlan::PaintPlan(std::vector<colored_stroke> strokes)
 template<class Color>
 std::unordered_set<Color> get_palette(const std::vector<colored_stroke>& strokes)
 {
-    static_assert(std::is_base_of_v<rgb_color<typename Color::Type>, Color>, "Pallete is only used for colors!");
+    static_assert(std::is_base_of_v<rgb_color<typename Color::DataType>, Color>, "Pallete is only used for colors!");
 
     std::unordered_set<Color> palette;
     for (auto& s : strokes) {
-        palette.insert(convert_color<typename Color::Type>(s.background_color));
+        palette.insert(convert_color<typename Color::DataType>(s.background_color));
     }
     return palette;
 }

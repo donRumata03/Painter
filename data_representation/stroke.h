@@ -105,19 +105,44 @@ void stroke::for_each (
 /**
  * Colored version of stroke:
  */
-struct colored_stroke : stroke
+
+template<class T>
+struct rgb_colored_stroke : stroke
 {
-	color background_color;
+	using ColorDataType = T;
 
-	friend std::ostream &operator<< (std::ostream &os, const colored_stroke &stroke);
+	rgb_color<T> background_color;
 
-	/*
-	colored_stroke() = default;
-	colored_stroke(const Point &point1, const Point &point2, const Point &point3, double _width, color _color);
-	colored_stroke(const stroke& colorless_stroke, const color& bg_color) :
-		stroke(colorless_stroke), background_color(bg_color) {}
-	*/
+	friend std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<T> &stroke);
+
+	template<class NewColorType, std::enable_if_t<not std::is_same_v<ColorDataType, NewColorType>, void*> = nullptr>
+	explicit operator rgb_colored_stroke<NewColorType> ();
 };
+
+using colored_stroke = rgb_colored_stroke<double>;
+using byte_colored_stroke = rgb_colored_stroke<uint8_t>;
+
+
+template<class T>
+std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<T> &stroke)
+{
+	os << reinterpret_cast<const struct stroke &>(stroke) << " background_color: " << stroke.background_color;
+	return os;
+}
+
+template <class T>
+template <class NewColorType, std::enable_if_t<not std::is_same_v<T, NewColorType>, void*>>
+rgb_colored_stroke<T>::operator rgb_colored_stroke<NewColorType> ()
+{
+	using ThisType = rgb_colored_stroke<T>;
+	using ResType = rgb_colored_stroke<NewColorType>;
+
+	ResType res;
+	*reinterpret_cast<stroke*>(&res) = *reinterpret_cast<stroke*>(this);
+	res.background_color = convert_color<NewColorType>(this->background_color);
+
+	return res;
+}
 
 
 /// For json:

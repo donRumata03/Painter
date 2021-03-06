@@ -216,11 +216,6 @@ void stroke::for_each (const Functor &operation, size_t step_number,
 	const_cast<colored_stroke*>(this)->for_each(operation, step_number, range_limits);
 }
 */
-std::ostream &operator<< (std::ostream &os, const colored_stroke &stroke)
-{
-	os << reinterpret_cast<const struct stroke &>(stroke) << " background_color: " << stroke.background_color;
-	return os;
-}
 
 
 /// Json

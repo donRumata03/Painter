@@ -8,6 +8,4 @@
 #include <data_representation/stroke.h>
 
 
-std::vector<colored_stroke> sort_strokes() {
-
-}
+std::vector<byte_colored_stroke> sort_strokes(const std::vector<byte_colored_stroke>& strokes, double w, double h, size_t zones);
