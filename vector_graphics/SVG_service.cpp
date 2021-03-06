@@ -6,6 +6,8 @@
 
 #include "SVG_service.h"
 #include "io_api/image_io_utils.h"
+#include <common_operations/basic_constraining.h>
+
 
 #define PATH_BOX_GOMOTHETY 1.1
 #define CRITICAL_WIDTH 20
@@ -64,14 +66,7 @@ bool SVG_service::load_current_image(cv::Mat &img) {
     return true;
 }
 
-void SVG_service::shift_strokes(std::vector<colored_stroke>& strokes) {
-    point vec(boxes[it].x, boxes[it].y);
-    for (auto& stroke : strokes) {
-        stroke.p0 = stroke.p0 + vec;
-        stroke.p1 = stroke.p1 + vec;
-        stroke.p2 = stroke.p2 + vec;
-    }
-}
+
 
 cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc) {
     auto bitmap = doc.renderToBitmap();

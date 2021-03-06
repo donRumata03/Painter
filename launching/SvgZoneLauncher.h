@@ -41,7 +41,7 @@ public:
 	using OptimizerParameters = typename OptimizerType::ParametersType;
 
 
-	SvgZoneLauncher(Image image, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
+	SvgZoneLauncher(fs::path image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
 				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2);
 
 	void run();     /// TODO: parallelize this!
@@ -49,12 +49,18 @@ public:
 private:
 	Image initial_image;
 
-	SVG_service svg_manager;
-
 	static_thread_pool thread_pool;
-	std::vector<OptimizerType> zone_optimizers;
 
 	std::mutex common_worker_data_mutex;
+
+	size_t zone_number = 0;
+	std::vector<std::pair<size_t, size_t>> thread_zone_distribution;
+
+	/// The common data being modified:
+	SVG_service svg_manager;
+	std::vector<OptimizerType> zone_optimizers;
+
+	std::vector<colored_stroke> collected_strokes;
 };
 
 /// ________________________________________________________________________________________________________________________________________________
@@ -69,12 +75,20 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (Image image, const CommonStroki
                                                  const OptimizerParameters& custom_parameters, bool parallelize,
                                                  size_t worker_thread_number)
 {
+	// Clear the old log:
+
+
 	// Determine the number of zones and what the zones actually are
 
 	svg_manager = SVG_service();
 	svg_manager.split_paths();
 
+	/// Make task distribution:
+	zone_number = svg_manager.get_shape_count();
 
+	thread_pool.init(worker_thread_number, [this](size_t thread_index) {
+
+	});
 }
 
 

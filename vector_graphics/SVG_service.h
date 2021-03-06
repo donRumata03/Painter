@@ -18,7 +18,8 @@ public:
     void split_paths();
     bool load_current_image(cv::Mat& img);
 
-    void shift_strokes(std::vector<colored_stroke>& strokes);
+	template<class StrokeType>
+    void shift_strokes_to_current_box(std::vector<StrokeType>& strokes);
 
     cv::Mat get_raster_original_image() { return get_raster_image(svg); }
     [[nodiscard]] cv::Rect get_borders() const { return borders; }
@@ -57,5 +58,13 @@ private:
     size_t shapes_count = 0;
 };
 
+
+template<class StrokeType>
+void SVG_service::shift_strokes_to_current_box(std::vector<StrokeType>& strokes) {
+	point shifting_vector(boxes[it].x, boxes[it].y);
+	for (auto& stroke : strokes) {
+		shift_stroke(stroke, shifting_vector);
+	}
+}
 
 #endif //PAINTER_SVG_SERVICE_H

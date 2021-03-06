@@ -9,8 +9,7 @@
 #include "GA_parameter_sets.h"
 #include "common_operations/image_adaptive_params.h"
 
-static inline void save_log_json(std::vector<colored_stroke> strokes,
-                                 fs::path filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
+static inline void save_log_json(const std::vector<colored_stroke>& strokes, const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
 {
     std::vector<color> pallete; // TODO: use specific color for strokes
     for (auto& col_stroke : strokes) {
@@ -135,6 +134,7 @@ void launch_svg_stroking(const std::string &filename) {
 
     Image image;
     std::vector<colored_stroke> strokes;
+
     /// Main stroking loop, add new strokes at each iteration:
     while (service.load_current_image(image))
     {
@@ -153,7 +153,7 @@ void launch_svg_stroking(const std::string &filename) {
 
         auto cur_strokes = unpack_stroke_data_buffer(worker.get_best_genome());
         colorize_strokes(cur_strokes, cur_color);
-        service.shift_strokes(cur_strokes);
+	    service.shift_strokes_to_current_box(cur_strokes);
         strokes.insert(strokes.end(), cur_strokes.begin(), cur_strokes.end());
 
         service.next();
