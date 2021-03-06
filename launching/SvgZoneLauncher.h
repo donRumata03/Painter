@@ -53,10 +53,14 @@ private:
 	CommonStrokingParams stroking_params;
 	OptimizerParameters optimizer_parameters;
 
-	static_thread_pool thread_pool;
-	std::mutex common_worker_data_mutex;
-
 	size_t zone_number = 0;
+
+	/// Threading:
+	bool is_threaded = false;
+	size_t thread_worker_number;
+	static_thread_pool thread_pool;
+
+	std::mutex common_worker_data_mutex;
 	std::vector<std::pair<size_t, size_t>> thread_zone_distribution;
 
 	/// The common data being modified:
@@ -77,7 +81,7 @@ template <class OptimizerType>
 SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, const CommonStrokingParams& stroking_params,
                                                  const OptimizerParameters& custom_parameters, bool parallelize,
                                                  size_t worker_thread_number)
-			: stroking_params(stroking_params), optimizer_parameters(custom_parameters)
+			: stroking_params(stroking_params), optimizer_parameters(custom_parameters), is_threaded(parallelize), thread_worker_number(worker_thread_number)
 {
 	// Clear the old log:
 	ensure_log_cleared();
@@ -89,12 +93,55 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 	initial_image = svg_manager.get_raster_original_image();
 	save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
 
-	/// Make task distribution:
 	zone_number = svg_manager.get_shape_count();
 
-	thread_pool.init(worker_thread_number, [this](size_t thread_index) {
+	/// Make task distribution if parallel:
 
-	});
+	if (parallelize) {
+		thread_zone_distribution = distribute_task_ranges(zone_number, worker_thread_number);
+
+		thread_pool.init(worker_thread_number, [this](size_t thread_index) {
+			auto job_range = thread_zone_distribution[thread_index];
+
+			for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
+
+				std::optional<OptimizerType> optimizer;
+
+				{
+					/// Acquire a mutex to work with data, which is common for all the worker threads
+					/// this particular data will be used to initialize and launch data
+					std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+
+					optimizer.emplace();
+				}
+
+				optimizer->run_remaining_iterations();
+
+				{
+					/// Acquire mutex to save the data collected:
+					std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+
+				}
+			}
+		});
+
+	}
+}
+
+
+
+
+template <class OptimizerType>
+void SvgZoneLauncher<OptimizerType>::run ()
+{
+	if(is_threaded) {
+		thread_pool.compute();
+	}
+	else
+	{
+		// Just do all the work:
+
+	}
 }
 
 

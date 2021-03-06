@@ -98,8 +98,6 @@ int main ()
 
 	const auto& image_path = circle_path;
 
-	std::cout << "███████████████████" << std::endl;
-
 	/// SVG management:
 	test_splitting_SVG(van_gogh_svg_path);
 
