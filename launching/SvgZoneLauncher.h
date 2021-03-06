@@ -19,6 +19,7 @@
 
 #include "vector_graphics/SVG_service.h"
 
+#include <common_operations/filesystem_primitives.h>
 
 /**
  * Is responsible for dividing the image into several zones
@@ -41,7 +42,7 @@ public:
 	using OptimizerParameters = typename OptimizerType::ParametersType;
 
 
-	SvgZoneLauncher(fs::path image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
+	SvgZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
 				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2);
 
 	void run();     /// TODO: parallelize this!
@@ -49,8 +50,10 @@ public:
 private:
 	Image initial_image;
 
-	static_thread_pool thread_pool;
+	CommonStrokingParams stroking_params;
+	OptimizerParameters optimizer_parameters;
 
+	static_thread_pool thread_pool;
 	std::mutex common_worker_data_mutex;
 
 	size_t zone_number = 0;
@@ -71,17 +74,20 @@ private:
 
 
 template <class OptimizerType>
-SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (Image image, const CommonStrokingParams& stroking_params,
+SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, const CommonStrokingParams& stroking_params,
                                                  const OptimizerParameters& custom_parameters, bool parallelize,
                                                  size_t worker_thread_number)
+			: stroking_params(stroking_params), optimizer_parameters(custom_parameters)
 {
 	// Clear the old log:
-
+	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-
-	svg_manager = SVG_service();
+	svg_manager = SVG_service(image_path.string());
 	svg_manager.split_paths();
+
+	initial_image = svg_manager.get_raster_original_image();
+	save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
 
 	/// Make task distribution:
 	zone_number = svg_manager.get_shape_count();

@@ -8,11 +8,9 @@
 
 
 
-inline void ensure_latest_log_cleared()
+inline void ensure_log_cleared(const fs::path& log_path = painter_base_path / "log" / "latest")
 {
-	auto latest_log_path = painter_base_path / "log" / "latest";
-
-	if(fs::exists(latest_log_path)) fs::remove_all(latest_log_path);
-	fs::create_directories(latest_log_path);
+	if(fs::exists(log_path)) fs::remove_all(log_path);
+	fs::create_directories(log_path);
 }
 

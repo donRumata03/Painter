@@ -16,7 +16,7 @@ struct PaintPlan {
 };
 
 template<class Color>
-std::set<Color> get_palette(const std::vector<colored_stroke>& strokes);
+std::unordered_set<Color> get_palette(const std::vector<colored_stroke>& strokes);
 
 void to_json(json& j, const PaintPlan& plan);
 void from_json(const json& j, PaintPlan& plan);

@@ -5,15 +5,15 @@ PaintPlan::PaintPlan(std::vector<colored_stroke> strokes)
 
 
 template<class Color>
-std::set<Color> get_palette(const std::vector<colored_stroke>& strokes)
+std::unordered_set<Color> get_palette(const std::vector<colored_stroke>& strokes)
 {
     static_assert(std::is_base_of_v<rgb_color<typename Color::Type>, Color>, "Pallete is only used for colors!");
 
-    std::set<Color> pallete;
+    std::unordered_set<Color> palette;
     for (auto& s : strokes) {
-        pallete.insert(convert_color<typename Color::Type>(s.background_color));
+        palette.insert(convert_color<typename Color::Type>(s.background_color));
     }
-    return pallete;
+    return palette;
 }
 
 void to_json(json& j, const PaintPlan& plan)

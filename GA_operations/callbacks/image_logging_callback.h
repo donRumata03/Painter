@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include <utility>
+#include "painter_pch.h"
+
 #include <GA_operations/util.h>
 #include <rasterization/stroke_rasterizer.h>
 
-#include "painter_pch.h"
+#include <common_operations/filesystem_primitives.h>
 
 /**
  * Renders and logs all the intermediate states as images to folders to a given one.
@@ -31,18 +32,17 @@ class image_logging_callback
 
 public:
 	image_logging_callback() = default;
-	image_logging_callback(ImageStrokingData  imageData,
+	image_logging_callback(ImageStrokingData imageData,
                         const std::string& path_for_logging,
                         double logged_percent,
                         bool log_precisely = true)
-		: path_for_logging(path_for_logging),
-		imageData(std::move(imageData)),
-		logged_genome_rate(logged_percent),
-		detalized_logging(log_precisely)
+										: path_for_logging(path_for_logging),
+										imageData(std::move(imageData)),
+										logged_genome_rate(logged_percent),
+										detalized_logging(log_precisely)
 	{
-		if (fs::exists(this->path_for_logging)) fs::remove_all(this->path_for_logging);
+		ensure_log_cleared(this->path_for_logging);
 
-		fs::create_directories(this->path_for_logging);
 		save_image(this->imageData.image, this->path_for_logging / "original.png");
 
 		path_for_best_genomes = this->path_for_logging / "best_genomes";

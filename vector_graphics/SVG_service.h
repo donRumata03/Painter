@@ -53,7 +53,7 @@ private:
     cv::Rect borders;
 
     bool is_logging;
-    const std::string logging_path;
+    std::string logging_path;
     size_t it = 0;
     size_t shapes_count = 0;
 };

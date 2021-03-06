@@ -128,7 +128,13 @@ add_executable(Painter
         launching/single_zone_workers/annealing_worker.h
 
         vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h)
+        vector_graphics/SVG_service.h
+
+        common_operations/stroke_sorting.cpp
+        common_operations/stroke_sorting.h
+
+        common_operations/filesystem_primitives.h
+        )
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

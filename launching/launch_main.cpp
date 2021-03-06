@@ -105,14 +105,14 @@ void launch_multizone_annealing(const std::string& filename) {
 
 void launch_svg_zonized_stroking()
 {
-	fs::remove_all(painter_base_path / "log" / "latest");
+	ensure_log_cleared();
 
 
 }
 
 
 void launch_svg_stroking(const std::string &filename) {
-    fs::remove_all(painter_base_path / "log" / "latest");
+	ensure_log_cleared();
 
     SVG_service service(filename);
     service.split_paths();
