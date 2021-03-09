@@ -49,6 +49,8 @@ struct GA_stroking_parameters
 	size_t epoch_num = 0;
 
 	bool allow_multithreading = false;
+
+	[[nodiscard]] size_t computations_expected() const { return epoch_num * population_size; }
 };
 
 
@@ -69,6 +71,8 @@ public:
 	double average_computation_time_seconds() const override { return configured_fitness_function.average_computation_time_seconds(); }
 	double average_computation_time_per_pixel_seconds() const override { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
 	double computations_performed() const override { return configured_fitness_function.computations_performed(); }
+
+	double time_spent_counting () const override;
 
 	const std::vector<double>& get_best_genome() override;
 

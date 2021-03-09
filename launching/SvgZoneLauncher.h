@@ -77,6 +77,11 @@ private:
 	// std::vector<OptimizerType> zone_optimizers;
 
 	std::vector<colored_stroke> collected_strokes;
+
+	/// For statistics:
+	size_t total_computations = 0;
+	size_t total_pixels_processed = 0;
+	double total_time_spent_counting = 0;
 };
 
 /// ________________________________________________________________________________________________________________________________________________
@@ -160,7 +165,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			this_params.stroke_color = this_color;
 
 
-			optimizer.emplace(this_zone_image, this->stroking_params, this->custom_params, this->logging_path / "zone №" + std::to_string(job_index));
+			optimizer.emplace(this_zone_image, this->stroking_params, this->optimizer_parameters, this->logging_path / "zone №" + std::to_string(job_index));
 		}
 
 		optimizer->run_remaining_iterations();
@@ -168,6 +173,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		{
 			/// Acquire mutex to save the data collected:
 			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+
+			total_computations += optimizer->computations_performed();
+			total_time_spent_counting += optimizer->time_spent_counting();
 
 			svg_manager.set_iterator(job_index);
 
@@ -202,7 +210,12 @@ void SvgZoneLauncher<OptimizerType>::run ()
 template <class OptimizerType>
 void SvgZoneLauncher<OptimizerType>::print_diagnostic_information ()
 {
-	std::cout << std::endl;
+	std::cout
+			<< "Computations performed: " << total_computations << " (" << optimizer_parameters.computations_expected() << " expected)" << std::endl
+			<< "Average computational time: " << total_time_spent_counting / total_computations * 1e+3 << "ms" << std::endl
+			<< "Computational time per pixel: " << total_time_spent_counting / (total_computations * initial_image) * 1e+9 << "ns" << std::endl
+			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+			<< std::endl;
 }
 
 

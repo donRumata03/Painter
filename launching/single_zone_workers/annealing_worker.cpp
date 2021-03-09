@@ -105,6 +105,11 @@ double AnnealingWorker::computations_performed () const
 	return configured_error_function.computations_performed();
 }
 
+double AnnealingWorker::time_spent_counting () const
+{
+	return configured_error_function.time_spent_counting();
+}
+
 void AnnealingWorker::print_diagnostic_information ()
 {
 	std::cout

@@ -134,7 +134,7 @@ add_executable(Painter
         common_operations/stroke_sorting.h
 
         common_operations/filesystem_primitives.h
-        )
+        data_representation/computational_efficiency_representation.cpp data_representation/computational_efficiency_representation.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

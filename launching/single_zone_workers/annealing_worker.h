@@ -23,6 +23,8 @@ struct AnnealingStrokingParams {
 	double gene_mutation_fraction = 0.1;
 
 	/// No multithreading: Single annealing optimization operation can't be performed multithreadingly!
+
+	[[nodiscard]] size_t computations_expected() const { return iterations; }
 };
 
 
@@ -45,13 +47,13 @@ public:
 
 
 	/// Diagnostics:
-	void show_fitness_dynamic () override;
 	[[nodiscard]] double average_computation_time_seconds () const override;
 	[[nodiscard]] double average_computation_time_per_pixel_seconds () const override;
 	[[nodiscard]] double computations_performed () const override;
+	double time_spent_counting () const override;
 
+	void show_fitness_dynamic () override;
 	void print_diagnostic_information () override;
-
 
 
 private:

@@ -159,6 +159,13 @@ void GA_worker::show_fitness_dynamic ()
 	show_plot({ .window_title = "Fitness Dynamic" });
 }
 
+
+double GA_worker::time_spent_counting () const
+{
+	return configured_fitness_function.time_spent_counting();
+}
+
+
 const std::vector<double>& GA_worker::get_best_genome ()
 {
 	return optimizer->get_best_genome();
