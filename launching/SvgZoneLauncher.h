@@ -189,6 +189,14 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			std::copy(this_collected_strokes.begin(), this_collected_strokes.end(), std::back_inserter(collected_strokes));
 		}
 	}
+
+	{
+		// Inform about ending:
+		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
+
+		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
+		          << "Ended, job range: [" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
+	}
 }
 
 
