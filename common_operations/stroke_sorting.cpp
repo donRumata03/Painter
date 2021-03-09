@@ -31,4 +31,6 @@ std::vector<byte_colored_stroke> sort_strokes (const std::vector<byte_colored_st
 
 		return zone_finder(s1.p0) < zone_finder(s2.p0);
 	});
+
+	return res;
 }

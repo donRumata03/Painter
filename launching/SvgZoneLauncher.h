@@ -7,6 +7,7 @@
 #include "painter_pch.h"
 
 #include <common_operations/image_segregation.h>
+#include <common_operations/image_adaptive_params.h>
 
 #include "optimization/error/error_computing.h"
 #include "optimization/stroke_color_optimizing.h"
@@ -46,10 +47,13 @@ public:
 
 	SvgZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
 				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
-				    fs::path  logging_path = fs::path{ painter_base_path } / "log" / "latest");
+				    fs::path logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 	void run();
 	[[nodiscard]] ComputationalEfficiencyRepresentation get_efficiency_account() const { return efficiency_account; }
+
+    std::vector<colored_stroke> get_final_strokes() const { return collected_strokes; }
+    cv::Size get_image_size() const { return cv::Size(initial_image.cols, initial_image.rows); }
 
 private:
 
@@ -98,25 +102,25 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
                                                  size_t worker_thread_number, fs::path logging_path)
 			: logging_path(std::move(logging_path)), stroking_params(stroking_params), optimizer_parameters(custom_parameters), is_threaded(parallelize), thread_worker_number(worker_thread_number)
 {
-	switch_to_absolute_values(this->stroking_params);
-
 	// Clear the old log:
 	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-	svg_manager = SVG_service(image_path.string());
+	svg_manager = SVG_service(image_path); // TODO: problems with SVG document
 	svg_manager.split_paths();
 
 	initial_image = svg_manager.get_raster_original_image();
 	save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
 
-	zone_number = svg_manager.get_shape_count();
+	zone_number = svg_manager.get_shapes_count();
+
+    switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
 
 	/// Make task distribution if parallel:
 
 	if (parallelize) {
 		thread_zone_distribution = distribute_task_ranges(zone_number, worker_thread_number);
-		thread_pool.init(worker_thread_number, this->worker_function);
+		thread_pool.init(worker_thread_number, [&](size_t thread_index) { this->worker_function(thread_index); }); // TODO: ??
 	}
 	else {
 		thread_zone_distribution = {
@@ -166,7 +170,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			this_params.stroke_color = this_color;
 
 
-			optimizer.emplace(this_zone_image, this->stroking_params, this->optimizer_parameters, this->logging_path / "zone №" + std::to_string(job_index));
+			optimizer.emplace(this_zone_image, this->stroking_params, this->optimizer_parameters, this->logging_path / ("part" + std::to_string(job_index)));
 		}
 
 		optimizer->run_remaining_iterations();
@@ -174,8 +178,8 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		{
 			/// Acquire mutex to save the data collected:
 			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
-
-			efficiency_account = efficiency_account + optimizer->get_efficiency_account();
+            // TODO
+//			efficiency_account = efficiency_account + optimizer->get_efficiency_account();
 //			total_computations += optimizer->computations_performed();
 //			total_time_spent_counting += optimizer->time_spent_counting();
 

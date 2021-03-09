@@ -3,7 +3,6 @@
 //
 
 #include "launch_main.h"
-#include "launching/single_zone_workers/GA_worker.h"
 
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
@@ -105,13 +104,30 @@ void launch_multizone_annealing(const std::string& filename) {
 }
 
 
-void launch_svg_zonized_stroking()
+template<class WorkerType>
+void launch_svg_zone_stroking(const std::string& filename)
 {
-	ensure_log_cleared();
+    CommonStrokingParams common_params = default_stroking_parameters;
+    //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
+    std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();
 
+    SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value());
 
+    launcher.run();
+    auto strokes = launcher.get_final_strokes();
+
+    // View result
+    auto size = launcher.get_image_size();
+    Image result = make_default_image(size.width, size.height);
+    rasterize_strokes(result, strokes);
+    save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+    std::cout << "[Launch] Result: " << strokes.size() << " strokes." << std::endl;
+
+    // Save strokes
+    save_log_json(strokes);
+
+    show_image_in_system_viewer(result);
 }
-
 
 void launch_svg_stroking(const std::string &filename) {
 	ensure_log_cleared();
@@ -168,7 +184,5 @@ void launch_svg_stroking(const std::string &filename) {
     show_image_in_system_viewer(result);
 }
 
-
-
-
-
+template void launch_svg_zone_stroking<GA_worker>(const std::string& filename);
+//template void launch_svg_zone_stroking<AnnealingWorker>(const std::string& filename);

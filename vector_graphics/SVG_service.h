@@ -12,8 +12,9 @@
 
 class SVG_service {
 public:
-    explicit SVG_service(const std::string& filepath, bool is_logging = true,
-                const std::string& logging_path = (fs::path{ painter_base_path } / "log" / "latest" / "svg").string());
+    SVG_service() = default;
+    explicit SVG_service(const fs::path& filepath, bool is_logging = true,
+                const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest" / "svg");
 
     void split_paths();
     bool load_current_image(cv::Mat& img);
@@ -54,7 +55,7 @@ private:
     cv::Rect borders;
 
     bool is_logging;
-    std::string logging_path;
+    fs::path logging_path;
     size_t it = 0;
     size_t shapes_count = 0;
 };

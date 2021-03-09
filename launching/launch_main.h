@@ -16,6 +16,7 @@
 #include "launching/single_zone_workers/GA_worker.h"
 #include "launching/single_zone_workers/annealing_worker.h"
 #include "multizoner.h"
+#include "SvgZoneLauncher.h"
 
 #include "vector_graphics/SVG_service.h"
 
@@ -30,5 +31,8 @@ void launch_multizone_GA (const std::string &filename);
 
 void launch_single_zone_annealing(const std::string& filename);
 void launch_multizone_annealing(const std::string& filename);
+
+template<class WorkerType>
+void launch_svg_zone_stroking(const std::string& filename);
 
 void launch_svg_stroking(const std::string &filename);

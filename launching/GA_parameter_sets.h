@@ -104,7 +104,13 @@ inline auto van_gogh_params = GA_launching_params {
 };
 */
 
+template<class OptimizerType>
+inline typename OptimizerType::ParametersType get_default_special_params();
 
+template<>
+inline GA_stroking_parameters get_default_special_params<GA_worker>() { return default_GA_params; }
+template<>
+inline AnnealingStrokingParams get_default_special_params<AnnealingWorker>() { return default_annealing_params; }
 
 //////////
 

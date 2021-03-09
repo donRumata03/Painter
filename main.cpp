@@ -109,7 +109,8 @@ int main ()
 	// launch_multizone_GA(image_path);
 
     /// SVG launch:
-    launch_svg_stroking(image_path);
+    // launch_svg_stroking(image_path);
+    launch_svg_zone_stroking<GA_worker>(image_path);
 
 	return 0;
 }

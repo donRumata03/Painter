@@ -27,9 +27,10 @@ static size_t count_substrings(const std::string& source, const std::string& sub
     return count;
 }
 
-SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
+SVG_service::SVG_service(const fs::path& filepath, bool is_logging, const fs::path& logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
-    svg.loadFromFile(filepath);
+
+    svg.loadFromFile(filepath.string());
     borders = get_shape_bounds(get_raster_image(svg));
     shapes_count = count_substrings(svg.toString(), "<path");
 
