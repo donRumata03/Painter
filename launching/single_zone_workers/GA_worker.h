@@ -68,22 +68,25 @@ public:
 	void run_remaining_iterations() override;
 
 	void show_fitness_dynamic () override;
-	double average_computation_time_seconds() const override { return configured_fitness_function.average_computation_time_seconds(); }
-	double average_computation_time_per_pixel_seconds() const override { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
-	double computations_performed() const override { return configured_fitness_function.computations_performed(); }
 
-	double time_spent_counting () const override;
+	ComputationalEfficiencyRepresentation get_efficiency_account() const override { return configured_fitness_function.get_efficiency_account(); }
+
+//	double average_computation_time_seconds() const override { return configured_fitness_function.average_computation_time_seconds(); }
+//	double average_computation_time_per_pixel_seconds() const override { return configured_fitness_function.average_computation_time_per_pixel_seconds(); }
+//	double computations_performed() const override { return configured_fitness_function.computations_performed(); }
+//
+//	double time_spent_counting () const override;
 
 	const std::vector<double>& get_best_genome() override;
 
-	void print_diagnostic_information() override {
-		std::cout
-				<< "Computations performed: " << computations_performed() << " (" << GA_params.epoch_num * GA_params.population_size << " expected)" << std::endl
-				<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
-				<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
-				<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
-				<< std::endl;
-	}
+//	void print_diagnostic_information() override {
+//		std::cout
+//				<< "Computations performed: " << computations_performed() << " (" << GA_params.epoch_num * GA_params.population_size << " expected)" << std::endl
+//				<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
+//				<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
+//				<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+//				<< std::endl;
+//	}
 
 
 private:

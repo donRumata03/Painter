@@ -144,7 +144,7 @@ bool MultizoneLaunchWrapper<Worker>::process_one_cell ()
 	auto& worker = workers[cell_x][cell_y];
 	worker->run_remaining_iterations();
 
-	worker->print_diagnostic_information();
+	worker->get_efficiency_account().print_diagnostic_information();
 	std::cout << "_____________________________________________" << std::endl;
 
 	workers_ready[cell_x][cell_y] = true;

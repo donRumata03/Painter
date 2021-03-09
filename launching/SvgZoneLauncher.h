@@ -49,7 +49,7 @@ public:
 				    fs::path  logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 	void run();
-	void print_diagnostic_information();
+	[[nodiscard]] ComputationalEfficiencyRepresentation get_efficiency_account() const { return efficiency_account; }
 
 private:
 
@@ -79,9 +79,10 @@ private:
 	std::vector<colored_stroke> collected_strokes;
 
 	/// For statistics:
-	size_t total_computations = 0;
-	size_t total_pixels_processed = 0;
-	double total_time_spent_counting = 0;
+	ComputationalEfficiencyRepresentation efficiency_account;
+//	size_t total_computations = 0;
+//	size_t total_pixels_processed = 0;
+//	double total_time_spent_counting = 0;
 };
 
 /// ________________________________________________________________________________________________________________________________________________
@@ -135,7 +136,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
 
 		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
-		          << "Started, job range: [" << job_range.first << ", …, " << job_range.second << ")" << std::endl;
+		          << "Started, job range: [" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
 	}
 
 	for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
@@ -174,8 +175,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			/// Acquire mutex to save the data collected:
 			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
-			total_computations += optimizer->computations_performed();
-			total_time_spent_counting += optimizer->time_spent_counting();
+			efficiency_account = efficiency_account + optimizer->get_efficiency_account();
+//			total_computations += optimizer->computations_performed();
+//			total_time_spent_counting += optimizer->time_spent_counting();
 
 			svg_manager.set_iterator(job_index);
 
@@ -207,16 +209,16 @@ void SvgZoneLauncher<OptimizerType>::run ()
 
 
 
-template <class OptimizerType>
-void SvgZoneLauncher<OptimizerType>::print_diagnostic_information ()
-{
-	std::cout
-			<< "Computations performed: " << total_computations << " (" << optimizer_parameters.computations_expected() << " expected)" << std::endl
-			<< "Average computational time: " << total_time_spent_counting / total_computations * 1e+3 << "ms" << std::endl
-			<< "Computational time per pixel: " << total_time_spent_counting / (total_computations * initial_image) * 1e+9 << "ns" << std::endl
-			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
-			<< std::endl;
-}
+//template <class OptimizerType>
+//void SvgZoneLauncher<OptimizerType>::print_diagnostic_information ()
+//{
+////	std::cout
+////			<< "Computations performed: " << total_computations << " (" << optimizer_parameters.computations_expected() << " expected)" << std::endl
+////			<< "Average computational time: " << total_time_spent_counting / total_computations * 1e+3 << "ms" << std::endl
+////			<< "Computational time per pixel: " << total_time_spent_counting / (total_computations * initial_image) * 1e+9 << "ns" << std::endl
+////			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+////			<< std::endl;
+//}
 
 
 

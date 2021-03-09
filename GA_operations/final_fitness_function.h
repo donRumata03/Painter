@@ -8,6 +8,8 @@
 #include "optimization/stroke_color_optimizing.h"
 
 #include "util.h"
+#include "data_representation/computational_efficiency_representation.h"
+
 
 struct RunTimeCounter {
 	std::shared_ptr<std::atomic<size_t>> total_runs = std::make_shared<std::atomic<size_t>>(0);
@@ -153,24 +155,32 @@ public:
 
 	/// Statistics:
 
-	double computations_performed() const {
-		return *rt_counter.total_runs;
+	auto get_efficiency_account() const {
+		return ComputationalEfficiencyRepresentation{
+			.computations_performed = *rt_counter.total_runs,
+			.pixels_processed = *rt_counter.total_runs * w * h,
+			.time_spent_computing = (*rt_counter.total_time_seconds),
+		};
 	}
 
-	double average_computation_time_seconds() const {
-		return (*rt_counter.total_time_seconds) / (*rt_counter.total_runs);
-	}
-
-	double average_computation_time_per_pixel_seconds() const {
-		double area = double(w) * double(h);
-
-		return average_computation_time_seconds() / area;
-	}
-
-	double time_spent_counting() const
-	{
-		return (*rt_counter.total_time_seconds);
-	}
+//	double computations_performed() const {
+//		return *rt_counter.total_runs;
+//	}
+//
+//	double average_computation_time_seconds() const {
+//		return (*rt_counter.total_time_seconds) / (*rt_counter.total_runs);
+//	}
+//
+//	double average_computation_time_per_pixel_seconds() const {
+//		double area = double(w) * double(h);
+//
+//		return average_computation_time_seconds() / area;
+//	}
+//
+//	double time_spent_counting() const
+//	{
+//		return (*rt_counter.total_time_seconds);
+//	}
 };
 
 

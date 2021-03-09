@@ -44,7 +44,7 @@ void launch_single_zone_GA (const std::string &filename)
 	/// For many threads with memory allocation saving system (measured WITHOUT buffer getting):
 	// 31 MegaPixel / (sec * thread)
 
-	worker.print_diagnostic_information();
+	worker.get_efficiency_account().print_diagnostic_information();
 	worker.show_fitness_dynamic();
 }
 
@@ -93,7 +93,7 @@ void launch_single_zone_annealing(const std::string& filename) {
 
     show_image_in_system_viewer(result);
 
-    worker.print_diagnostic_information();
+    worker.get_efficiency_account().print_diagnostic_information();
     worker.show_fitness_dynamic();
 }
 

@@ -47,13 +47,15 @@ public:
 
 
 	/// Diagnostics:
-	[[nodiscard]] double average_computation_time_seconds () const override;
-	[[nodiscard]] double average_computation_time_per_pixel_seconds () const override;
-	[[nodiscard]] double computations_performed () const override;
-	double time_spent_counting () const override;
+	ComputationalEfficiencyRepresentation get_efficiency_account() const override { return configured_error_function.get_efficiency_account(); }
+
+//	[[nodiscard]] double average_computation_time_seconds () const override;
+//	[[nodiscard]] double average_computation_time_per_pixel_seconds () const override;
+//	[[nodiscard]] double computations_performed () const override;
+//	double time_spent_counting () const override;
 
 	void show_fitness_dynamic () override;
-	void print_diagnostic_information () override;
+	// void print_diagnostic_information () override;
 
 
 private:

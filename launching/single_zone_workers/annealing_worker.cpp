@@ -90,33 +90,33 @@ void AnnealingWorker::show_fitness_dynamic ()
 	show_plot({ .window_title =  "MSE Dynamic" });
 }
 
-double AnnealingWorker::average_computation_time_seconds () const
-{
-	return configured_error_function.average_computation_time_seconds();
-}
+//double AnnealingWorker::average_computation_time_seconds () const
+//{
+//	return configured_error_function.average_computation_time_seconds();
+//}
+//
+//double AnnealingWorker::average_computation_time_per_pixel_seconds () const
+//{
+//	return configured_error_function.average_computation_time_per_pixel_seconds();
+//}
+//
+//double AnnealingWorker::computations_performed () const
+//{
+//	return configured_error_function.computations_performed();
+//}
+//
+//double AnnealingWorker::time_spent_counting () const
+//{
+//	return configured_error_function.time_spent_counting();
+//}
 
-double AnnealingWorker::average_computation_time_per_pixel_seconds () const
-{
-	return configured_error_function.average_computation_time_per_pixel_seconds();
-}
-
-double AnnealingWorker::computations_performed () const
-{
-	return configured_error_function.computations_performed();
-}
-
-double AnnealingWorker::time_spent_counting () const
-{
-	return configured_error_function.time_spent_counting();
-}
-
-void AnnealingWorker::print_diagnostic_information ()
-{
-	std::cout
-			<< "Computations performed: " << computations_performed() << " (" << annealing_stroking_params.iterations << " expected)" << std::endl
-			<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
-			<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
-			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
-			<< std::endl;
-}
+//void AnnealingWorker::print_diagnostic_information ()
+//{
+//	std::cout
+//			<< "Computations performed: " << computations_performed() << " (" << annealing_stroking_params.iterations << " expected)" << std::endl
+//			<< "Average computational time: " << average_computation_time_seconds() * 1e+3 << "ms" << std::endl
+//			<< "Computational time per pixel: " << average_computation_time_per_pixel_seconds() * 1e+9 << "ns" << std::endl
+//			<< "=> Computational speed: " << size_t(std::round(1 / average_computation_time_per_pixel_seconds() / 1e+6)) << " MegaPixel / (sec * thread)"
+//			<< std::endl;
+//}
 
