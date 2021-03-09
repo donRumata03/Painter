@@ -151,6 +151,7 @@ public:
 		return error_or_fitness ? MSE : (1 / MSE);
 	}
 
+	/// Statistics:
 
 	double computations_performed() const {
 		return *rt_counter.total_runs;
@@ -166,6 +167,10 @@ public:
 		return average_computation_time_seconds() / area;
 	}
 
+	double time_spent_counting() const
+	{
+		return (*rt_counter.total_time_seconds);
+	}
 };
 
 

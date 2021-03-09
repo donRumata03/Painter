@@ -150,7 +150,7 @@ void launch_svg_stroking(const std::string &filename) {
         strokes.insert(strokes.end(), cur_strokes.begin(), cur_strokes.end());
 
         service.next();
-    }
+	}
 
     // View result
     Image result = make_default_image(original.cols, original.rows);

@@ -21,6 +21,8 @@
 
 #include <common_operations/filesystem_primitives.h>
 
+#include <utility>
+
 /**
  * Is responsible for dividing the image into several zones
  * following the partitioning made by a pasteurizer such as Adobe Illustrator
@@ -43,12 +45,19 @@ public:
 
 
 	SvgZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
-				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2);
+				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
+				    fs::path  logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
-	void run();     /// TODO: parallelize this!
+	void run();
+	void print_diagnostic_information();
+
+private:
+
+	void worker_function(size_t thread_index);
 
 private:
 	Image initial_image;
+	fs::path logging_path;
 
 	CommonStrokingParams stroking_params;
 	OptimizerParameters optimizer_parameters;
@@ -65,7 +74,7 @@ private:
 
 	/// The common data being modified:
 	SVG_service svg_manager;
-	std::vector<OptimizerType> zone_optimizers;
+	// std::vector<OptimizerType> zone_optimizers;
 
 	std::vector<colored_stroke> collected_strokes;
 };
@@ -80,9 +89,11 @@ private:
 template <class OptimizerType>
 SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, const CommonStrokingParams& stroking_params,
                                                  const OptimizerParameters& custom_parameters, bool parallelize,
-                                                 size_t worker_thread_number)
-			: stroking_params(stroking_params), optimizer_parameters(custom_parameters), is_threaded(parallelize), thread_worker_number(worker_thread_number)
+                                                 size_t worker_thread_number, fs::path logging_path)
+			: logging_path(std::move(logging_path)), stroking_params(stroking_params), optimizer_parameters(custom_parameters), is_threaded(parallelize), thread_worker_number(worker_thread_number)
 {
+	switch_to_absolute_values(this->stroking_params);
+
 	// Clear the old log:
 	ensure_log_cleared();
 
@@ -99,32 +110,74 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 
 	if (parallelize) {
 		thread_zone_distribution = distribute_task_ranges(zone_number, worker_thread_number);
+		thread_pool.init(worker_thread_number, this->worker_function);
+	}
+	else {
+		thread_zone_distribution = {
+				{ 0ULL, zone_number }
+		};
+	}
+}
 
-		thread_pool.init(worker_thread_number, [this](size_t thread_index) {
-			auto job_range = thread_zone_distribution[thread_index];
 
-			for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
+template <class OptimizerType>
+void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
+{
+	auto job_range = thread_zone_distribution[thread_index];
 
-				std::optional<OptimizerType> optimizer;
+	{
+		// Inform bout beginning:
+		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
 
-				{
-					/// Acquire a mutex to work with data, which is common for all the worker threads
-					/// this particular data will be used to initialize and launch data
-					std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
+		          << "Started, job range: [" << job_range.first << ", …, " << job_range.second << ")" << std::endl;
+	}
 
-					optimizer.emplace();
-				}
+	for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
 
-				optimizer->run_remaining_iterations();
+		std::optional<OptimizerType> optimizer;
 
-				{
-					/// Acquire mutex to save the data collected:
-					std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+		{
+			/// Acquire a mutex to work with data, which is common for all the worker threads
+			/// this particular data will be used to initialize and launch data
+			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
-				}
-			}
-		});
+			std::cout << "[SvgZoneLauncher][thread " << thread_index << "]: Stroking zone №" << job_index << ":" << std::endl;
 
+			svg_manager.set_iterator(job_index);
+
+			Image this_zone_image;
+			svg_manager.load_current_image(this_zone_image);
+
+			auto this_params = this->stroking_params;
+
+			this_params.stroke_number = calc_strokes_count(
+					this_zone_image, cv::Size { initial_image.rows, initial_image.cols }, this->stroking_params.stroke_number
+			);
+
+			auto this_color = svg_manager.get_current_color();
+			this_params.use_constant_color = true;
+			this_params.stroke_color = this_color;
+
+
+			optimizer.emplace(this_zone_image, this->stroking_params, this->custom_params, this->logging_path / "zone №" + std::to_string(job_index));
+		}
+
+		optimizer->run_remaining_iterations();
+
+		{
+			/// Acquire mutex to save the data collected:
+			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+
+			svg_manager.set_iterator(job_index);
+
+			auto this_collected_strokes = unpack_stroke_data_buffer(optimizer->get_best_genome());
+			colorize_strokes(this_collected_strokes, svg_manager.get_current_color());
+
+			svg_manager.shift_strokes_to_current_box(this_collected_strokes);
+
+			std::copy(this_collected_strokes.begin(), this_collected_strokes.end(), std::back_inserter(collected_strokes));
+		}
 	}
 }
 
@@ -139,9 +192,18 @@ void SvgZoneLauncher<OptimizerType>::run ()
 	}
 	else
 	{
-		// Just do all the work:
-
+		// Just do all the work with this particular thread:
+		worker_function(0);
 	}
 }
+
+
+
+template <class OptimizerType>
+void SvgZoneLauncher<OptimizerType>::print_diagnostic_information ()
+{
+	std::cout << std::endl;
+}
+
 
 

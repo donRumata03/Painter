@@ -6,13 +6,16 @@
 
 #include <optimization/stroke_color_optimizing.h>
 #include <rasterization/stroke_rasterizer.h>
+
+#include <utility>
 #include "data_representation/stroke.h"
+
 
 struct ImageStrokingData {
 public:
     ImageStrokingData() = default;
-    ImageStrokingData(const Image& image, bool use_constant_color = false, const color& stroke_color = { 1., 1., 1.})
-    : image(image), use_constant_color(use_constant_color), stroke_color(stroke_color) {}
+    ImageStrokingData(Image image, bool use_constant_color = false, const color& stroke_color = { 1., 1., 1.})
+            : image(std::move(image)), use_constant_color(use_constant_color), stroke_color(stroke_color) {}
 
     Image image;
 
@@ -20,6 +23,7 @@ public:
     color stroke_color {};
 
 };
+
 
 /**
  * The returning buffer actually doesn`t have colors.

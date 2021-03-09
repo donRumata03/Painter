@@ -83,7 +83,7 @@ MultizoneLaunchWrapper<Worker>::MultizoneLaunchWrapper (Image _image, size_t _zo
 
 	/// Init logger:
 	logger = image_logging_callback(
-			image,
+			ImageStrokingData {image},
 			(painter_base_path / "log" / "latest").string(), 0, false);
 
 
