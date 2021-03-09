@@ -107,6 +107,8 @@ void launch_multizone_annealing(const std::string& filename) {
 template<class WorkerType>
 void launch_svg_zone_stroking(const std::string& filename)
 {
+	std::cout << "Launching SVG zoned stroking…" << std::endl;
+
     CommonStrokingParams common_params = default_stroking_parameters;
     //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
     std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();

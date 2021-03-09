@@ -33,7 +33,9 @@ int main ()
     // system(("chcp "s + std::to_string(CP_UTF8)).c_str());
 
     set_utf8_in_console();
-	std::cout << "Using " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
+
+    std::cout << console_colors::green << "Welcome to Painter™!" << console_colors::remove_all_colors << std::endl;
+    std::cout << "Using up to " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
 
 	/// IO tests:
 

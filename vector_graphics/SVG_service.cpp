@@ -7,6 +7,7 @@
 #include "SVG_service.h"
 #include "io_api/image_io_utils.h"
 #include <common_operations/basic_constraining.h>
+#include <common_operations/filesystem_primitives.h>
 #include "utils/Progress.h"
 
 #define PATH_BOX_GOMOTHETY 1.1
@@ -34,8 +35,9 @@ SVG_service::SVG_service(const fs::path& filepath, bool is_logging, const fs::pa
     borders = get_shape_bounds(get_raster_image(svg));
     shapes_count = count_substrings(svg.toString(), "<path");
 
-    if (fs::exists(logging_path)) fs::remove_all(logging_path);
-    fs::create_directories(logging_path);
+//    if (fs::exists(logging_path)) fs::remove_all(logging_path);
+//    fs::create_directories(logging_path);
+	ensure_log_cleared(logging_path);
 
     if (is_logging) std::cout << "[SVG_service] Created" << std::endl;
 }

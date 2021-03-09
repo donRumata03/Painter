@@ -77,7 +77,7 @@ private:
 	std::vector<std::pair<size_t, size_t>> thread_zone_distribution;
 
 	/// The common data being modified:
-	SVG_service svg_manager;
+	std::optional<SVG_service> svg_manager;
 	// std::vector<OptimizerType> zone_optimizers;
 
 	std::vector<colored_stroke> collected_strokes;
@@ -106,13 +106,13 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-	svg_manager = SVG_service(image_path); // TODO: problems with SVG document
-	svg_manager.split_paths();
+	svg_manager.emplace(image_path); // TODO: problems with SVG document
+	svg_manager->split_paths();
 
-	initial_image = svg_manager.get_raster_original_image();
+	initial_image = svg_manager->get_raster_original_image();
 	save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
 
-	zone_number = svg_manager.get_shapes_count();
+	zone_number = svg_manager->get_shapes_count();
 
     switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
 
@@ -154,10 +154,10 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 
 			std::cout << "[SvgZoneLauncher][thread " << thread_index << "]: Stroking zone №" << job_index << ":" << std::endl;
 
-			svg_manager.set_iterator(job_index);
+			svg_manager->set_iterator(job_index);
 
 			Image this_zone_image;
-			svg_manager.load_current_image(this_zone_image);
+			svg_manager->load_current_image(this_zone_image);
 
 			auto this_params = this->stroking_params;
 
@@ -165,7 +165,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 					this_zone_image, cv::Size { initial_image.rows, initial_image.cols }, this->stroking_params.stroke_number
 			);
 
-			auto this_color = svg_manager.get_current_color();
+			auto this_color = svg_manager->get_current_color();
 			this_params.use_constant_color = true;
 			this_params.stroke_color = this_color;
 
@@ -183,12 +183,12 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 //			total_computations += optimizer->computations_performed();
 //			total_time_spent_counting += optimizer->time_spent_counting();
 
-			svg_manager.set_iterator(job_index);
+			svg_manager->set_iterator(job_index);
 
 			auto this_collected_strokes = unpack_stroke_data_buffer(optimizer->get_best_genome());
-			colorize_strokes(this_collected_strokes, svg_manager.get_current_color());
+			colorize_strokes(this_collected_strokes, svg_manager->get_current_color());
 
-			svg_manager.shift_strokes_to_current_box(this_collected_strokes);
+			svg_manager->shift_strokes_to_current_box(this_collected_strokes);
 
 			std::copy(this_collected_strokes.begin(), this_collected_strokes.end(), std::back_inserter(collected_strokes));
 		}
