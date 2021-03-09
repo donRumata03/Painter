@@ -10,17 +10,22 @@
 #include "painter_pch.h"
 
 #include "GA_operations/util.h"
+#include "utils/Progress.h"
 
 class GA_informer
 {
 	const Image& initial_image;
 	size_t total_iterations = 0;
+	bool enable_console_output = true;
 
 public:
-	explicit GA_informer(const Image& image, size_t _total_iterations) : initial_image(image), total_iterations(_total_iterations) {}
+	explicit GA_informer(const Image& image, size_t _total_iterations, bool enable_console_output = true)
+	        : initial_image(image), total_iterations(_total_iterations), enable_console_output(enable_console_output)
+	        {  }
 
 	void operator() (size_t GA_iterations, double best_fitness_value, const std::vector<double>& best_stroke_genome){
-		std::cout << "GA percent: \t" << percent_plotter(GA_iterations, total_iterations, 1) << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
+		if (enable_console_output)
+		    std::cout << "GA percent: \t" << percent_plotter(GA_iterations, total_iterations, 1) << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
 
 		// std::cout << best_stroke_genome << std::endl;
 

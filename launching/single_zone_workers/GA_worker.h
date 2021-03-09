@@ -62,7 +62,8 @@ public:
 
 	GA_worker (const Image& image,
                const CommonStrokingParams& stroking_params, const GA_stroking_parameters& ga_stroking_parameters,
-               const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest");
+               const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest",
+               bool enable_console_output = true);
 
 	void run_one_iteration() override;
 	void run_remaining_iterations() override;

@@ -26,8 +26,8 @@ public:
 //	[[nodiscard]] virtual double time_spent_counting() const = 0;
 
 	virtual void show_fitness_dynamic () = 0;
-	// virtual void print_diagnostic_information() = 0;
-
+protected:
+    bool enable_console_output = true;
 };
 
 

@@ -7,13 +7,14 @@
 
 
 
-GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_params, const GA_stroking_parameters& ga_stroking_parameters, const fs::path& logging_path)
+GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_params, const GA_stroking_parameters& ga_stroking_parameters, const fs::path& logging_path, bool enable_console_output)
 		: stroking_params(stroking_params), GA_params(ga_stroking_parameters) {
 	image.copyTo(initial_image);
 
 	image_w = image.cols;
 	image_h = image.rows;
 
+    this->enable_console_output = enable_console_output;
 
 	/// Count typical distances:
 //	typical_coord = geometric_mean({ double(image_w), double(image_h) });
@@ -83,7 +84,8 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_p
 	logger = image_logging_callback(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
                                  logging_path.string(),
                                  stroking_params.logging_percentage,
-                                 enable_detailed_logging);
+                                 enable_detailed_logging,
+                                 enable_console_output);
 
 	// std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
 
@@ -126,9 +128,9 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_p
 	// std::cout << "[GA_worker]: plugged logger" << std::endl;
 
 
-	optimizer->set_informer(GA_informer(image, GA_params.epoch_num));
+	optimizer->set_informer(GA_informer(image, GA_params.epoch_num, enable_console_output));
 
-	std::cout << "[GA_worker]: successfully initialized and ready to run" << std::endl;
+    if (enable_console_output) std::cout << "[GA_worker]: successfully initialized and ready to run" << std::endl;
 }
 
 void GA_worker::run_one_iteration ()

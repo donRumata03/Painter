@@ -7,19 +7,31 @@
 #include "SVG_service.h"
 #include "io_api/image_io_utils.h"
 #include <common_operations/basic_constraining.h>
-
+#include "utils/Progress.h"
 
 #define PATH_BOX_GOMOTHETY 1.1
-#define CRITICAL_WIDTH 20
-#define CRITICAL_HEIGHT 20
+#define CRITICAL_WIDTH 10
+#define CRITICAL_HEIGHT 10
 
 const std::regex SVG_service::color_regex = std::regex("fill:#([a-fA-F0-9]{6})");
+const std::regex SVG_service::path_regex = std::regex("(<path[\\w\\W]+?>)");
 
+static size_t count_substrings(const std::string& source, const std::string& sub)
+{
+    int count = 0;
+    for (size_t offset = source.find(sub); offset != std::string::npos;
+         offset = source.find(sub, offset + sub.length()))
+    {
+        count++;
+    }
+    return count;
+}
 
 SVG_service::SVG_service(const std::string& filepath, bool is_logging, const std::string &logging_path)
     : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
     svg.loadFromFile(filepath);
     borders = get_shape_bounds(get_raster_image(svg));
+    shapes_count = count_substrings(svg.toString(), "<path");
 
     if (fs::exists(logging_path)) fs::remove_all(logging_path);
     fs::create_directories(logging_path);
@@ -33,6 +45,7 @@ void SVG_service::split_paths() {
     // Split paths & render
     size_t count = 0;
     lunasvg::SVGElementIter iter(root, "", "path");
+    Progress progress(shapes_count);
     while (iter.next()) {
         lunasvg::SVGDocument path_doc;
         path_doc.rootElement()->setAttribute("viewBox", root->getAttribute("viewBox"));
@@ -40,7 +53,10 @@ void SVG_service::split_paths() {
 
         // Setup borders
         auto box = get_shape_bounds(get_raster_image(path_doc));
-        if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) continue; // TODO: find better solution
+        if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) {
+            progress.update();
+            continue; // TODO: find better solution
+        }
 
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
         path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
@@ -49,6 +65,7 @@ void SVG_service::split_paths() {
 
         cv::imwrite(get_shape_path(count), get_raster_image(path_doc));
         count++;
+        progress.update();
     }
 
     shapes_count = count;

@@ -48,7 +48,8 @@ add_executable(Painter
         data_representation/paint_plan.cpp
         data_representation/color.cpp
         data_representation/color.h
-
+        data_representation/computational_efficiency_representation.cpp
+        data_representation/computational_efficiency_representation.h
         data_representation/range_rectangle.h
 
         io_api/image_io_utils.cpp
@@ -101,6 +102,9 @@ add_executable(Painter
         common_operations/image_segregation.h
         common_operations/image_adaptive_params.cpp
         common_operations/image_adaptive_params.h
+        common_operations/stroke_sorting.cpp
+        common_operations/stroke_sorting.h
+        common_operations/filesystem_primitives.h
 
         GA_operations/all.h
         GA_operations/stroke_range_generator.h
@@ -130,11 +134,8 @@ add_executable(Painter
         vector_graphics/SVG_service.cpp
         vector_graphics/SVG_service.h
 
-        common_operations/stroke_sorting.cpp
-        common_operations/stroke_sorting.h
-
-        common_operations/filesystem_primitives.h
-        data_representation/computational_efficiency_representation.cpp data_representation/computational_efficiency_representation.h)
+        utils/Progress.h
+)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

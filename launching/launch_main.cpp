@@ -9,8 +9,10 @@
 #include "GA_parameter_sets.h"
 #include "common_operations/image_adaptive_params.h"
 #include "data_representation/paint_plan.h"
+#include "utils/Progress.h"
 
-static inline void save_log_json(const std::vector<colored_stroke>& strokes, const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
+static inline void save_log_json(const std::vector<colored_stroke>& strokes,
+                                 const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
 {
     json j = PaintPlan(strokes);
     std::ofstream json_file(filepath);
@@ -127,7 +129,7 @@ void launch_svg_stroking(const std::string &filename) {
 
     Image image;
     std::vector<colored_stroke> strokes;
-
+    Progress progress(service.get_shapes_count());
     /// Main stroking loop, add new strokes at each iteration:
     while (service.load_current_image(image))
     {
@@ -138,10 +140,11 @@ void launch_svg_stroking(const std::string &filename) {
         cur_params.use_constant_color = true;
         cur_params.stroke_color = cur_color;
 
-        std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation ("
-                    << cur_params.stroke_number << " strokes, " << cur_color << " color)" << std::endl;
+        /*std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation ("
+                    << cur_params.stroke_number << " strokes, " << cur_color << " color)" << std::endl;*/
         GA_worker worker(image, cur_params, ga_params,
-                         fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())));
+                         fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())),
+                         false);
         worker.run_remaining_iterations();
 
         auto cur_strokes = unpack_stroke_data_buffer(worker.get_best_genome());
@@ -149,6 +152,7 @@ void launch_svg_stroking(const std::string &filename) {
 	    service.shift_strokes_to_current_box(cur_strokes);
         strokes.insert(strokes.end(), cur_strokes.begin(), cur_strokes.end());
 
+        progress.update();
         service.next();
 	}
 

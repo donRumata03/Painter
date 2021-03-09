@@ -26,7 +26,7 @@ public:
     [[nodiscard]] color get_current_color() const { return colors[it]; }
 
     [[nodiscard]] size_t get_it() const { return it; }
-    [[nodiscard]] size_t get_shape_count() const { return shapes_count; }
+    [[nodiscard]] size_t get_shapes_count() const { return shapes_count; }
 
     void set_iterator(size_t desired_iterator_value) { it = desired_iterator_value; }
     void next() { ++it; }
@@ -46,6 +46,7 @@ private:
     color get_element_color(const lunasvg::SVGElement* elem);
 
     const static std::regex color_regex;
+    const static std::regex path_regex;
 
     lunasvg::SVGDocument svg;
     std::vector<cv::Rect> boxes;

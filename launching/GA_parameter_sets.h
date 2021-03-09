@@ -9,31 +9,31 @@
 
 
 inline auto default_stroking_parameters = CommonStrokingParams{
-		.stroke_number = 20,
+		.stroke_number = 100,
 
-		.stroke_length_to_image_size_fraction = 0.3, // 0.2,
-		.stroke_width_to_length_factor = 0.25,
+		.stroke_length_to_image_size_fraction = 0.2, // 0.2,
+		.stroke_width_to_length_factor = 0.3,
 		.stroke_coord_mutation_to_stroke_length_factor = 0.4,
 		.stroke_width_mutation_to_stroke_width_factor = 0.4,
 
 		.stroke_param_relative_range = 3,
 
 		.move_mutation_probability = 0.2,
-		.logging_percentage = 0.1,
-
-		.canvas_color = { 0., 0., 0. },
+		.logging_percentage = 0.0,
+		
+		.canvas_color = { 0., 0., 0. }
 };
 
 
 inline auto default_GA_params = GA_stroking_parameters {
-		.population_size = 1000,
-		.epoch_num = 20,
+		.population_size = 200,
+		.epoch_num = 10,
 
 		.allow_multithreading = true,
 };
 
 inline auto default_annealing_params = AnnealingStrokingParams {
-		.iterations = 3'000,
+		.iterations = 2,
 
 		.typical_temperature = 0.005,
 		.gene_mutation_fraction = 0.1,
