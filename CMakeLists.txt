@@ -119,8 +119,8 @@ add_executable(Painter
         GA_operations/genome_generator.h
         GA_operations/adjustable_genome_mutation.h
 
-        launching/launch_main.cpp
-        launching/launch_main.h
+        launching/launch_stroking.cpp
+        launching/launch_stroking.h
         launching/GA_parameter_sets.h
         launching/multizoner.cpp
         launching/multizoner.h

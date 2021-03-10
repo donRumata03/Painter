@@ -58,7 +58,7 @@ void SVG_service::split_paths() {
         auto box = get_shape_bounds(get_raster_image(path_doc));
         if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) {
             progress.update();
-            continue; // TODO: find better solution
+            continue; // TODO: find a better solution
         }
 
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
@@ -66,7 +66,9 @@ void SVG_service::split_paths() {
         boxes.emplace_back(box);
         colors.emplace_back(get_element_color(iter.currentElement()));
 
+        // std::cout << "[SVG_service] Saving raster image of part #" << count << " to " << get_shape_path(count) << "…" << std::endl;
         cv::imwrite(get_shape_path(count), get_raster_image(path_doc));
+
         count++;
         progress.update();
     }
@@ -102,9 +104,10 @@ cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc) {
 }
 
 std::string SVG_service::get_shape_path(size_t i) {
-    std::stringstream ss;
-    ss << logging_path << "/" << "path" << i << ".png";
-    return ss.str();
+	return (fs::path{ logging_path } / ("path" + std::to_string(i) + ".png")).string();
+//    std::stringstream ss;
+//    ss << logging_path << "/" << "path" << i << ".png";
+//    return ss.str();
 }
 
 cv::Rect SVG_service::get_shape_bounds(const cv::Mat &img) {

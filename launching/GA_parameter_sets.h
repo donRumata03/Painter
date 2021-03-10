@@ -19,7 +19,7 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 		.stroke_param_relative_range = 3,
 
 		.move_mutation_probability = 0.2,
-		.logging_percentage = 0.0,
+		.logging_percentage = 0.05,
 		
 		.canvas_color = { 0., 0., 0. }
 };
@@ -27,15 +27,15 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 
 inline auto default_GA_params = GA_stroking_parameters {
 		.population_size = 200,
-		.epoch_num = 10,
+		.epoch_num = 50,
 
 		.allow_multithreading = true,
 };
 
 inline auto default_annealing_params = AnnealingStrokingParams {
-		.iterations = 2,
+		.iterations = 800,
 
-		.typical_temperature = 0.005,
+		.typical_temperature = 3e-7,
 		.gene_mutation_fraction = 0.1,
 };
 
@@ -111,6 +111,17 @@ template<>
 GA_stroking_parameters get_default_special_params<GA_worker>() { return default_GA_params; }
 template<>
 AnnealingStrokingParams get_default_special_params<AnnealingWorker>() { return default_annealing_params; }
+
+template <class OptimizationAlgorithm>
+struct CanBeParallelized {};
+
+template<> struct CanBeParallelized<AnnealingWorker> {
+	static constexpr auto value = false;
+};
+
+template<> struct CanBeParallelized<GA_worker> {
+	static constexpr auto value = true;
+};
 
 //////////
 

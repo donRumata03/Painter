@@ -2,7 +2,7 @@
 // Created by Vova on 02.10.2020.
 //
 
-#include "launch_main.h"
+#include "launch_stroking.h"
 
 #include "io_api/image_io_utils.h"
 #include "GA_parameter_sets.h"
@@ -113,7 +113,7 @@ void launch_svg_zone_stroking(const std::string& filename)
     //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
     std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();
 
-    SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value());
+    SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), not CanBeParallelized<WorkerType>::value);
 
     launcher.run();
     auto strokes = launcher.get_final_strokes();
@@ -187,4 +187,4 @@ void launch_svg_stroking(const std::string &filename) {
 }
 
 template void launch_svg_zone_stroking<GA_worker>(const std::string& filename);
-//template void launch_svg_zone_stroking<AnnealingWorker>(const std::string& filename);
+template void launch_svg_zone_stroking<AnnealingWorker>(const std::string& filename);

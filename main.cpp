@@ -10,7 +10,7 @@
 #include <tests/stroke_color_optimization_test.h>
 #include <tests/error_computing_tests/image_mse_test.h>
 #include <tests/GA_tests/stroke_constraining_test.h>
-#include <launching/launch_main.h>
+#include <launching/launch_stroking.h>
 #include <tests/GA_tests/population_generation_tests.h>
 #include <tests/example_stroke_image_generation.h>
 #include <tests/image_splitting_test.h>
@@ -98,21 +98,26 @@ int main ()
     std::string simple_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "simple.svg").string();
     std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
 
-	const auto& image_path = simple_svg_path;
+	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
+
+
+	const auto& image_path = zone_example_path;
+	std::cout << "Image Path: " << image_path << std::endl;
 
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-    // launch_single_zone_annealing(image_path);
+    launch_single_zone_annealing(image_path);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);
 
     /// SVG launch:
     // launch_svg_stroking(image_path);
-    launch_svg_zone_stroking<GA_worker>(image_path);
+    // launch_svg_zone_stroking<GA_worker>(image_path);
+    // launch_svg_zone_stroking<AnnealingWorker>(image_path);
 
 	return 0;
 }

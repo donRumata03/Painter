@@ -140,7 +140,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
 
 		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
-		          << "Started, job range: [" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
+		          << "Started, job range: ";
+		if (job_range.first < job_range.second) std::cout << "[" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
+		else std::cout << "ø" << std::endl;
 	}
 
 	for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
@@ -170,7 +172,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			this_params.stroke_color = this_color;
 
 
-			optimizer.emplace(this_zone_image, this->stroking_params, this->optimizer_parameters, this->logging_path / ("part" + std::to_string(job_index)));
+			optimizer.emplace(this_zone_image, this_params, this->optimizer_parameters, this->logging_path / ("part" + std::to_string(job_index)));
 		}
 
 		optimizer->run_remaining_iterations();
@@ -199,7 +201,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
 
 		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
-		          << "Ended, job range: [" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
+		          << "Ended, job range: ";
+		if (job_range.first < job_range.second) std::cout << "[" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
+		else std::cout << "ø" << std::endl;
 	}
 }
 
