@@ -9,7 +9,8 @@
 /// Possible signs:
 // ⇛, 🢖, 🡆, ⇝, ⟿, ↝, ☛, ☞, ⟼, ➽, ❱, ⇉, ➠
 
-static const char* bars[] = {"▯", "▉", "❱"};
+// static const std::vector<std::string> bars = { "▯", "▉", "❱" };
+static const char* bars[] = { " ", "=", ">" };
 
 static double round(double value, uint8_t presicion) {
     uint64_t multiplicator = std::pow(10, presicion);
