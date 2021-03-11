@@ -13,6 +13,6 @@ void OnImprovementUpdatingLogger::operator() (const std::vector<double>& stroke_
 	}
 
 	fs::path filename = updating_path / (std::to_string(this_iteration) + ".png");
-	std::cout << "Update logged:  " << filename.string() << std::endl;
+	if (enable_console_output) std::cout << "Update logged:  " << filename.string() << std::endl;
 	save_stroke_buffer_as_image(stroke_set, imageData, filename);
 }

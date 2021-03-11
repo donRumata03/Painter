@@ -8,7 +8,7 @@
 
 /// Custom constructor:
 AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams& stroking_params,
-                                  const AnnealingStrokingParams& params, const fs::path& logging_path)
+                                  const AnnealingStrokingParams& params, const fs::path& logging_path, bool enable_console_output)
 
                                   : annealing_stroking_params(params), common_stroking_params(stroking_params)
 {
@@ -16,6 +16,8 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 
 	image_w = initial_image.cols;
 	image_h = initial_image.rows;
+
+	this->enable_console_output = enable_console_output;
 
 	configured_error_function = final_fitness_function(
             ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
@@ -38,7 +40,7 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 
 	logger = OnImprovementUpdatingLogger(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
-                                      params.iterations, stroking_params.logging_percentage, logging_path);
+                                      params.iterations, stroking_params.logging_percentage, logging_path, enable_console_output);
 }
 
 
@@ -64,7 +66,7 @@ void AnnealingWorker::run_remaining_iterations ()
 				configured_generator,
 				configured_mutator,
 				default_exp_temperature_dynamic,
-				true,
+				enable_console_output,
 				nullptr,
 				nullptr,
 				nullptr,

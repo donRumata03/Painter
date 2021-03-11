@@ -33,11 +33,14 @@ class OnImprovementUpdatingLogger
 	fs::path base_path;
 	fs::path updating_path;
 
+	bool enable_console_output;
+
 public:
 
 	OnImprovementUpdatingLogger() = default;
-	OnImprovementUpdatingLogger(ImageStrokingData imageData, size_t total_iterations, double logging_percentage, fs::path logging_path)
-										: total_iterations(total_iterations), logging_fraction(logging_percentage), base_path(std::move(logging_path)), imageData(std::move(imageData))
+	OnImprovementUpdatingLogger(ImageStrokingData imageData, size_t total_iterations, double logging_percentage, fs::path logging_path, bool enable_console_output = true)
+										: total_iterations(total_iterations), logging_fraction(logging_percentage), base_path(std::move(logging_path)), imageData(std::move(imageData)),
+										enable_console_output(enable_console_output)
 	{
 		if (fs::exists(base_path)) fs::remove_all(base_path);
 
