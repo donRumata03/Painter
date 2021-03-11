@@ -40,7 +40,7 @@ AnnealingWorker::AnnealingWorker (const Image& image, const CommonStrokingParams
 	configured_generator = FinalGenomeGenerator(stroke_limits, common_stroking_params.stroke_number);
 
 	logger = OnImprovementUpdatingLogger(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
-                                      params.iterations, stroking_params.logging_percentage, logging_path, enable_console_output);
+                                      params.iterations, stroking_params.logging_percentage, logging_path, stroking_params.canvas_color, enable_console_output);
 }
 
 
@@ -65,7 +65,7 @@ void AnnealingWorker::run_remaining_iterations ()
 				},
 				configured_generator,
 				configured_mutator,
-				custom_exp_temperature_dynamic(1.2),
+				custom_exp_temperature_dynamic(0.2),
 				true,
 				nullptr,
 				nullptr,

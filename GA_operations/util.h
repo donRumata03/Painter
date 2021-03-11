@@ -109,11 +109,11 @@ inline std::vector<double> pack_stroke_data(const std::vector<ColoredOrNotStroke
 	return stroke_data_buffer;
 }
 
-inline Image stroke_buffer_to_image(const std::vector<double>& stroke_buffer, const ImageStrokingData& data) {
+inline Image stroke_buffer_to_image(const std::vector<double>& stroke_buffer, const ImageStrokingData& data, color canvas_color = { 0., 0., 0., }) {
 	auto strokes = unpack_stroke_data_buffer(stroke_buffer);
 	colorize_strokes(strokes, data);
 
-	Image new_image = make_default_image(data.image.cols, data.image.rows);
+	Image new_image = make_default_image(data.image.cols, data.image.rows, canvas_color);
 	rasterize_strokes(new_image, strokes);
 
 	return new_image;
@@ -139,14 +139,14 @@ inline void save_stroke_buffer_as_image(const std::vector<double>& stroke_buffer
     save_image(image, filename);
 }*/
 
-inline void save_stroke_buffer_as_image(const std::vector<double>& stroke_buffer, const ImageStrokingData& data, const fs::path& filename) {
-    Image image = stroke_buffer_to_image(stroke_buffer, data);
+inline void save_stroke_buffer_as_image(const std::vector<double>& stroke_buffer, const ImageStrokingData& data, const fs::path& filename, color canvas_color) {
+    Image image = stroke_buffer_to_image(stroke_buffer, data, canvas_color);
     save_image(image, filename);
 }
 
 
-inline void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffer, const ImageStrokingData& data, const std::vector<fs::path>& filenames) {
-	Image image = stroke_buffer_to_image(stroke_buffer, data);
+inline void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffer, const ImageStrokingData& data, const std::vector<fs::path>& filenames, color canvas_color) {
+	Image image = stroke_buffer_to_image(stroke_buffer, data, canvas_color);
 	for (auto& filename : filenames)
 		save_image(image, filename);
 }

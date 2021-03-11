@@ -85,7 +85,8 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_p
                                  logging_path.string(),
                                  stroking_params.logging_percentage,
                                  enable_detailed_logging,
-                                 enable_console_output);
+                                 enable_console_output,
+                                 stroking_params.canvas_color);
 
 	// std::cout << "[GA_worker]: fitness and logger ready" << std::endl;
 

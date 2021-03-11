@@ -91,6 +91,7 @@ int main ()
 	std::string one_stroke_path = (fs::path(painter_base_path) / "images_for_testing" / "one_stroke.png").string();
 
 	std::string circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle.png").string();
+	std::string cutted_circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle_cutted.png").string();
 	std::string moon_path = (fs::path(painter_base_path) / "images_for_testing" / "moon.png").string();
 	std::string cutted_moon_path = (fs::path(painter_base_path) / "images_for_testing" / "cutted_moon.png").string();
 	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
@@ -101,7 +102,7 @@ int main ()
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
 
 
-	const auto& image_path = circle_path;
+	const auto& image_path = cutted_circle_path;
 	std::cout << "Image Path: " << image_path << std::endl;
 
 	/// SVG management:

@@ -75,19 +75,22 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
 
 	Image image = open_image(filename);
 	std::cout << "[launch_single_zone_annealing]: Opened image at " << filename << std::endl;
-	color major_color;
 
-    CommonStrokingParams this_common_params = default_stroking_parameters;
+	CommonStrokingParams this_common_params = default_stroking_parameters;
+
+	color major_color {};
+	color canvas_color {};
     if (auto_find_color) {
 	    major_color = find_major_image_color(image);
-	    color contrast_color = find_contrast_color(major_color);
+	    canvas_color = find_contrast_color(major_color);
 
 	    std::cout << "[launch_single_zone_annealing]: Found major color for the image: "
-	        << major_color << " the one, contrast to it, is " << contrast_color << ". It's taken to be canvas color" << std::endl;
+	              << major_color << " the one, contrast to it, is " << canvas_color << ". It's taken to be canvas color" << std::endl;
 
 		this_common_params.stroke_color = major_color;
-		this_common_params.canvas_color = contrast_color;
-    } /// TODO: Doesn't work
+	    this_common_params.canvas_color = canvas_color;
+	    this_common_params.use_constant_color = true;
+    }
 
 	AnnealingStrokingParams this_annealing_params = default_annealing_params;
 
@@ -100,7 +103,7 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
     auto strokes = unpack_stroke_data_buffer(worker.get_best_genome());
     colorize_strokes(strokes, ImageStrokingData(image, this_common_params.use_constant_color, this_common_params.stroke_color));
 
-    Image result = make_default_image(image.cols, image.rows);
+    Image result = make_default_image(image.cols, image.rows, canvas_color);
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 
