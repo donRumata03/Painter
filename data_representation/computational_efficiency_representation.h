@@ -13,8 +13,8 @@ struct ComputationalEfficiencyRepresentation
 
 
 	[[nodiscard]] double average_computational_time() const { return time_spent_computing / double(computations_performed); }
-	[[nodiscard]] double computational_time_per_pixel() const { return pixels_processed / time_spent_computing; }
-	[[nodiscard]] double pixels_per_second() const { return time_spent_computing / double(pixels_processed); }
+	[[nodiscard]] double computational_time_per_pixel() const { return time_spent_computing / double(pixels_processed); }
+	[[nodiscard]] double pixels_per_second() const { return double(pixels_processed) / time_spent_computing; }
 
 	void print_diagnostic_information() const;
 
