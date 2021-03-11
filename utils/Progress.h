@@ -9,39 +9,48 @@
 /// Possible signs:
 // ⇛, 🢖, 🡆, ⇝, ⟿, ↝, ☛, ☞, ⟼, ➽, ❱, ⇉, ➠
 
-// static const std::vector<std::string> bars = { "▯", "▉", "❱" };
-static const char* bars[] = { " ", "=", ">" };
+static const std::vector<std::string> bars = {" ", "▏","▎","▍","▌","▋","▊","▉","█"};
+static const std::pair<std::string, std::string> borders = {"▏", "▕"};
+static const double time_threshold = 0.5;
+static const uint8_t time_presicion = 2;
+// static const std::vector<std::string> bars = { " ", "▉", "❱" };
+// static const char* bars[] = { " ", "=", ">" };
 
 static double round(double value, uint8_t presicion) {
     uint64_t multiplicator = std::pow(10, presicion);
-    return int(value * multiplicator) / (double)multiplicator;
+    return (int)(value * multiplicator) / (double)multiplicator;
 }
 
 class Progress {
 private:
     size_t total, current, start;
-    uint8_t totalWidth;
+    uint8_t barWidth;
     std::chrono::time_point<std::chrono::system_clock> t_start = std::chrono::system_clock::now();
     std::chrono::time_point<std::chrono::system_clock> t_current;
     bool is_working = true;
 
-    uint8_t _total_str_width;
+    uint8_t _total_str_width = 0;
+    uint8_t max_width = 0;
 
     double get_progress() { return current / (double)total; }
-    double get_time_per_it() { return round(std::chrono::duration<double>(t_current - t_start).count() / (current - start), 2); }
+    double get_time_per_it() { return std::chrono::duration<double>(t_current - t_start).count() / (current - start); }
 
     static std::string bar_string(double progress, size_t size)
     {
         size -= 2; // Extra symbols
-        double step = 1. / size;
+        double length = progress * size, filled_length = 0;
+        modf(length, &filled_length);
+        uint8_t idx = std::floor((length - filled_length) * bars.size());
         std::stringstream ss;
-        ss << "[";
+
+        ss << borders.first;
         for (size_t i = 0; i < size; i++) {
-            if (i == (int)(progress * size)) ss << bars[2];
-            else if (i < progress * size) ss << bars[1];
+            if (i < filled_length) ss << bars[bars.size() - 1];
+            else if (i == filled_length) ss << bars[idx];
             else ss << bars[0];
         }
-        ss << "]";
+        ss << borders.second;
+
         return ss.str();
     }
 
@@ -49,12 +58,23 @@ private:
         std::stringstream ss;
         ss.width(_total_str_width);
         ss << current << " / " << total;
-        if (current - start) ss << " (" << get_time_per_it() << " s/it)";
+        if (current - start) {
+            double time_per_it = get_time_per_it();
+            size_t time_passed = std::chrono::duration_cast<std::chrono::seconds>(t_current - t_start).count();
+            size_t total_time_prediction = time_passed / get_progress();
+            ss << " [";
+            ss << std::setfill('0') << std::setw(2) << (time_passed / 60) << ":" << std::setw(2) << (time_passed % 60) << "<"
+                << std::setw(2) << (total_time_prediction / 60) << ":" << std::setw(2) << (total_time_prediction % 60) << " ";
+
+            if (time_per_it > time_threshold) ss << round(time_per_it, time_presicion) << " s/it";
+            else ss << round(1. / time_per_it, time_presicion) << " it/s";
+            ss << "]";
+        }
         return ss.str();
     }
 public:
-    explicit Progress(size_t total, size_t start = 0, uint8_t totalWidth = 70)
-            : total(total), start(start), current(start), totalWidth(totalWidth) {
+    explicit Progress(size_t total, size_t start = 0, uint8_t barWidth = 50)
+            : total(total), start(start), current(start), barWidth(barWidth) {
         _total_str_width = std::to_string(total).size();
         draw();
     }
@@ -76,9 +96,12 @@ public:
     void draw() {
         if (!is_working) return;
 
-        std::string info = get_info();
-        uint8_t barWidth = totalWidth - info.size() - 1;
-        std::cout << bar_string(get_progress(), barWidth) << " " << info << "\r";
+        std::stringstream ss;
+        ss << bar_string(get_progress(), barWidth) << " " << get_info();
+        std::string result = ss.str();
+        max_width = std::max((uint8_t)result.size(), max_width);
+        std::cout << result << std::string(max_width - result.size(), ' ') << "\r";
+        //std::cout << bar_string(get_progress(), barWidth) << " " << info << "\r";
         std::cout.flush();
     }
 };
