@@ -7,4 +7,9 @@
 
 #include "data_representation/color.h"
 
-color find_contrast_color(color initial_color);
+
+
+template <class ColorDataType>
+rgb_color<ColorDataType> find_contrast_color (rgb_color<ColorDataType> initial_color);
+
+

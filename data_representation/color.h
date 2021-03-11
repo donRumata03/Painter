@@ -67,6 +67,7 @@ struct rgb_color
     template<class Type> friend bool operator >= (const rgb_color<Type>&, const rgb_color<Type>&);
 };
 
+
 /// RGB_color Constructors and conversions to other color types:
 template < class T >
 std::vector<T> rgb_color<T>::to_vector () const
@@ -261,12 +262,32 @@ struct rgba_color
 	r, g, b, a;
 };
 
-using color = rgb_color<double>;
 using Pixel = cv::Point3_<double>;
-// using color = rgba_color;
+using byte_Pixel = cv::Point3_<uint8_t>;
+
+
+/// Color traits for template programming:
 
 using byte_color = rgb_color<uint8_t>;
-using byte_Pixel = cv::Point3_<uint8_t>;
+using color = rgb_color<double>;
+
+
+template <class ColorType>
+struct ColorTraits {};
+
+template <> struct ColorTraits<rgb_color<double>>
+{
+	static constexpr double min = 0.;
+	static constexpr double max = 1.;
+	static constexpr double middle = 0.5;
+};
+
+template <> struct ColorTraits<rgb_color<uint8_t>>
+{
+	static constexpr uint8_t min = 0;
+	static constexpr uint8_t max = 255;
+	static constexpr uint8_t middle = 127;
+};
 
 
 
