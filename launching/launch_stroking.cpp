@@ -18,7 +18,7 @@ static inline void save_log_json(const std::vector<colored_stroke>& strokes,
 {
     json j = PaintPlan(strokes);
     std::ofstream json_file(filepath);
-    json_file << j;
+    json_file << j.dump(1, '\t');
     json_file.close();
 }
 
@@ -88,7 +88,7 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
 	              << major_color << " the one, contrast to it, is " << canvas_color << ". It's taken to be canvas color" << std::endl;
 
 		this_common_params.stroke_color = major_color;
-	    this_common_params.canvas_color = canvas_color;
+	    // this_common_params.canvas_color = canvas_color;
 	    this_common_params.use_constant_color = true;
     }
 
