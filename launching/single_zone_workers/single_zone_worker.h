@@ -53,7 +53,7 @@ struct CommonStrokingParams
 	double move_mutation_probability = 0.2;
 	double logging_percentage = 0.00;
 
-	///
+	/// Colors:
 	color canvas_color = { 0., 0., 0. };
 
 	bool use_constant_color = false;

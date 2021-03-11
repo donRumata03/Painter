@@ -10,7 +10,7 @@
 #include "data_representation/paint_plan.h"
 #include "utils/Progress.h"
 #include <common_operations/find_major_image_color.h>
-
+#include <optimization/contrast_color_finding.h>
 
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes,
@@ -76,12 +76,21 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
 	Image image = open_image(filename);
 	std::cout << "[launch_single_zone_annealing]: Opened image at " << filename << std::endl;
 	color major_color;
-	if (auto_find_color) {
-		major_color = find_major_image_color(image);
-	}
 
     CommonStrokingParams this_common_params = default_stroking_parameters;
-    AnnealingStrokingParams this_annealing_params = default_annealing_params;
+    if (auto_find_color) {
+	    major_color = find_major_image_color(image);
+	    color contrast_color = find_contrast_color(major_color);
+
+	    std::cout << "[launch_single_zone_annealing]: Found major color for the image: "
+	        << major_color << " the one, contrast to it, is " << contrast_color << ". It's taken to be canvas color" << std::endl;
+
+		this_common_params.stroke_color = major_color;
+		this_common_params.canvas_color = contrast_color;
+    } /// TODO: Doesn't work
+
+	AnnealingStrokingParams this_annealing_params = default_annealing_params;
+
 
     AnnealingWorker worker(image, this_common_params, this_annealing_params);
     std::cout << "[launch_single_zone_annealing]: initialized AnnealingWorker => Running the iterations…" << std::endl;
