@@ -35,7 +35,7 @@ std::unordered_set<rgb_color<uint8_t>> get_unique_colors (const Image &img)
 {
 	std::unordered_set<rgb_color<uint8_t>> res;
 
-	img.forEach<cv::Vec3b>([&](cv::Vec3b& pixel, const int position[]){
+	img.forEach<byte_Pixel>([&](byte_Pixel& pixel, const int position[]){
 		byte_color this_color(RGB_Vec(), pixel);
 		res.insert(this_color);
 	});

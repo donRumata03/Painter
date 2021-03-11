@@ -44,7 +44,7 @@ struct rgb_color
 	explicit rgb_color(const cv::Point3_<T>& cv_point);
 
 	cv::Vec<T, 3> to_OpenCV_Vec3() const;
-	cv::Scalar to_OpenCV_Scalar() const;
+	[[nodiscard]] cv::Scalar to_OpenCV_Scalar() const;
 	std::vector<T> to_vector() const;
 	std::array<T, 3> to_array() const;
 
@@ -65,6 +65,9 @@ struct rgb_color
     template<class Type> friend bool operator > (const rgb_color<Type>&, const rgb_color<Type>&);
     template<class Type> friend bool operator <= (const rgb_color<Type>&, const rgb_color<Type>&);
     template<class Type> friend bool operator >= (const rgb_color<Type>&, const rgb_color<Type>&);
+
+
+	double brightness();
 };
 
 
@@ -226,6 +229,12 @@ template < class T >
 const T &rgb_color<T>::operator[] (size_t index) const
 {
 	return const_cast<const T&>(const_cast<rgb_color<T>*>(this)->operator[](index));
+}
+
+template <class T>
+double rgb_color<T>::brightness ()
+{
+	return r * 0.3 + g * 0.59 + b * 0.11;
 }
 
 // To be able to put it into hash tables:

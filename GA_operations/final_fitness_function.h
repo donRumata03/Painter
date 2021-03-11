@@ -143,6 +143,7 @@ public:
 				pixel.y = this_canvas_color.g;
 				pixel.z = this_canvas_color.b;
 			});
+			cv::setNumThreads(-1); // Reset to system defaults
 		};
 
 		clean_up_image(this_buffer);

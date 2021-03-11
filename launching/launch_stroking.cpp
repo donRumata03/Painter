@@ -9,6 +9,9 @@
 #include "common_operations/image_adaptive_params.h"
 #include "data_representation/paint_plan.h"
 #include "utils/Progress.h"
+#include <common_operations/find_major_image_color.h>
+
+
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes,
                                  const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
@@ -67,11 +70,15 @@ void launch_multizone_GA (const std::string& filename)
 }
 
 
-void launch_single_zone_annealing(const std::string& filename) {
+void launch_single_zone_annealing(const std::string& filename, bool auto_find_color) {
     std::cout << "Launching single zone annealing…" << std::endl;
 
 	Image image = open_image(filename);
 	std::cout << "[launch_single_zone_annealing]: Opened image at " << filename << std::endl;
+	color major_color;
+	if (auto_find_color) {
+		major_color = find_major_image_color(image);
+	}
 
     CommonStrokingParams this_common_params = default_stroking_parameters;
     AnnealingStrokingParams this_annealing_params = default_annealing_params;

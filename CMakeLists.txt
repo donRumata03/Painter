@@ -135,7 +135,7 @@ add_executable(Painter
         vector_graphics/SVG_service.h
 
         utils/Progress.h
-        optimization/contrast_color_finding.cpp optimization/contrast_color_finding.h)
+        optimization/contrast_color_finding.cpp optimization/contrast_color_finding.h common_operations/find_major_image_color.cpp common_operations/find_major_image_color.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

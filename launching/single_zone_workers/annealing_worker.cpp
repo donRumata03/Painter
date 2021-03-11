@@ -63,7 +63,7 @@ void AnnealingWorker::run_remaining_iterations ()
 				},
 				configured_generator,
 				configured_mutator,
-				default_exp_temperature_dynamic,
+				custom_exp_temperature_dynamic(1.2),
 				true,
 				nullptr,
 				nullptr,

@@ -29,7 +29,7 @@ using multizone_annealing_worker = MultizoneLaunchWrapper<AnnealingWorker>;
 void launch_single_zone_GA (const std::string &filename);
 void launch_multizone_GA (const std::string &filename);
 
-void launch_single_zone_annealing(const std::string& filename);
+void launch_single_zone_annealing(const std::string& filename, bool auto_find_color);
 void launch_multizone_annealing(const std::string& filename);
 
 template<class WorkerType>

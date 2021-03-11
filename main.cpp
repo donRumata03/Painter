@@ -101,7 +101,7 @@ int main ()
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
 
 
-	const auto& image_path = zone_example_path;
+	const auto& image_path = circle_path;
 	std::cout << "Image Path: " << image_path << std::endl;
 
 	/// SVG management:
@@ -109,7 +109,7 @@ int main ()
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-    launch_single_zone_annealing(image_path);
+    launch_single_zone_annealing(image_path, true);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);
