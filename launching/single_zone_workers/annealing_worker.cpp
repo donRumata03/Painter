@@ -66,7 +66,7 @@ void AnnealingWorker::run_remaining_iterations ()
 				configured_generator,
 				configured_mutator,
 				custom_exp_temperature_dynamic(0.2),
-				true,
+				enable_console_output,
 				nullptr,
 				nullptr,
 				nullptr,

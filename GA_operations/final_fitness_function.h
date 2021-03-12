@@ -137,13 +137,11 @@ public:
 		auto this_canvas_color = canvas_color;
 
 		auto clean_up_image = [this_canvas_color](Image& image_to_clean_up){
-			cv::setNumThreads(0);
 			image_to_clean_up.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
 				pixel.x = this_canvas_color.r;
 				pixel.y = this_canvas_color.g;
 				pixel.z = this_canvas_color.b;
 			});
-			cv::setNumThreads(-1); // Reset to system defaults
 		};
 
 		clean_up_image(this_buffer);

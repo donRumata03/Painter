@@ -217,7 +217,11 @@ void SvgZoneLauncher<OptimizerType>::run ()
 {
     zone_progress.emplace(zone_number);
 	if(is_threaded) {
+	    cv::setNumThreads(0);
+
 		thread_pool.compute();
+
+		cv::setNumThreads(-1); // Reset to system defaults
 	} else {
 		// Just do all the work with this particular thread:
 		worker_function(0);
