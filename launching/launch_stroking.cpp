@@ -9,7 +9,7 @@
 #include "common_operations/image_adaptive_params.h"
 #include "data_representation/paint_plan.h"
 #include "utils/Progress.h"
-#include <common_operations/find_major_image_color.h>
+#include <common_operations/image_color_deduction.h>
 #include <optimization/contrast_color_finding.h>
 
 

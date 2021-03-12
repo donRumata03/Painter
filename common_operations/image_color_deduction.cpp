@@ -2,7 +2,7 @@
 // Created by Vova on 11.03.2021.
 //
 
-#include "find_major_image_color.h"
+#include "image_color_deduction.h"
 
 
 /// As for now assume that that major color is the brightest
@@ -75,4 +75,47 @@ color find_major_image_color (const Image& image, double minimal_allowed_percent
 
 
 	return res;
+}
+
+color find_image_background_color (const Image& image, double max_can_be_non_background_color)
+{
+	/// Goes though image's borders and look at their colors
+
+
+	std::vector<color> colors_noticed;
+
+	// Horizontal rows
+	for (size_t x = 0; x < image.cols; ++x) {
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(0, x); );
+	}
+	for (size_t x = 0; x < image.cols; ++x) {
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(image.rows - 1, x); );
+	}
+
+	for (size_t y = 0; y < image.cols; ++y) {
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, 0); );
+	}
+	for (size_t y = 0; y < image.cols; ++y) {
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, image.cols - 1) );
+	}
+
+	auto distr = make_Counter(colors_noticed);
+
+	color most_frequent_color{};
+	size_t highest_frequency = 0;
+
+	for (auto& this_col : distr) {
+		if (this_col.second > highest_frequency) {
+			most_frequent_color = this_col.first;
+			highest_frequency = this_col.second;
+		}
+	}
+
+	size_t total_pixels_viewed = colors_noticed.size();
+	if (double(highest_frequency) >= total_pixels_viewed * (1 - max_can_be_non_background_color)) {
+		std::cout << "[find_image_background_color]: Background's frequency: " << double(highest_frequency) / double(total_pixels_viewed) << std::endl;
+		return most_frequent_color;
+	}
+
+	throw std::runtime_error("Can't find background color: no one is frequent enough!");
 }
