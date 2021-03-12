@@ -17,7 +17,7 @@ public:
                 const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest" / "svg");
 
     void split_paths();
-    bool load_current_image(cv::Mat& img);
+    bool load_current_image(cv::Mat& img) const;
 
 	template<class StrokeType>
     void shift_strokes_to_current_box(std::vector<StrokeType>& strokes);
@@ -29,14 +29,14 @@ public:
     [[nodiscard]] size_t get_it() const { return it; }
     [[nodiscard]] size_t get_shapes_count() const { return shapes_count; }
 
-    void set_iterator(size_t desired_iterator_value) { it = desired_iterator_value; }
-    void next() { ++it; }
-    void previous() { --it; }
-    void restart() { it = 0; }
+    void set_iterator(size_t desired_iterator_value) const { it = desired_iterator_value; }
+    void next() const { ++it; }
+    void previous() const { --it; }
+    void restart() const { it = 0; }
 
 private:
     cv::Mat get_raster_image(const lunasvg::SVGDocument& doc);
-    std::string get_shape_path(size_t i);
+    std::string get_shape_path(size_t i) const;
 
     cv::Rect get_shape_bounds(const cv::Mat& img);
     cv::Rect gomothety_bounds(const cv::Rect& bounds, double coeff);
@@ -49,6 +49,7 @@ private:
     const static std::regex color_regex;
     const static std::regex path_regex;
 
+private:
     lunasvg::SVGDocument svg;
     std::vector<cv::Rect> boxes;
     std::vector<color> colors;
@@ -56,7 +57,7 @@ private:
 
     bool is_logging;
     fs::path logging_path;
-    size_t it = 0;
+    mutable size_t it = 0;
     size_t shapes_count = 0;
 };
 

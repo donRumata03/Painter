@@ -78,7 +78,7 @@ void SVG_service::split_paths() {
     if (is_logging) std::cout << "[SVG_service] Splited image into " << shapes_count << " parts." << std::endl;
 }
 
-bool SVG_service::load_current_image(cv::Mat &img) {
+bool SVG_service::load_current_image(cv::Mat &img) const {
     auto path = get_shape_path(it);
     if (it >= shapes_count || !fs::exists(path)) {
         return false;
@@ -103,7 +103,7 @@ cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc) {
     return img;
 }
 
-std::string SVG_service::get_shape_path(size_t i) {
+std::string SVG_service::get_shape_path(size_t i) const {
 	return (fs::path{ logging_path } / ("path" + std::to_string(i) + ".png")).string();
 //    std::stringstream ss;
 //    ss << logging_path << "/" << "path" << i << ".png";
