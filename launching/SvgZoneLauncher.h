@@ -166,7 +166,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 
 			this_params.stroke_number = calc_strokes_count(
 					this_zone_image, cv::Size { initial_image.rows, initial_image.cols },
-					this->stroking_params.stroke_number, nullptr);
+					this->stroking_params.stroke_number, stroking_params.canvas_color);
 
 			auto this_color = svg_manager->get_current_color();
 			this_params.use_constant_color = true;
