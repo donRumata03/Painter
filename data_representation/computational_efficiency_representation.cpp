@@ -4,7 +4,7 @@
 
 #include "computational_efficiency_representation.h"
 
-auto ComputationalEfficiencyRepresentation::operator+ (const ComputationalEfficiencyRepresentation& other) const
+ComputationalEfficiencyRepresentation ComputationalEfficiencyRepresentation::operator+ (const ComputationalEfficiencyRepresentation& other) const
 {
 	return ComputationalEfficiencyRepresentation {
 			computations_performed + other.computations_performed,

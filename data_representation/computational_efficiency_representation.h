@@ -19,7 +19,7 @@ struct ComputationalEfficiencyRepresentation
 	void print_diagnostic_information() const;
 
 
-	auto operator+ (const ComputationalEfficiencyRepresentation& other) const;
+	ComputationalEfficiencyRepresentation operator+ (const ComputationalEfficiencyRepresentation& other) const;
 };
 
 

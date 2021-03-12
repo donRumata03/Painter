@@ -181,8 +181,8 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 		{
 			/// Acquire mutex to save the data collected:
 			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
-            // TODO
-//			efficiency_account = efficiency_account + optimizer->get_efficiency_account();
+
+			efficiency_account = efficiency_account + optimizer->get_efficiency_account();
 //			total_computations += optimizer->computations_performed();
 //			total_time_spent_counting += optimizer->time_spent_counting();
 
