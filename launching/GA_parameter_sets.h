@@ -35,7 +35,7 @@ inline auto default_GA_params = GA_stroking_parameters {
 inline auto default_annealing_params = AnnealingStrokingParams {
 		.iterations = 5000,
 
-		.typical_temperature = 1e-3, // 1e-2,
+		.typical_temperature = 2e-4, // 1e-2,
 		.gene_mutation_fraction = 0.1,
 };
 

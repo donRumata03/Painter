@@ -173,7 +173,8 @@ void launch_svg_stroking(const std::string &filename) {
         color cur_color = service.get_current_color();
 
         auto cur_params = common_params;
-        cur_params.stroke_number = calc_strokes_count(image, original_size, common_params.stroke_number);
+        // cur_params.canvas_color = find_contrast_color(cur_color); // TODO: apply this string
+        cur_params.stroke_number = calc_strokes_count(image, original_size, common_params.stroke_number, cur_params.canvas_color);
         cur_params.use_constant_color = true;
         cur_params.stroke_color = cur_color;
 

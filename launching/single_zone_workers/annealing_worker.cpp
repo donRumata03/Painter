@@ -89,7 +89,7 @@ void AnnealingWorker::show_fitness_dynamic ()
 
 	add_vectors_to_plot(xs_to_plot, current_ys, { .name = "MSE Dynamic of current genome" });
 	add_vectors_to_plot(xs_to_plot, best_ys, { .name = "MSE Dynamic of best genome since the beginning" });
-	show_plot({ .window_title =  "MSE Dynamic" });
+	show_plot({ .log_y = true, .window_title =  "MSE Dynamic" });
 }
 
 //double AnnealingWorker::average_computation_time_seconds () const

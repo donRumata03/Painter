@@ -2,7 +2,7 @@
 #include "io_api/image_io_utils.h"
 
 
-size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, const size_t max_strokes)
+size_t calc_strokes_count (const cv::Mat& img, const cv::Size& size, size_t max_strokes, color canvas_color)
 {
     cv::Mat gray, thresh, u_img = convert_image_from_floating_point(img);
     cv::cvtColor(u_img, gray, cv::COLOR_BGR2GRAY);
@@ -21,7 +21,7 @@ size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, const size_t
  */
 double estimate_stroke_complexity (ZoneComplexityDescriptor zone_descriptor)
 {
-	// TODO: test
+	// TODO: test me ! ;(
 
 	/// HyperParameters:
 	constexpr double max_perimeter_contribution = 1.75; /// Is essentially an asymptote of the relative perimeter contribution

@@ -16,6 +16,7 @@
 #include <tests/image_splitting_test.h>
 #include <tests/strokes_to_json_tests.h>
 #include <tests/svg_service_test.h>
+#include <tests/area_counting_test.h>
 #include "tests/opencv_test.h"
 
 
@@ -30,12 +31,33 @@ int main ()
 {
 	signal(SIGSEGV, posix_death_signal);
 
-    // system(("chcp "s + std::to_string(CP_UTF8)).c_str());
-
     set_utf8_in_console();
 
     std::cout << console_colors::green << "Welcome to Painter™!" << console_colors::remove_all_colors << std::endl;
     std::cout << "Using up to " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
+
+    /// Example Paths:
+	std::string coffee_path = (fs::path(painter_base_path) / "images_for_testing" / "brown_coffee.png").string();
+	std::string van_gogh_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.jpg").string();
+	std::string van_gogh_beard_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh-beard.png").string();
+
+	std::string one_stroke_path = (fs::path(painter_base_path) / "images_for_testing" / "one_stroke.png").string();
+
+	std::string circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle.png").string();
+	std::string cutted_circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle_cutted.png").string();
+	std::string moon_path = (fs::path(painter_base_path) / "images_for_testing" / "moon.png").string();
+	std::string cutted_moon_path = (fs::path(painter_base_path) / "images_for_testing" / "cutted_moon.png").string();
+	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
+
+	std::string simple_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "simple.svg").string();
+	std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
+
+	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
+
+
+	const auto& image_path = cutted_circle_path;
+	std::cout << "Example Image Path: " << image_path << std::endl;
+
 
 	/// IO tests:
 
@@ -55,6 +77,9 @@ int main ()
 	// test_stroke_derivative_counting();
 	// test_length_function_by_comparing_with_derivative();
 	// test_stroke_scaling();
+
+	test_painted_area_counting();
+	// test_painted_figures_perimeters_counting();
 
 	/// Rasterization:
 	// test_stroke_rasterizaton();
@@ -84,33 +109,13 @@ int main ()
 	// generate_stoke_image_example();
 
 	/// The actual GA:
-	std::string coffee_path = (fs::path(painter_base_path) / "images_for_testing" / "brown_coffee.png").string();
-	std::string van_gogh_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.jpg").string();
-	std::string van_gogh_beard_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh-beard.png").string();
-
-	std::string one_stroke_path = (fs::path(painter_base_path) / "images_for_testing" / "one_stroke.png").string();
-
-	std::string circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle.png").string();
-	std::string cutted_circle_path = (fs::path(painter_base_path) / "images_for_testing" / "circle_cutted.png").string();
-	std::string moon_path = (fs::path(painter_base_path) / "images_for_testing" / "moon.png").string();
-	std::string cutted_moon_path = (fs::path(painter_base_path) / "images_for_testing" / "cutted_moon.png").string();
-	std::string half_ring_path = (fs::path(painter_base_path) / "images_for_testing" / "half_ring.png").string();
-
-    std::string simple_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "simple.svg").string();
-    std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
-
-	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
-
-
-	const auto& image_path = cutted_circle_path;
-	std::cout << "Image Path: " << image_path << std::endl;
 
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-    launch_single_zone_annealing(image_path, true);
+	// launch_single_zone_annealing(image_path, true);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

@@ -1,10 +1,11 @@
 #pragma once
 
+#include <data_representation/color.h>
 #include "painter_pch.h"
 
 /// Dummy computing:
 
-size_t calc_strokes_count(const cv::Mat& img, const cv::Size& size, size_t max_strokes);
+size_t calc_strokes_count (const cv::Mat& img, const cv::Size& size, size_t max_strokes, color canvas_color);
 
 /// Smart computing (taking the «difficulty» of the region into account):
 
