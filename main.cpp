@@ -55,9 +55,9 @@ int main ()
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
 
 
-	const auto& image_path = cutted_circle_path;
+	const auto& image_path = zone_example_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
-
+	std::cout << "______________________________________________" << std::endl;
 
 	/// IO tests:
 
@@ -78,7 +78,7 @@ int main ()
 	// test_length_function_by_comparing_with_derivative();
 	// test_stroke_scaling();
 
-	test_painted_area_counting();
+	// test_painted_area_counting();
 	// test_painted_figures_perimeters_counting();
 
 	/// Rasterization:
@@ -115,7 +115,7 @@ int main ()
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-	// launch_single_zone_annealing(image_path, true);
+	launch_single_zone_annealing(image_path, true);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

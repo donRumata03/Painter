@@ -1,14 +1,15 @@
 #include "image_adaptive_params.h"
 #include "io_api/image_io_utils.h"
+#include "figure_area_and_perimeter.h"
 
 
 size_t calc_strokes_count (const cv::Mat& img, const cv::Size& size, size_t max_strokes, color canvas_color)
 {
-    cv::Mat gray, thresh, u_img = convert_image_from_floating_point(img);
-    cv::cvtColor(u_img, gray, cv::COLOR_BGR2GRAY);
-    cv::threshold(gray, thresh, 0, 1, cv::THRESH_BINARY);
+//    cv::Mat gray, thresh, u_img = convert_image_from_floating_point(img);
+//    cv::cvtColor(u_img, gray, cv::COLOR_BGR2GRAY);
+//    cv::threshold(gray, thresh, 0, 1, cv::THRESH_BINARY);
 
-    size_t pixels = cv::sum(thresh)[0];
+    size_t pixels = painted_pixel_number(img, canvas_color);
     return std::max(max_strokes * (pixels / (double)(size.width * size.height)), 1.);
 }
 
