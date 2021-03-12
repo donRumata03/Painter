@@ -6,6 +6,6 @@
 
 #include "io_api/image_io_utils.h"
 
-color find_major_image_color(const Image& image);
+color find_major_image_color (const Image& image, double minimal_allowed_percentage = 0.1);
 
 

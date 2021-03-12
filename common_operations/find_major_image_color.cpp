@@ -6,20 +6,73 @@
 
 
 /// As for now assume that that major color is the brightest
-// TODO: think something more clever out?
-color find_major_image_color (const Image& image)
+/// among colors, that cover >= image_size * p, p ∈ (0, 1) and are non-background (don't have ALL the corner pixels)
+
+color find_major_image_color (const Image& image, double minimal_allowed_percentage)
 {
+	size_t image_area = image.cols * image.rows;
+	auto minimal_allowed_pixels_for_zone = size_t(std::ceil(minimal_allowed_percentage * image_area));
+
+	std::vector<color> color_list;
+
+	cv::setNumThreads(0);
+	image.forEach<Pixel>([&color_list](Pixel& pixel, const int position[]){
+		auto this_col = color{pixel};
+
+		color_list.push_back(this_col);
+
+		//		auto this_brightness = this_col.brightness();
+//		if (this_brightness > current_brightness) {
+//			res = this_col;
+//			current_brightness = this_brightness;
+//		}
+	});
+	cv::setNumThreads(-1);
+
+	auto pixel_color_distribution = make_Counter(color_list);
+
+	std::vector<std::pair<color, size_t>> widely_spread_enough_pixel_color_distribution;
+	std::copy_if(pixel_color_distribution.begin(), pixel_color_distribution.end(), widely_spread_enough_pixel_color_distribution.begin(),
+			  [minimal_allowed_pixels_for_zone](const std::pair<color, size_t>& item){
+		return item.second >= minimal_allowed_pixels_for_zone;
+	});
+
+	std::vector<std::pair<color, size_t>> non_background_color_data;
+	std::copy_if(widely_spread_enough_pixel_color_distribution.begin(), widely_spread_enough_pixel_color_distribution.end(), non_background_color_data.begin(),
+			  [&image](const std::pair<color, size_t> color_descriptor){
+		/// The color is considered background only if all the 4 image's corners have that color
+		auto col = color_descriptor.first;
+
+		return
+				col != color{ image.at<cv::Vec3d>(0, 0) } ||
+				col != color{ image.at<cv::Vec3d>(0, image.rows) } ||
+				col != color{ image.at<cv::Vec3d>(image.cols, 0) } ||
+				col != color{ image.at<cv::Vec3d>(image.cols, image.rows) }
+		;
+	});
+
+
+	if(non_background_color_data.empty()) {
+		throw std::runtime_error("There are no colors satisfying requirements => can't find proper «major color»");
+	}
+
+	/// Sort by covered area (covered area is increasing):
+	std::sort(non_background_color_data.begin(), non_background_color_data.end(), [](auto p1, auto p2){ return p1.second > p2.second; });
+
+
+	/// Select the brightest of colors left:
 	color res = { 0., 0., 0. };
 	double current_brightness = 0;
 
-	image.forEach<Pixel>([&res, &current_brightness](Pixel& pixel, const int position[]){
-		auto this_col = color{pixel};
-		auto this_brightness = this_col.brightness();
+	for (auto& col : non_background_color_data) {
+		double this_brightness = col.first.brightness();
+
 		if (this_brightness > current_brightness) {
-			res = this_col;
+			res = col.first;
 			current_brightness = this_brightness;
 		}
-	});
+	}
+
 
 	return res;
 }
