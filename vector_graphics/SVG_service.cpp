@@ -100,7 +100,7 @@ bool SVG_service::load_current_image(cv::Mat &img) const {
 
 
 
-cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc, size_t width, size_t height) {
+cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc, size_t width, size_t height) const {
     auto bitmap = doc.renderToBitmap(width, height);
     width = bitmap.width();
     height = bitmap.height();

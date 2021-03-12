@@ -55,7 +55,7 @@ int main ()
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
 
 
-	const auto& image_path = zone_example_path;
+	const auto& image_path = van_gogh_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
 	std::cout << "______________________________________________" << std::endl;
 

@@ -86,14 +86,14 @@ color find_image_background_color (const Image& image, double max_can_be_non_bac
 
 	// Horizontal rows
 	for (size_t x = 0; x < image.cols; ++x) {
-		colors_noticed.emplace_back( image.at<cv::Vec3d>(0, x); );
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(0, x) );
 	}
 	for (size_t x = 0; x < image.cols; ++x) {
-		colors_noticed.emplace_back( image.at<cv::Vec3d>(image.rows - 1, x); );
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(image.rows - 1, x) );
 	}
 
 	for (size_t y = 0; y < image.cols; ++y) {
-		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, 0); );
+		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, 0) );
 	}
 	for (size_t y = 0; y < image.cols; ++y) {
 		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, image.cols - 1) );

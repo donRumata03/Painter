@@ -80,12 +80,15 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
 
 	color major_color {};
 	color canvas_color {};
+	color background_color {};
     if (auto_find_color) {
 	    major_color = find_major_image_color(image);
 	    canvas_color = find_contrast_color(major_color);
+		background_color = find_image_background_color(image);
 
 	    std::cout << "[launch_single_zone_annealing]: Found major color for the image: "
 	              << major_color << " the one, contrast to it, is " << canvas_color << ". It's taken to be canvas color" << std::endl;
+		std::cout << "[launch_single_zone_annealing]: Original Image's background color is " << background_color << std::endl;
 
 		this_common_params.stroke_color = major_color;
 	    // this_common_params.canvas_color = canvas_color;
