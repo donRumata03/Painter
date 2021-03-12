@@ -9,11 +9,12 @@
 
 #include "painter_pch.h"
 #include "data_representation/stroke.h"
+#include "data_representation/canvas.h"
 
 class SVG_service {
 public:
     SVG_service() = default;
-    explicit SVG_service(const fs::path& filepath, bool is_logging = true,
+    explicit SVG_service(const fs::path& filepath, const Canvas& canvas = Canvas(300, 400), bool is_logging = true,
                 const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest" / "svg");
 
     void split_paths();
@@ -22,7 +23,13 @@ public:
 	template<class StrokeType>
     void shift_strokes_to_current_box(std::vector<StrokeType>& strokes);
 
-    cv::Mat get_raster_original_image() { return get_raster_image(svg); }
+    template<class StrokeType>
+    void shift_strokes_to_canvas(std::vector<StrokeType>& strokes);
+
+    template<class StrokeType>
+    void transform_strokes_into_mm(std::vector<StrokeType>& strokes);
+
+    cv::Mat get_raster_original_image() { return get_raster_image(svg, transform->scale_factor * borders.width, transform->scale_factor * borders.height); }
     [[nodiscard]] cv::Rect get_borders() const { return borders; }
     [[nodiscard]] color get_current_color() const { return colors[it]; }
 
@@ -35,7 +42,7 @@ public:
     void restart() { it = 0; }
 
 private:
-    cv::Mat get_raster_image(const lunasvg::SVGDocument& doc);
+    cv::Mat get_raster_image(const lunasvg::SVGDocument& doc, size_t width = 0, size_t height = 0);
     std::string get_shape_path(size_t i);
 
     cv::Rect get_shape_bounds(const cv::Mat& img);
@@ -54,6 +61,9 @@ private:
     std::vector<color> colors;
     cv::Rect borders;
 
+    std::optional<Canvas> canvas;
+    std::optional<TransformImageData> transform;
+
     bool is_logging;
     fs::path logging_path;
     size_t it = 0;
@@ -63,10 +73,24 @@ private:
 
 template<class StrokeType>
 void SVG_service::shift_strokes_to_current_box(std::vector<StrokeType>& strokes) {
-	point shifting_vector(boxes[it].x, boxes[it].y);
+	point shifting_vector(transform->scale_factor * boxes[it].x, transform->scale_factor * boxes[it].y);
 	for (auto& stroke : strokes) {
 		shift_stroke(stroke, shifting_vector);
 	}
+}
+
+template<class StrokeType>
+void SVG_service::shift_strokes_to_canvas(std::vector<StrokeType>& strokes) {
+    for (auto& stroke : strokes) {
+        shift_stroke(stroke, transform->move_vector);
+    }
+}
+
+template<class StrokeType>
+void SVG_service::transform_strokes_into_mm(std::vector<StrokeType>& strokes) {
+    for (auto& stroke : strokes) {
+        scale_stroke(stroke, 1. / canvas->dpi() * MM_PER_INCH);
+    }
 }
 
 #endif //PAINTER_SVG_SERVICE_H

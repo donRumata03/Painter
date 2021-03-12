@@ -14,7 +14,7 @@
 
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes,
-                                 const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "result.json")
+                                 const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "plan.json")
 {
     json j = PaintPlan(strokes);
     std::ofstream json_file(filepath);
@@ -124,7 +124,7 @@ void launch_multizone_annealing(const std::string& filename) {
 
 
 template<class WorkerType>
-void launch_svg_zone_stroking(const std::string& filename)
+void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
 {
 	std::cout << "Launching SVG zoned stroking…" << std::endl;
 
@@ -132,20 +132,28 @@ void launch_svg_zone_stroking(const std::string& filename)
     //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
     std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();
 
-    SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), not CanBeParallelized<WorkerType>::value);
+    SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), canvas, not CanBeParallelized<WorkerType>::value);
 
     launcher.run();
-    auto strokes = launcher.get_final_strokes();
 
     // View result
+    // Full size, only result
     auto size = launcher.get_image_size();
     Image result = make_default_image(size.width, size.height);
+    auto strokes = launcher.get_final_strokes();
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
     std::cout << "[Launch] Result: " << strokes.size() << " strokes." << std::endl;
 
+    // Full size, result on canvas (in px)
+    Image result_mm = make_default_image(canvas.width(), canvas.height());
+    rasterize_strokes(result_mm, launcher.get_final_strokes(PX, true));
+    save_image(result_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
+
     // Save strokes
-    save_log_json(strokes);
+    save_log_json(launcher.get_final_strokes(MM, true));
+    save_log_json(launcher.get_final_strokes(PX, true),
+                  fs::path(painter_base_path) / "log" / "latest" / "plan_px.json");
 
     show_image_in_system_viewer(result);
 }
@@ -206,5 +214,5 @@ void launch_svg_stroking(const std::string &filename) {
     show_image_in_system_viewer(result);
 }
 
-template void launch_svg_zone_stroking<GA_worker>(const std::string& filename);
-template void launch_svg_zone_stroking<AnnealingWorker>(const std::string& filename);
+template void launch_svg_zone_stroking<GA_worker>(const std::string& filename, const Canvas& canvas);
+template void launch_svg_zone_stroking<AnnealingWorker>(const std::string& filename, const Canvas& canvas);

@@ -11,6 +11,7 @@
 bool fits_into(const stroke& stroke, const RangeRectangle<double>& rectangle);
 
 void shift_stroke (stroke& stroke, const point& shifting_vector);
+void scale_stroke (stroke& stroke, double factor);
 
 /// After these operations the stroke will be in the boundary of the rectangle:
 void brute_constrain_stroke_to_fit_into_rect(stroke& stroke, const RangeRectangle<double>& rectangle);      // Croped

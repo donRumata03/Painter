@@ -55,8 +55,10 @@ int main ()
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
 
 
-	const auto& image_path = cutted_circle_path;
+	const auto& image_path = van_gogh_svg_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
+
+	Canvas canvas(300, 400, 96);
 
 
 	/// IO tests:
@@ -78,7 +80,7 @@ int main ()
 	// test_length_function_by_comparing_with_derivative();
 	// test_stroke_scaling();
 
-	test_painted_area_counting();
+	// test_painted_area_counting();
 	// test_painted_figures_perimeters_counting();
 
 	/// Rasterization:
@@ -108,22 +110,20 @@ int main ()
 	// launch_stroke_constraining_visualizing_test();
 	// generate_stoke_image_example();
 
-	/// The actual GA:
-
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-	// launch_single_zone_annealing(image_path, true);
+    // launch_single_zone_annealing(image_path, true);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);
 
     /// SVG launch:
     // launch_svg_stroking(image_path);
-    // launch_svg_zone_stroking<GA_worker>(image_path);
-    // launch_svg_zone_stroking<AnnealingWorker>(image_path);
+    launch_svg_zone_stroking<GA_worker>(image_path, canvas);
+    // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
 	return 0;
 }

@@ -24,6 +24,14 @@ void shift_stroke (stroke &stroke, const stroke::Point &shifting_vector)
 	shift_point(stroke.p2, shifting_vector);
 }
 
+void scale_stroke(stroke &stroke, double factor) {
+    stroke.p0 = stroke.p0 * factor;
+    stroke.p1 = stroke.p1 * factor;
+    stroke.p2 = stroke.p2 * factor;
+    stroke.width *= factor;
+}
+
+
 double get_best_shift(const std::pair<double, double>& target_coords, const std::pair<double, double>& rect_coords, double randomness_coefficient = 0.1) {
 	// assert(target_coords.second > target_coords.first);
 	// assert(rect_coords.second > rect_coords.first);
@@ -102,4 +110,3 @@ void constrain_stroke_size_parameters (stroke &stroke,
 			                 // Width
 	stroke.width = std::clamp(stroke.width, min_width, max_width);
 }
-

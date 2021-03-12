@@ -10,9 +10,9 @@
 #include <common_operations/filesystem_primitives.h>
 #include "utils/Progress.h"
 
-#define PATH_BOX_GOMOTHETY 1.1
-#define CRITICAL_WIDTH 10
-#define CRITICAL_HEIGHT 10
+#define PATH_BOX_GOMOTHETY 1.05
+#define CRITICAL_WIDTH 2
+#define CRITICAL_HEIGHT 2
 
 const std::regex SVG_service::color_regex = std::regex("fill:#([a-fA-F0-9]{6})");
 const std::regex SVG_service::path_regex = std::regex("(<path[\\w\\W]+?>)");
@@ -28,15 +28,23 @@ static size_t count_substrings(const std::string& source, const std::string& sub
     return count;
 }
 
-SVG_service::SVG_service(const fs::path& filepath, bool is_logging, const fs::path& logging_path)
-    : svg(lunasvg::SVGDocument()), is_logging(is_logging), logging_path(logging_path), it(0) {
+static cv::Rect2i scale_rect(const cv::Rect2i& rect, double scale_factor)
+{
+    return cv::Rect2i(scale_factor * rect.x,
+                      scale_factor * rect.y,
+                      scale_factor * rect.width,
+                      scale_factor * rect.height);
+}
+
+SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, bool is_logging, const fs::path& logging_path)
+    : svg(lunasvg::SVGDocument()), canvas(canvas), is_logging(is_logging), logging_path(logging_path), it(0) {
 
     svg.loadFromFile(filepath.string());
     borders = get_shape_bounds(get_raster_image(svg));
     shapes_count = count_substrings(svg.toString(), "<path");
 
-//    if (fs::exists(logging_path)) fs::remove_all(logging_path);
-//    fs::create_directories(logging_path);
+    transform.emplace(calc_transform_to_canvas(canvas, borders.width, borders.height));
+
 	ensure_log_cleared(logging_path);
 
     if (is_logging) std::cout << "[SVG_service] Created" << std::endl;
@@ -61,13 +69,15 @@ void SVG_service::split_paths() {
             continue; // TODO: find a better solution
         }
 
+
         box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
         path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
         boxes.emplace_back(box);
         colors.emplace_back(get_element_color(iter.currentElement()));
 
         // std::cout << "[SVG_service] Saving raster image of part #" << count << " to " << get_shape_path(count) << "…" << std::endl;
-        cv::imwrite(get_shape_path(count), get_raster_image(path_doc));
+        cv::imwrite(get_shape_path(count),
+                    get_raster_image(path_doc, transform->scale_factor * box.width, transform->scale_factor * box.height));
 
         count++;
         progress.update();
@@ -90,9 +100,10 @@ bool SVG_service::load_current_image(cv::Mat &img) {
 
 
 
-cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc) {
-    auto bitmap = doc.renderToBitmap();
-    size_t width = bitmap.width(), height = bitmap.height();
+cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc, size_t width, size_t height) {
+    auto bitmap = doc.renderToBitmap(width, height);
+    width = bitmap.width();
+    height = bitmap.height();
     auto data = bitmap.data(); // array of bytes (RGBA)
 
     cv::Mat img = cv::Mat::zeros(height, width, CV_8UC3);
