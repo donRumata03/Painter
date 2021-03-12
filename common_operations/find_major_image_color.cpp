@@ -32,22 +32,22 @@ color find_major_image_color (const Image& image, double minimal_allowed_percent
 	auto pixel_color_distribution = make_Counter(color_list);
 
 	std::vector<std::pair<color, size_t>> widely_spread_enough_pixel_color_distribution;
-	std::copy_if(pixel_color_distribution.begin(), pixel_color_distribution.end(), widely_spread_enough_pixel_color_distribution.begin(),
+	std::copy_if(pixel_color_distribution.begin(), pixel_color_distribution.end(), std::back_inserter(widely_spread_enough_pixel_color_distribution),
 			  [minimal_allowed_pixels_for_zone](const std::pair<color, size_t>& item){
 		return item.second >= minimal_allowed_pixels_for_zone;
 	});
 
 	std::vector<std::pair<color, size_t>> non_background_color_data;
-	std::copy_if(widely_spread_enough_pixel_color_distribution.begin(), widely_spread_enough_pixel_color_distribution.end(), non_background_color_data.begin(),
+	std::copy_if(widely_spread_enough_pixel_color_distribution.begin(), widely_spread_enough_pixel_color_distribution.end(), std::back_inserter(non_background_color_data),
 			  [&image](const std::pair<color, size_t> color_descriptor){
 		/// The color is considered background only if all the 4 image's corners have that color
 		auto col = color_descriptor.first;
 
 		return
 				col != color{ image.at<cv::Vec3d>(0, 0) } ||
-				col != color{ image.at<cv::Vec3d>(0, image.rows) } ||
-				col != color{ image.at<cv::Vec3d>(image.cols, 0) } ||
-				col != color{ image.at<cv::Vec3d>(image.cols, image.rows) }
+				col != color{ image.at<cv::Vec3d>(image.rows - 1, 0 ) } ||
+				col != color{ image.at<cv::Vec3d>(0, image.cols - 1) } ||
+				col != color{ image.at<cv::Vec3d>(image.rows - 1, image.cols - 1) }
 		;
 	});
 
