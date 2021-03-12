@@ -69,6 +69,8 @@ add_executable(Painter
         tests/stroke_color_optimization_test.h
         tests/image_splitting_test.h
         tests/strokes_to_json_tests.h
+        tests/area_counting_test.h
+
 
         rasterization/stroke_rasterizer.cpp
         rasterization/stroke_rasterizer.h
@@ -135,7 +137,18 @@ add_executable(Painter
         vector_graphics/SVG_service.h
 
         utils/Progress.h
-        optimization/contrast_color_finding.cpp optimization/contrast_color_finding.h common_operations/image_color_deduction.cpp common_operations/image_color_deduction.h common_operations/figure_area_and_perimeter.cpp common_operations/figure_area_and_perimeter.h tests/area_counting_test.h)
+        data_representation/canvas.cpp
+        data_representation/canvas.h
+
+        optimization/contrast_color_finding.cpp
+        optimization/contrast_color_finding.h
+
+        common_operations/image_color_deduction.cpp
+        common_operations/image_color_deduction.h
+        common_operations/figure_area_and_perimeter.cpp
+        common_operations/figure_area_and_perimeter.h
+
+        )
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

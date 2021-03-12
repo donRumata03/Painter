@@ -33,6 +33,6 @@ void launch_single_zone_annealing(const std::string& filename, bool auto_find_co
 void launch_multizone_annealing(const std::string& filename);
 
 template<class WorkerType>
-void launch_svg_zone_stroking(const std::string& filename);
+void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas);
 
 void launch_svg_stroking(const std::string &filename);

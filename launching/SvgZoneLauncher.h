@@ -46,13 +46,13 @@ public:
 
 
 	SvgZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params, const OptimizerParameters& custom_parameters,
-				    bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
+                    const Canvas& canvas, bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
 				    fs::path logging_path = fs::path{ painter_base_path } / "log" / "latest");
 
 	void run();
 	[[nodiscard]] ComputationalEfficiencyRepresentation get_efficiency_account() const { return efficiency_account; }
 
-    std::vector<colored_stroke> get_final_strokes() const { return collected_strokes; }
+    std::vector<colored_stroke> get_final_strokes(Units units = PX, bool shift_strokes = false);
     cv::Size get_image_size() const { return cv::Size(initial_image.cols, initial_image.rows); }
 
 private:
@@ -61,6 +61,7 @@ private:
 
 private:
 	Image initial_image;
+	std::optional<Canvas> canvas;
 	fs::path logging_path;
 
 	CommonStrokingParams stroking_params;
@@ -99,15 +100,16 @@ private:
 
 template <class OptimizerType>
 SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, const CommonStrokingParams& stroking_params,
-                                                 const OptimizerParameters& custom_parameters, bool parallelize,
+                                                 const OptimizerParameters& custom_parameters, const Canvas& canvas, bool parallelize,
                                                  size_t worker_thread_number, fs::path logging_path)
-			: logging_path(std::move(logging_path)), stroking_params(stroking_params), optimizer_parameters(custom_parameters), is_threaded(parallelize), thread_worker_number(worker_thread_number)
+			: logging_path(std::move(logging_path)), stroking_params(stroking_params), optimizer_parameters(custom_parameters),
+			  canvas(canvas), is_threaded(parallelize), thread_worker_number(worker_thread_number)
 {
 	// Clear the old log:
 	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-	svg_manager.emplace(image_path);
+	svg_manager.emplace(image_path, canvas);
 	svg_manager->split_paths();
 
 	initial_image = svg_manager->get_raster_original_image();
@@ -173,7 +175,7 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			this_params.stroke_color = this_color;
 
 
-			optimizer.emplace(this_zone_image, this_params, this->optimizer_parameters, this->logging_path / ("part" + std::to_string(job_index)), false);
+			optimizer.emplace(this_zone_image, this_params, this->optimizer_parameters, this->logging_path / "stroking" / ("part" + std::to_string(job_index)), false);
 		}
 
 		optimizer->run_remaining_iterations();
@@ -228,7 +230,15 @@ void SvgZoneLauncher<OptimizerType>::run ()
 	}
 }
 
-
+template <class OptimizerType>
+std::vector<colored_stroke> SvgZoneLauncher<OptimizerType>::get_final_strokes(Units units, bool shift_strokes)
+{
+    std::vector<colored_stroke> strokes(collected_strokes.size());
+    std::copy(collected_strokes.begin(), collected_strokes.end(), std::back_inserter(strokes));
+    if (shift_strokes) svg_manager->shift_strokes_to_canvas(strokes);
+    if (units == MM) svg_manager->transform_strokes_into_mm(strokes);
+    return strokes;
+}
 
 //template <class OptimizerType>
 //void SvgZoneLauncher<OptimizerType>::print_diagnostic_information ()

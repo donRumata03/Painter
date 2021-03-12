@@ -11,7 +11,7 @@
 inline void test_splitting_SVG(const std::string& filename) {
 	fs::path path = filename;
 
-	SVG_service svg_manager(filename, true);
+	SVG_service svg_manager(filename);
 	svg_manager.split_paths();
 
 
