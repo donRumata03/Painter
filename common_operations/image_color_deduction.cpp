@@ -92,10 +92,10 @@ color find_image_background_color (const Image& image, double max_can_be_non_bac
 		colors_noticed.emplace_back( image.at<cv::Vec3d>(image.rows - 1, x) );
 	}
 
-	for (size_t y = 0; y < image.cols; ++y) {
+	for (size_t y = 0; y < image.rows; ++y) {
 		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, 0) );
 	}
-	for (size_t y = 0; y < image.cols; ++y) {
+	for (size_t y = 0; y < image.rows; ++y) {
 		colors_noticed.emplace_back( image.at<cv::Vec3d>(y, image.cols - 1) );
 	}
 

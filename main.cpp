@@ -17,6 +17,7 @@
 #include <tests/strokes_to_json_tests.h>
 #include <tests/svg_service_test.h>
 #include <tests/area_counting_test.h>
+#include <tests/param_adapting_test.h>
 #include "tests/opencv_test.h"
 
 
@@ -53,9 +54,10 @@ int main ()
 	std::string van_gogh_svg_path = (fs::path(painter_base_path) / "images_for_testing" / "van-gogh.svg").string();
 
 	std::string zone_example_path = (fs::path(painter_base_path) / "images_for_testing" / "zone_example.png").string();
+	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = van_gogh_path;
+	const auto& image_path = van_gogh_svg_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
 	std::cout << "______________________________________________" << std::endl;
 
@@ -111,12 +113,15 @@ int main ()
 	// launch_stroke_constraining_visualizing_test();
 	// generate_stoke_image_example();
 
+	/// Working with Zones:
+	// test_zone_distributor(image_path);
+
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
 
 	/// Single zone:
 	// launch_single_zone_GA(image_path);
-    launch_single_zone_annealing(image_path, true);
+    // launch_single_zone_annealing(image_path, true);
 
 	/// Multizone:
 	// launch_multizone_GA(image_path);

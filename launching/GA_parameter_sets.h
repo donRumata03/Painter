@@ -9,17 +9,17 @@
 
 
 inline auto default_stroking_parameters = CommonStrokingParams{
-		.stroke_number = 20,
+		.stroke_number = 2000,
 
-		.stroke_length_to_image_size_fraction = 0.35, // 0.2,
-		.stroke_width_to_length_factor = 0.4,
+		.stroke_length_to_image_size_fraction = 0.2, // 0.2,
+		.stroke_width_to_length_factor = 0.2,
 		.stroke_coord_mutation_to_stroke_length_factor = 0.4,
 		.stroke_width_mutation_to_stroke_width_factor = 0.4,
 
 		.stroke_param_relative_range = 3,
 
 		.move_mutation_probability = 0.2,
-		.logging_percentage = 0.5,
+		.logging_percentage = 0.,
 		
 		.canvas_color = { 0., 0., 0. }
 };
@@ -27,7 +27,7 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 
 inline auto default_GA_params = GA_stroking_parameters {
 		.population_size = 200,
-		.epoch_num = 50,
+		.epoch_num = 200,
 
 		.allow_multithreading = true,
 };
@@ -35,7 +35,7 @@ inline auto default_GA_params = GA_stroking_parameters {
 inline auto default_annealing_params = AnnealingStrokingParams {
 		.iterations = 5000,
 
-		.typical_temperature = 2e-4, // 1e-2,
+		.typical_temperature = 1e-4, // 1e-2,
 		.gene_mutation_fraction = 0.1,
 };
 

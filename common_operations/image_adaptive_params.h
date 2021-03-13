@@ -16,13 +16,16 @@ size_t calc_strokes_count (const cv::Mat& img, const cv::Size& size, size_t max_
 
 class ZoneResourceDistributor
 {
+public:
 	// TODO: test me!
 
 	ZoneResourceDistributor(const SVG_service& service,
 	                        color canvas_color,
 						    const std::optional<std::function<double(const Image&, color)>>& complexity_estimator = std::nullopt);
 
-	std::vector<size_t> distribute_resource(size_t total_resource);
+	std::vector<size_t> distribute_resource (size_t total_resource, size_t minimal_allowed_param = 0);
+
+	void visualize_resource_distribution();
 
 private:
 	std::vector<double> zone_fractions;

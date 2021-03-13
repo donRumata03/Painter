@@ -45,6 +45,7 @@ ZoneResourceDistributor::ZoneResourceDistributor (const SVG_service& service,
 
 		service.next();
 	}
+	total_sum = std::accumulate(partial_sums.begin(), partial_sums.end(), 0.);
 
 	zone_fractions.resize(service.get_shapes_count());
 	std::transform(partial_sums.begin(), partial_sums.end(), zone_fractions.begin(), [&total_sum](double partial_sum){ return partial_sum / total_sum; });
@@ -52,14 +53,24 @@ ZoneResourceDistributor::ZoneResourceDistributor (const SVG_service& service,
 	service.set_iterator(temp_it);
 }
 
-std::vector<size_t> ZoneResourceDistributor::distribute_resource (size_t total_resource)
+std::vector<size_t> ZoneResourceDistributor::distribute_resource (size_t total_resource, size_t minimal_allowed_param)
 {
 	std::vector<size_t> res(zone_fractions.size());
-	std::transform(zone_fractions.begin(), zone_fractions.end(), res.begin(), [&total_resource](double this_zone_fraction){
-		return size_t(std::round(this_zone_fraction * double(total_resource)));
+	std::transform(zone_fractions.begin(), zone_fractions.end(), res.begin(), [&total_resource, &minimal_allowed_param](double this_zone_fraction){
+		return std::max(minimal_allowed_param, size_t(std::round(this_zone_fraction * double(total_resource))));
 	});
 
 	return res;
+}
+
+void ZoneResourceDistributor::visualize_resource_distribution ()
+{
+	auto density = count_number_density(zone_fractions);
+	std::cout << "Fractions: " << zone_fractions << std::endl;
+	std::cout << "Density: " << density << std::endl;
+
+	add_pairs_to_plot(density);
+	show_plot({ .log_x = true, .log_y = false, .window_title = "Zone-Resource Distribution" });
 }
 
 
