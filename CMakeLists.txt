@@ -148,7 +148,7 @@ add_executable(Painter
         common_operations/figure_area_and_perimeter.cpp
         common_operations/figure_area_and_perimeter.h
 
-        tests/param_adapting_test.h)
+        tests/param_adapting_test.h tests/test_stroke_sorting.h tests/_test_common_utils.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

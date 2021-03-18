@@ -18,6 +18,7 @@
 #include <tests/svg_service_test.h>
 #include <tests/area_counting_test.h>
 #include <tests/param_adapting_test.h>
+#include <tests/test_stroke_sorting.h>
 #include "tests/opencv_test.h"
 
 
@@ -115,6 +116,9 @@ int main ()
 
 	/// Working with Zones:
 	// test_zone_distributor(image_path);
+
+	/// Sorting strokes:
+	test_stroke_sorting_function(simple_svg_path);
 
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);

@@ -34,3 +34,18 @@ std::vector<byte_colored_stroke> sort_strokes (const std::vector<byte_colored_st
 
 	return res;
 }
+
+
+std::vector<std::vector<byte_colored_stroke>> group_sorted_strokes_by_color (const std::vector<byte_colored_stroke>& strokes)
+{
+	std::vector<std::vector<byte_colored_stroke>> res;
+
+	for (auto& this_stroke: strokes) {
+		if (res.empty() or res.back().back().background_color != this_stroke.background_color) {
+			auto new_color_vector = res.emplace_back();
+			new_color_vector.push_back(this_stroke);
+		}
+	}
+
+	return res;
+}
