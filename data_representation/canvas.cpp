@@ -4,9 +4,6 @@
 
 #include "canvas.h"
 
-TransformImageData::TransformImageData(point move_vector, double scale_factor)
-    : move_vector(move_vector), scale_factor(scale_factor) { }
-
 Canvas::Canvas(size_t mm_width, size_t mm_height, size_t dpi)
     : mm_width(mm_width), mm_height(mm_height), _dpi(dpi) {
 
