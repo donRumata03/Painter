@@ -13,14 +13,13 @@ TransformImageData calc_transform_to_canvas(const Canvas &canvas, size_t w, size
     //assert(canvas.width > w);
     //assert(canvas.height > h);
 
-    double scale = 1.;
     point vector(0, 0); // px
     bool album_canvas = canvas.width() >= canvas.height(); // Album orientation
 
-    scale = album_canvas ? (double)canvas.height() / h : (double)canvas.width() / w;
+    double scale = album_canvas ? (double)canvas.height() / h : (double)canvas.width() / w;
     vector.x = album_canvas ? (canvas.width() - scale * w) / 2 : 0;
     vector.y = album_canvas ? 0 : (canvas.height() - scale * h) / 2;
 
-    return TransformImageData(vector, scale);
+    return TransformImageData { vector, scale };
 }
 
