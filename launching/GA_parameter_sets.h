@@ -9,7 +9,7 @@
 
 
 inline auto default_stroking_parameters = CommonStrokingParams{
-		.stroke_number = 2000,
+		.stroke_number = 100,
 
 		.stroke_length_to_image_size_fraction = 0.2, // 0.2,
 		.stroke_width_to_length_factor = 0.2,
@@ -19,7 +19,7 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 		.stroke_param_relative_range = 3,
 
 		.move_mutation_probability = 0.2,
-		.logging_percentage = 0.,
+		.logging_percentage = 0.2,
 		
 		.canvas_color = { 0., 0., 0. }
 };
@@ -33,7 +33,7 @@ inline auto default_GA_params = GA_stroking_parameters {
 };
 
 inline auto default_annealing_params = AnnealingStrokingParams {
-		.iterations = 5000,
+		.iterations = 1000,
 
 		.typical_temperature = 1e-4, // 1e-2,
 		.gene_mutation_fraction = 0.1,
@@ -107,10 +107,9 @@ inline auto van_gogh_params = GA_launching_params {
 template<class OptimizerType>
 typename OptimizerType::ParametersType get_default_special_params();
 
-template<>
-GA_stroking_parameters get_default_special_params<GA_worker>() { return default_GA_params; }
-template<>
-AnnealingStrokingParams get_default_special_params<AnnealingWorker>() { return default_annealing_params; }
+template<> inline GA_stroking_parameters get_default_special_params<GA_worker>() { return default_GA_params; }
+
+template<> inline AnnealingStrokingParams get_default_special_params<AnnealingWorker>() { return default_annealing_params; }
 
 template <class OptimizationAlgorithm>
 struct CanBeParallelized {};

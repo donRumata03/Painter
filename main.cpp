@@ -58,7 +58,7 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = van_gogh_svg_path;
+	const auto& image_path = simple_svg_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
 	std::cout << "______________________________________________" << std::endl;
 
@@ -118,7 +118,7 @@ int main ()
 	// test_zone_distributor(image_path);
 
 	/// Sorting strokes:
-	test_stroke_sorting_function(simple_svg_path);
+	test_stroke_sorting_function(image_path);
 
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
@@ -130,7 +130,7 @@ int main ()
 	/// Multizone:
 	// launch_multizone_GA(image_path);
 
-    /// SVG launch:
+	/// SVG launch:
     // launch_svg_stroking(image_path);
     // launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);

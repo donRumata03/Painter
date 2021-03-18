@@ -52,7 +52,7 @@ public:
 	void run();
 	[[nodiscard]] ComputationalEfficiencyRepresentation get_efficiency_account() const { return efficiency_account; }
 
-    std::vector<colored_stroke> get_final_strokes(Units units = PX, bool shift_strokes = false);
+    std::vector<colored_stroke> get_final_strokes(Units units = Units::PX, bool shift_strokes = false);
     cv::Size get_image_size() const { return cv::Size(initial_image.cols, initial_image.rows); }
 
 private:
@@ -234,9 +234,9 @@ template <class OptimizerType>
 std::vector<colored_stroke> SvgZoneLauncher<OptimizerType>::get_final_strokes(Units units, bool shift_strokes)
 {
     std::vector<colored_stroke> strokes(collected_strokes.size());
-    std::copy(collected_strokes.begin(), collected_strokes.end(), std::back_inserter(strokes));
+    std::copy(collected_strokes.begin(), collected_strokes.end(), strokes.begin());
     if (shift_strokes) svg_manager->shift_strokes_to_canvas(strokes);
-    if (units == MM) svg_manager->transform_strokes_into_mm(strokes);
+    if (units == Units::MM) svg_manager->transform_strokes_into_mm(strokes);
     return strokes;
 }
 

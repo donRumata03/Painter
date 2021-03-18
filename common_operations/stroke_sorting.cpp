@@ -42,9 +42,9 @@ std::vector<std::vector<byte_colored_stroke>> group_sorted_strokes_by_color (con
 
 	for (auto& this_stroke: strokes) {
 		if (res.empty() or res.back().back().background_color != this_stroke.background_color) {
-			auto new_color_vector = res.emplace_back();
-			new_color_vector.push_back(this_stroke);
+			res.emplace_back();
 		}
+		res.back().push_back(this_stroke);
 	}
 
 	return res;

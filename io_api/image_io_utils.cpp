@@ -65,6 +65,8 @@ void cv_show_image (const Image &img, const std::string &image_name)
 
 void save_image (const Image &img, const fs::path &filename)
 {
+	fs::create_directories(filename.parent_path());
+
     Image output;
     switch (img.type()) {
         case CV_8UC3: // Nothing to do

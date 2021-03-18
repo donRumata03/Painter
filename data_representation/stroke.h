@@ -116,7 +116,7 @@ struct rgb_colored_stroke : stroke
 	friend std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<T> &stroke);
 
 	template<class NewColorType, std::enable_if_t<not std::is_same_v<ColorDataType, NewColorType>, void*> = nullptr>
-	explicit operator rgb_colored_stroke<NewColorType> ();
+	explicit operator rgb_colored_stroke<NewColorType> () const;
 };
 
 using colored_stroke = rgb_colored_stroke<double>;
@@ -132,13 +132,13 @@ std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<T> &stroke)
 
 template <class T>
 template <class NewColorType, std::enable_if_t<not std::is_same_v<T, NewColorType>, void*>>
-rgb_colored_stroke<T>::operator rgb_colored_stroke<NewColorType> ()
+rgb_colored_stroke<T>::operator rgb_colored_stroke<NewColorType>  () const
 {
 	using ThisType = rgb_colored_stroke<T>;
 	using ResType = rgb_colored_stroke<NewColorType>;
 
 	ResType res;
-	*reinterpret_cast<stroke*>(&res) = *reinterpret_cast<stroke*>(this);
+	*reinterpret_cast<stroke*>(&res) = *reinterpret_cast<const stroke*>(this);
 	res.background_color = convert_color<NewColorType>(this->background_color);
 
 	return res;

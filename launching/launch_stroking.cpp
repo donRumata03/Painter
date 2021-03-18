@@ -150,12 +150,12 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
 
     // Full size, result on canvas (in px)
     Image result_mm = make_default_image(canvas.width(), canvas.height());
-    rasterize_strokes(result_mm, launcher.get_final_strokes(PX, true));
+    rasterize_strokes(result_mm, launcher.get_final_strokes(Units::PX, true));
     save_image(result_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
 
     // Save strokes
-    save_log_json(launcher.get_final_strokes(MM, true));
-    save_log_json(launcher.get_final_strokes(PX, true),
+    save_log_json(launcher.get_final_strokes(Units::MM, true));
+    save_log_json(launcher.get_final_strokes(Units::PX, true),
                   fs::path(painter_base_path) / "log" / "latest" / "plan_px.json");
 
     show_image_in_system_viewer(result);
