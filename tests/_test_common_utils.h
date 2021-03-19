@@ -24,7 +24,6 @@ inline void visualize_stroke_painting(const std::vector<byte_colored_stroke>& st
 			auto& this_stroke = grouped_strokes[stroke_group_index][index_in_group];
 			rasterize_stroke(image_for_strokes, static_cast<colored_stroke>(this_stroke));
 
-			std::cout << target_folder_path / ("Color " + std::to_string(stroke_group_index) + ", stroke №" + std::to_string(index_in_group) + " (" + std::to_string(total_index) + "th in global order).png") << "…" << std::endl;
 			// show_image_in_system_viewer(image_for_strokes);
 
 			std::string output_filename =
@@ -33,6 +32,9 @@ inline void visualize_stroke_painting(const std::vector<byte_colored_stroke>& st
 			                                                    :
 			                              target_folder_path / (std::to_string(total_index) + ".png")
 					).string();
+
+			std::cout << output_filename << "…" << std::endl;
+
 
 			save_image(
 					image_for_strokes,

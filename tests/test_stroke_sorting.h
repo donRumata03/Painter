@@ -7,6 +7,8 @@
 #include <common_operations/stroke_sorting.h>
 #include <launching/SvgZoneLauncher.h>
 
+#include <utils/glue_video.h>
+
 #include <launching/GA_parameter_sets.h>
 #include "_test_common_utils.h"
 
@@ -80,8 +82,10 @@ inline void test_stroke_sorting_function(const fs::path& sample_image_path) {
 //		}
 //	}
 
-	visualize_stroke_painting(sorted_strokes, painter_base_path / "log" / "latest" / "sorted_sequence_visualization", w, h, false);
+	fs::path image_series_folder_path = painter_base_path / "log" / "latest" / "sorted_sequence_visualization";
+	visualize_stroke_painting(sorted_strokes, image_series_folder_path, w, h, false);
 	std::cout << "Visualized the strokes!" << std::endl;
 
+	glue_photos_into_video(image_series_folder_path, w, h);
 }
 

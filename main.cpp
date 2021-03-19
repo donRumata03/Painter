@@ -60,7 +60,7 @@ int main ()
 
 	const auto& image_path = simple_svg_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
-	std::cout << "______________________________________________" << std::endl;
+	std::cout << "_________________________________________________________________________" << std::endl;
 
 	Canvas canvas(300, 400, 96);
 
