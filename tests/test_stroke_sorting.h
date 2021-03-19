@@ -12,6 +12,16 @@
 #include <launching/GA_parameter_sets.h>
 #include "_test_common_utils.h"
 
+inline void test_zone_number_determining() {
+	std::vector<size_t> numbers = {
+			1, 5, 10, 50, 100, 200, 1000
+	};
+
+	for (const auto& number : numbers) {
+		std::cout << number << " : " << get_default_number_of_zones_by_stroke_number(number) << std::endl;
+	}
+}
+
 
 inline void test_stroke_sorting_function(const fs::path& sample_image_path) {
 	std::vector<colored_stroke> stroke_list;

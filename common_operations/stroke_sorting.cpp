@@ -5,8 +5,37 @@
 #include "stroke_sorting.h"
 
 
+
+size_t get_default_number_of_zones_by_stroke_number (size_t stroke_number)
+{
+	// the number of sectors = zones^2, how much strokes should be there in the sector?
+	constexpr double strokes_in_sector_to_all_strokes_fraction = 0.04;
+	constexpr double typical_strokes_in_sector = 4.;
+	constexpr size_t minimal_zones = 3;
+
+
+	double strokes_in_sector = geometric_mean({
+			                                          typical_strokes_in_sector,
+			                                          double(stroke_number) * strokes_in_sector_to_all_strokes_fraction
+	                                          });
+	// std::cout << "strokes_in_sector: " << strokes_in_sector << std::endl;
+
+	double sectors = double(stroke_number) / strokes_in_sector;
+	return std::max(minimal_zones, size_t(std::round(std::sqrt(sectors))));
+}
+
+
+
 std::vector<byte_colored_stroke> sort_strokes (const std::vector<byte_colored_stroke>& strokes, double w, double h, size_t zones)
 {
+	if (zones == size_t(-1)) {
+		/// Adaptive number of zones:
+
+		zones = get_default_number_of_zones_by_stroke_number(strokes.size());
+
+		std::cout << "[Stroke Sorting]: The number of zones isn't given, but it's automatically computed to be " << zones << std::endl;
+	}
+
 	std::vector<byte_colored_stroke> res(strokes.size());
 	std::copy(strokes.begin(), strokes.end(), res.begin());
 

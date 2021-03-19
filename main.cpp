@@ -118,7 +118,8 @@ int main ()
 	// test_zone_distributor(image_path);
 
 	/// Sorting strokes:
-	test_stroke_sorting_function(image_path);
+	test_zone_number_determining();
+	// test_stroke_sorting_function(image_path);
 
 	/// SVG management:
 	// test_splitting_SVG(van_gogh_svg_path);
