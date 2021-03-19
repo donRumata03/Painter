@@ -25,7 +25,29 @@ public:
 
 	std::vector<size_t> distribute_resource (size_t total_resource, size_t minimal_allowed_param = 0);
 
-	void visualize_resource_distribution();
+
+
+	/// Statistics for image analyzing:
+	void add_resource_distribution_to_plot();
+	void add_distributed_resource_to_plot (size_t total_resource, size_t minimal_allowed_param);
+	void show_plot_with_parameters();
+
+		/// Inequality measures:
+	void print_inequality_account();
+
+			/// Different Metrics:
+	double compute_Gini_index();
+	double top_1_percent_wealth_share();
+	double having_half_wealth_share_fraction();
+
+			/// Graphs:
+	void add_cumulative_inequality_graph_to_plot();
+
+
+
+private:
+	std::vector<double> get_sorted_fractions (bool from_lowest = false);
+	std::vector<std::pair<double, double>> get_cumulative_inequality_graph();
 
 private:
 	std::vector<double> zone_fractions;

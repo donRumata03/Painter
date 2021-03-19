@@ -58,7 +58,7 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = simple_svg_path;
+	const auto& image_path = van_gogh_svg_path;
 	std::cout << "Example Image Path: " << image_path << std::endl;
 	std::cout << "_________________________________________________________________________" << std::endl;
 
@@ -116,9 +116,11 @@ int main ()
 
 	/// Working with Zones:
 	// test_zone_distributor(image_path);
+	test_counting_zone_inequality(image_path);
+	// test_plotting_inequality_graph(image_path);
 
 	/// Sorting strokes:
-	test_zone_number_determining();
+	// test_zone_number_determining();
 	// test_stroke_sorting_function(image_path);
 
 	/// SVG management:
