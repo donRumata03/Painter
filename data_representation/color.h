@@ -60,11 +60,14 @@ struct rgb_color
 		return std::tie(non_const_this->r, non_const_this->g, non_const_this->b);
 	}
 	 */
-	template<class Type> friend bool operator == (const rgb_color<Type>&, const rgb_color<Type>&);
-    template<class Type> friend bool operator < (const rgb_color<Type>&, const rgb_color<Type>&);
-    template<class Type> friend bool operator > (const rgb_color<Type>&, const rgb_color<Type>&);
-    template<class Type> friend bool operator <= (const rgb_color<Type>&, const rgb_color<Type>&);
-    template<class Type> friend bool operator >= (const rgb_color<Type>&, const rgb_color<Type>&);
+
+	auto operator <=>(const rgb_color<T>&) const = default;
+
+//	template<class Type> friend bool operator == (const rgb_color<Type>&, const rgb_color<Type>&);
+//    template<class Type> friend bool operator < (const rgb_color<Type>&, const rgb_color<Type>&);
+//    template<class Type> friend bool operator > (const rgb_color<Type>&, const rgb_color<Type>&);
+//    template<class Type> friend bool operator <= (const rgb_color<Type>&, const rgb_color<Type>&);
+//    template<class Type> friend bool operator >= (const rgb_color<Type>&, const rgb_color<Type>&);
 
 
 	double brightness();
@@ -171,38 +174,38 @@ cv::Scalar rgb_color<T>::to_OpenCV_Scalar () const
 }
 
 
-template < class Type >
-bool operator== (const rgb_color<Type> & first, const rgb_color<Type> & second)
-{
-	return first.r == second.r && first.g == second.g, first.b == second.b;
-	// return first.represent() == second.represent();
-}
-
-template<class Type>
-bool operator<(const rgb_color <Type> &first, const rgb_color <Type> &second) {
-    if (first.r < second.r) return true;
-    if (first.r > second.r) return false;
-
-    if (first.g < second.g) return true;
-    if (first.g > second.g) return false;
-
-    return first.b < second.b;
-}
-
-template<class Type>
-bool operator>(const rgb_color <Type> &first, const rgb_color <Type> &second) {
-    return second < first;
-}
-
-template<class Type>
-bool operator<=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
-    return !(first > second);
-}
-
-template<class Type>
-bool operator>=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
-    return !(first < second);
-}
+//template < class Type >
+//bool operator== (const rgb_color<Type> & first, const rgb_color<Type> & second)
+//{
+//	return first.r == second.r && first.g == second.g && first.b == second.b;
+//	// return first.represent() == second.represent();
+//}
+//
+//template<class Type>
+//bool operator<(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+//    if (first.r < second.r) return true;
+//    if (first.r > second.r) return false;
+//
+//    if (first.g < second.g) return true;
+//    if (first.g > second.g) return false;
+//
+//    return first.b < second.b;
+//}
+//
+//template<class Type>
+//bool operator>(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+//    return second < first;
+//}
+//
+//template<class Type>
+//bool operator<=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+//    return !(first > second);
+//}
+//
+//template<class Type>
+//bool operator>=(const rgb_color <Type> &first, const rgb_color <Type> &second) {
+//    return !(first < second);
+//}
 
 template<class T>
 std::ostream &operator<< (std::ostream &os, const rgb_color<T> &rgb_color)

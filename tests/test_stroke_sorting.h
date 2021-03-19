@@ -54,10 +54,18 @@ inline void test_stroke_sorting_function(const fs::path& sample_image_path) {
 	for (const auto& hi_fi_stroke : stroke_list) {
 		lo_fi_color_strokes.push_back(static_cast<byte_colored_stroke>(hi_fi_stroke));
 	}
+
+	for (const auto& stroke : lo_fi_color_strokes) {
+		std::cout << stroke.background_color << std::endl;
+	}
+
 	std::cout << "Converted the strokes!" << std::endl;
 
 
 	auto sorted_strokes = sort_strokes(lo_fi_color_strokes, w, h, 4);
+	for (const auto& stroke : sorted_strokes) {
+		std::cout << stroke.background_color << std::endl;
+	}
 	std::cout << "Sorted the strokes!" << std::endl;
 
 
@@ -72,7 +80,7 @@ inline void test_stroke_sorting_function(const fs::path& sample_image_path) {
 //		}
 //	}
 
-	visualize_stroke_painting(sorted_strokes, painter_base_path / "log" / "latest" / "sorted_sequence_visualization", w, h);
+	visualize_stroke_painting(sorted_strokes, painter_base_path / "log" / "latest" / "sorted_sequence_visualization", w, h, false);
 	std::cout << "Visualized the strokes!" << std::endl;
 
 }
