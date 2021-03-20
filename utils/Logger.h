@@ -203,68 +203,94 @@ private:
     std::queue<std::string> console_queue;
 };
 
-
-inline Logger::LogStreamProxy ConsoleDebug(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Debug, module, true, false);
-}
-inline Logger::LogStreamProxy LogDebug(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Debug, module, false, true);
-}
-inline Logger::LogStreamProxy LogConsoleDebug(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Debug, module, true, true);
+// TODO: find better place for that function
+template<class ...T>
+static std::string concat(const std::string& sep, T&... args)
+{
+    std::stringstream ss;
+    ((ss << sep << args), ...); // left fold
+    return ss.str();
 }
 
-
-inline Logger::LogStreamProxy ConsoleInfo(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Info, module, true, false);
+template<class ...T>
+inline Logger::LogStreamProxy ConsoleDebug(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), true, false);
 }
-inline Logger::LogStreamProxy LogInfo(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Info, module, false, true);
+template<class ...T>
+inline Logger::LogStreamProxy LogDebug(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), false, true);
 }
-inline Logger::LogStreamProxy LogConsoleInfo(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Info, module, true, true);
-}
-
-
-inline Logger::LogStreamProxy Console() {
-    return Logger::Instance()(LogLevel::Common, "", true, false);
-}
-inline Logger::LogStreamProxy Log() {
-    return Logger::Instance()(LogLevel::Common, "", false, true);
-}
-inline Logger::LogStreamProxy LogConsole() {
-    return Logger::Instance()(LogLevel::Common, "", true, true);
+template<class ...T>
+inline Logger::LogStreamProxy LogConsoleDebug(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), true, true);
 }
 
 
-inline Logger::LogStreamProxy ConsoleSuccess(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Success, module, true, false);
+template<class ...T>
+inline Logger::LogStreamProxy ConsoleInfo(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), true, false);
 }
-inline Logger::LogStreamProxy LogSuccess(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Success, module, false, true);
+template<class ...T>
+inline Logger::LogStreamProxy LogInfo(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), false, true);
 }
-inline Logger::LogStreamProxy LogConsoleSuccess(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Success, module, true, true);
-}
-
-
-inline Logger::LogStreamProxy ConsoleWarning(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Warning, module, true, false);
-}
-inline Logger::LogStreamProxy LogWarning(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Warning, module, false, true);
-}
-inline Logger::LogStreamProxy LogConsoleWarning(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Warning, module, true, true);
+template<class ...T>
+inline Logger::LogStreamProxy LogConsoleInfo(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), true, true);
 }
 
 
-inline Logger::LogStreamProxy ConsoleError(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Error, module, true, false);
+template<class ...T>
+inline Logger::LogStreamProxy Console(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), true, false);
 }
-inline Logger::LogStreamProxy LogError(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Error, module, false, true);
+template<class ...T>
+inline Logger::LogStreamProxy Log(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), false, true);
 }
-inline Logger::LogStreamProxy LogConsoleError(const std::string& module = "") {
-    return Logger::Instance()(LogLevel::Error, module, true, true);
+template<class ...T>
+inline Logger::LogStreamProxy LogConsole(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), true, true);
+}
+
+
+template<class ...T>
+inline Logger::LogStreamProxy ConsoleSuccess(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), true, false);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogSuccess(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), false, true);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogConsoleSuccess(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), true, true);
+}
+
+
+template<class ...T>
+inline Logger::LogStreamProxy ConsoleWarning(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), true, false);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogWarning(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), false, true);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogConsoleWarning(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), true, true);
+}
+
+
+template<class ...T>
+inline Logger::LogStreamProxy ConsoleError(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, false);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogError(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), false, true);
+}
+template<class ...T>
+inline Logger::LogStreamProxy LogConsoleError(const std::string& module = "", T&... submodules) {
+    return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, true);
 }

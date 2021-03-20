@@ -38,4 +38,10 @@ inline void test_logging()
     LogConsoleSuccess() << "Test detail";
     LogConsoleWarning() << "Test detail";
     LogConsoleError() << "Test detail";
+    Logger::SetLoggingLevel(LogLevel::Debug);
+
+    LogConsole() << "";
+
+    LogConsoleInfo("Module", "Submodule", "Subsubmodule") << "Text";
+    LogConsoleError("File", "Function", "Line", "Byte", "Atom", "Electron") << "Just stop...";
 }
