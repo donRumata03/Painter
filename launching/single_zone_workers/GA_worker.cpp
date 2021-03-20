@@ -131,7 +131,7 @@ GA_worker::GA_worker (const Image& image, const CommonStrokingParams& stroking_p
 
 	optimizer->set_informer(GA_informer(image, GA_params.epoch_num, enable_console_output));
 
-    if (enable_console_output) std::cout << "[GA_worker]: successfully initialized and ready to run" << std::endl;
+    LogSuccess("GA Worker") << "Inited";
 }
 
 void GA_worker::run_one_iteration ()

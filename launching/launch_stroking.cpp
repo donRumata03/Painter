@@ -11,6 +11,7 @@
 #include "utils/Progress.h"
 #include <common_operations/image_color_deduction.h>
 #include <optimization/contrast_color_finding.h>
+#include "utils/Logger.h"
 
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes,
@@ -129,7 +130,7 @@ void launch_multizone_annealing(const std::string& filename) {
 template<class WorkerType>
 void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
 {
-	std::cout << "Launching SVG zoned stroking…" << std::endl;
+    LogConsoleInfo("Launch") << "Launching SVG zoned stroking…";
 
     CommonStrokingParams common_params = default_stroking_parameters;
     //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
@@ -146,7 +147,7 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     auto strokes = launcher.get_final_strokes();
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
-    std::cout << "[Launch] Result: " << strokes.size() << " strokes." << std::endl;
+    LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
 
     // Full size, result on canvas (in px)
     Image result_mm = make_default_image(canvas.width(), canvas.height());

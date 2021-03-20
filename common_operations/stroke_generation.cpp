@@ -3,6 +3,7 @@
 //
 
 #include "stroke_generation.h"
+#include "utils/Logger.h"
 
 stroke generate_stroke (const stroke_limit_descriptor &stroke_descriptor)
 {
@@ -11,7 +12,7 @@ stroke generate_stroke (const stroke_limit_descriptor &stroke_descriptor)
 
 	// assert(image_dx >= stroke_descriptor.max_dx);
 	if (!stroke_descriptor.validate_self()) {
-		std::cout << console_colors::red << stroke_descriptor << console_colors::remove_all_colors << std::endl;
+		LogConsoleError("Stroke Generator") << stroke_descriptor;
 		assert(false);
 	}
 

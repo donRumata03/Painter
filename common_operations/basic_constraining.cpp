@@ -3,7 +3,7 @@
 //
 
 #include "basic_constraining.h"
-
+#include "utils/Logger.h"
 
 bool fits_into (const stroke &stroke, const RangeRectangle<double> &rectangle)
 {
@@ -37,9 +37,9 @@ double get_best_shift(const std::pair<double, double>& target_coords, const std:
 	// assert(rect_coords.second > rect_coords.first);
 
 	if (target_coords.second <= target_coords.first || rect_coords.second <= rect_coords.first) {
-		std::cout << console_colors::red << "Something's wrong with rect or target coords: " << console_colors::remove_all_colors << std::endl;
-		std::cout << "Target coords: " << target_coords << std::endl;
-		std::cout << "Rect coords: " << rect_coords << std::endl;
+		LogError("Constrain") << "Something's wrong with rect or target coords: ";
+        LogError("Constrain") << "Target coords: " << target_coords;
+        LogError("Constrain") << "Rect coords: " << rect_coords;
 		assert(false);
 	}
 

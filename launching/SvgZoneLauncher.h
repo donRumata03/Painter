@@ -23,6 +23,7 @@
 #include <common_operations/filesystem_primitives.h>
 
 #include <utility>
+#include "utils/Logger.h"
 
 /**
  * Is responsible for dividing the image into several zones
@@ -96,6 +97,22 @@ private:
 /// ________________________________________________________________________________________________________________________________________________
 
 
+// TODO: find better place for that function
+inline std::string get_current_thread_info(size_t thread_index = 0)
+{
+    std::stringstream ss;
+    ss << "Thread " << thread_index << " (" << std::this_thread::get_id() << ")";
+    return ss.str();
+}
+
+// TODO: find better place for that function
+inline std::string get_range_string(std::pair<size_t, size_t> job_range)
+{
+    std::stringstream ss;
+    if (job_range.first < job_range.second) ss << "[" << job_range.first << ", " << job_range.second - 1 << "]";
+    else ss << "ø";
+    return ss.str();
+}
 
 
 template <class OptimizerType>
@@ -141,11 +158,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 	{
 		// Inform bout beginning:
 		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
-/*
-		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
-		          << "Started, job range: ";
-		if (job_range.first < job_range.second) std::cout << "[" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
-		else std::cout << "ø" << std::endl;*/
+
+		LogInfo("SVG Zone Launcher", get_current_thread_info(thread_index))
+            << "Started, job range: " << get_range_string(job_range);
 	}
 
 	for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
@@ -157,7 +172,9 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 			/// this particular data will be used to initialize and launch data
 			std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
-			// std::cout << "[SvgZoneLauncher][thread " << thread_index << "]: Stroking zone #" << job_index << ":" << std::endl;
+
+            LogInfo("SVG Zone Launcher", get_current_thread_info(thread_index))
+                    << "Stroking zone #" << job_index;
 
 			svg_manager->set_iterator(job_index);
 
@@ -203,11 +220,8 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 	{
 		// Inform about ending:
 		std::lock_guard<std::mutex> print_locker(common_worker_data_mutex);
-/*
-		std::cout << "[SVG zone launcher][thread " << thread_index << " (" << std::this_thread::get_id() << ")]: "
-		          << "Ended, job range: ";
-		if (job_range.first < job_range.second) std::cout << "[" << job_range.first << ", …, " << job_range.second - 1 << "]" << std::endl;
-		else std::cout << "ø" << std::endl;*/
+        LogInfo("SVG Zone Launcher", get_current_thread_info(thread_index))
+                << "Ended, job range: " << get_range_string(job_range);
 	}
 }
 

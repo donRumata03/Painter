@@ -11,6 +11,7 @@
 
 #include "GA_operations/util.h"
 #include "utils/Progress.h"
+#include "utils/Logger.h"
 
 class GA_informer
 {
@@ -24,8 +25,8 @@ public:
 	        {  }
 
 	void operator() (size_t GA_iterations, double best_fitness_value, const std::vector<double>& best_stroke_genome){
-		if (enable_console_output)
-		    std::cout << "GA percent: \t" << percent_plotter(GA_iterations, total_iterations, 1) << "; Best MSE of error function is: \t" << 1 / best_fitness_value << std::endl;
+		//if (enable_console_output)
+		    LogInfo("GA") << "GA percent: " << percent_plotter(GA_iterations, total_iterations, 1) << "; Best MSE of error function is: " << 1 / best_fitness_value;
 
 		// std::cout << best_stroke_genome << std::endl;
 

@@ -9,6 +9,7 @@
 #include <common_operations/basic_constraining.h>
 #include <common_operations/filesystem_primitives.h>
 #include "utils/Progress.h"
+#include "utils/Logger.h"
 
 #define PATH_BOX_GOMOTHETY 1.05
 #define CRITICAL_WIDTH 2
@@ -47,7 +48,7 @@ SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, bool is
 
 	ensure_log_cleared(logging_path);
 
-    if (is_logging) std::cout << "[SVG_service] Created" << std::endl;
+	LogConsoleSuccess("SVG Service") << "Inited";
 }
 
 void SVG_service::split_paths() {
@@ -75,9 +76,9 @@ void SVG_service::split_paths() {
         boxes.emplace_back(box);
         colors.emplace_back(get_element_color(iter.currentElement()));
 
-        // std::cout << "[SVG_service] Saving raster image of part #" << count << " to " << get_shape_path(count) << "…" << std::endl;
         cv::imwrite(get_shape_path(count),
                     get_raster_image(path_doc, transform->scale_factor * box.width, transform->scale_factor * box.height));
+        LogInfo("SVG Service") << "Saved raster image of part #" << count << " to " << get_shape_path(count);
 
         count++;
         progress.update();
@@ -85,7 +86,7 @@ void SVG_service::split_paths() {
 
     shapes_count = count;
 
-    if (is_logging) std::cout << "[SVG_service] Splited image into " << shapes_count << " parts." << std::endl;
+    LogConsoleSuccess("SVG Service") << "Splitted image into " << shapes_count << " parts";
 }
 
 bool SVG_service::load_current_image(cv::Mat &img) const {
@@ -115,10 +116,7 @@ cv::Mat SVG_service::get_raster_image(const lunasvg::SVGDocument& doc, size_t wi
 }
 
 std::string SVG_service::get_shape_path(size_t i) const {
-	return (fs::path{ logging_path } / ("path" + std::to_string(i) + ".png")).string();
-//    std::stringstream ss;
-//    ss << logging_path << "/" << "path" << i << ".png";
-//    return ss.str();
+	return (logging_path / ("path" + std::to_string(i) + ".png")).string();
 }
 
 cv::Rect SVG_service::get_shape_bounds(const cv::Mat &img) {

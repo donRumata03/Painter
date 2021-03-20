@@ -39,8 +39,8 @@ int main ()
     Logger::SetLogFile(painter_base_path / "log" / "logs.txt");
     Logger::SetLoggingLevel(LogLevel::Info);
 
-    std::cout << console_colors::green << "Welcome to Painter™!" << console_colors::remove_all_colors << std::endl;
-    std::cout << "Using up to " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
+    Console() << console_colors::green << "Welcome to Painter™!" << console_colors::remove_all_colors;
+    LogConsoleInfo("Main") << "Using up to " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency();
 
     /// Example Paths:
 	std::string coffee_path = (fs::path(painter_base_path) / "images_for_testing" / "brown_coffee.png").string();
@@ -62,9 +62,9 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = van_gogh_svg_path;
-	std::cout << "Example Image Path: " << image_path << std::endl;
-	std::cout << "_________________________________________________________________________" << std::endl;
+	const auto& image_path = simple_svg_path;
+	LogConsoleInfo("Main") << "Example Image Path: " << image_path;
+	Console() << "_________________________________________________________________________";
 
 	Canvas canvas(300, 400, 96);
 
@@ -140,7 +140,7 @@ int main ()
 
 	/// SVG launch:
     // launch_svg_stroking(image_path);
-    // launch_svg_zone_stroking<GA_worker>(image_path, canvas);
+    launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
     Logger::Stop();
