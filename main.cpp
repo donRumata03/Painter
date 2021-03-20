@@ -20,6 +20,8 @@
 #include <tests/param_adapting_test.h>
 #include <tests/test_stroke_sorting.h>
 #include "tests/opencv_test.h"
+#include <tests/test_logging.h>
+#include "utils/Logger.h"
 
 
 void posix_death_signal(int signum)
@@ -34,6 +36,8 @@ int main ()
 	signal(SIGSEGV, posix_death_signal);
 
     set_utf8_in_console();
+    Logger::SetLogFile(painter_base_path / "log" / "logs.txt");
+    Logger::SetLoggingLevel(LogLevel::Info);
 
     std::cout << console_colors::green << "Welcome to Painter™!" << console_colors::remove_all_colors << std::endl;
     std::cout << "Using up to " << std::thread::hardware_concurrency() - 1 << " threads of " << std::thread::hardware_concurrency() << std::endl;
@@ -83,6 +87,7 @@ int main ()
 	// test_stroke_derivative_counting();
 	// test_length_function_by_comparing_with_derivative();
 	// test_stroke_scaling();
+	// test_logging();
 
 	// test_painted_area_counting();
 	// test_painted_figures_perimeters_counting();
@@ -116,7 +121,7 @@ int main ()
 
 	/// Working with Zones:
 	// test_zone_distributor(image_path);
-	test_counting_zone_inequality(image_path);
+	// test_counting_zone_inequality(image_path);
 	// test_plotting_inequality_graph(image_path);
 
 	/// Sorting strokes:
@@ -138,5 +143,6 @@ int main ()
     // launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
+    Logger::Stop();
 	return 0;
 }

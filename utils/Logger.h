@@ -1,0 +1,270 @@
+#pragma once
+
+#include "painter_pch.h"
+
+enum class LogLevel {
+    Debug = 0,
+    Info = 1,
+    Common = 2, // Using for simple output without any additional info
+    Success = 3,
+    Warning = 4,
+    Error = 5,
+};
+
+class Logger {
+    friend class LogStreamProxy;
+public:
+    struct LogParams {
+        LogLevel level = LogLevel::Info;
+        std::string module;
+        bool output_in_console = true;
+        bool output_in_file = true;
+    };
+
+    class LogStreamProxy;
+    class LogStream {
+        friend class LogStreamProxy;
+    public:
+        ~LogStream() {
+            if (flush) {
+                Logger::Instance().flush_mutex.lock();
+                if (IsNeedToLog(dest.level)) {
+                    Logger::Instance().push_log(buffer.str(), dest);
+                }
+                buffer.str("");
+                Logger::Instance().flush_mutex.unlock();
+            }
+        }
+
+        template<typename T>
+        LogStream& operator<< (const T& data) {
+            buffer << data;
+            return *this;
+        }
+
+        LogStream(const LogStream&) = delete;
+    private:
+        explicit LogStream(LogParams dest) : dest(dest), buffer(Logger::buffer) { }
+
+        LogStream(LogStream& prev) : dest(prev.dest), buffer(prev.buffer), flush(prev.flush) {
+            prev.flush = false;
+        }
+
+        std::ostringstream& buffer;
+        LogParams dest;
+        bool flush = true;
+
+    };
+
+    class LogStreamProxy {
+        friend class Logger;
+    public:
+        LogStreamProxy(LogParams dest) : dest(dest) {}
+
+        template<typename T>
+        LogStream operator<< (const T& data)
+        {
+            LogStream stream(dest);
+            return (stream << data);
+        }
+    private:
+        LogParams dest;
+    };
+
+    static void SetLogFile(const fs::path& output_path) {
+        Instance().set_log_file(output_path);
+    }
+
+    static void Stop() {
+        Instance().stop();
+    }
+
+    static LogLevel GetLoggingLevel() { return Instance().log_level; }
+    static void SetLoggingLevel(LogLevel level) { Instance().log_level = level; }
+    static bool IsNeedToLog(LogLevel level) { return (int)level >= (int)GetLoggingLevel(); }
+
+    static Logger& Instance() {
+        static Logger logger;
+        return logger;
+    }
+
+    LogStreamProxy operator() (LogLevel level, const std::string& module, bool output_in_console, bool output_in_file)
+    {
+        return LogStreamProxy({level, module, output_in_console, output_in_file });
+    }
+
+private:
+    Logger() : console_stream(std::cout), is_working(true), log_level(LogLevel::Debug) {
+        thread = std::thread(&Logger::run, this);
+    }
+    Logger(const Logger&);
+    Logger& operator=(Logger&);
+
+    inline static std::unordered_map<LogLevel, std::string> LogLevelStrings = {
+        {LogLevel::Debug,   "DEBUG"},
+        {LogLevel::Info,    "INFO"},
+        {LogLevel::Common,    ""},
+        {LogLevel::Success, "SUCCESS"},
+        {LogLevel::Warning, "WARN"},
+        {LogLevel::Error,   "ERROR"}
+    };
+    inline static std::unordered_map<LogLevel, console_colors> LogLevelColors = {
+        {LogLevel::Debug,   console_colors::dark_cyan},
+        {LogLevel::Info,    console_colors::remove_last_color},
+        {LogLevel::Common,    console_colors::remove_last_color},
+        {LogLevel::Success, console_colors::green},
+        {LogLevel::Warning, console_colors::yellow},
+        {LogLevel::Error,   console_colors::red}
+    };
+
+    void set_log_file(const fs::path& output_path)
+    {
+        file_stream = std::ofstream(output_path);
+    }
+
+    void stop()
+    {
+        is_working = false;
+        flush_cond.notify_all();
+        thread.join();
+    }
+
+    void flush_to_file()
+    {
+        while (!file_queue.empty()) {
+            file_stream << file_queue.front() << std::endl;
+            file_queue.pop();
+        }
+    }
+
+    void flush_to_console()
+    {
+        while (!console_queue.empty()) {
+            console_stream << console_queue.front() << std::endl;
+            console_queue.pop();
+        }
+    }
+
+    void run() {
+        while (is_working)
+        {
+            if (file_queue.empty() && console_queue.empty()) {
+                std::unique_lock<std::mutex> locker(print_mutex);
+                flush_cond.wait(locker, [&](){ return !file_queue.empty() || !console_queue.empty() || !is_working; });
+            }
+
+            flush_to_file();
+            flush_to_console();
+        }
+
+        flush_to_file();
+        flush_to_console();
+    }
+
+    void push_log(const std::string& message, LogParams dest)
+    {
+        std::stringstream time, module;
+        if (dest.level != LogLevel::Common) {
+            const auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            time << "[" << std::put_time(std::localtime(&timestamp), "%d.%m.%Y %H:%M:%S") << "]";
+            if (!dest.module.empty()) module << "[" << dest.module << "] ";
+            module << LogLevelStrings[dest.level] << ": ";
+        }
+
+        if (dest.output_in_console) {
+            std::stringstream ss;
+            ss << LogLevelColors[dest.level] << module.str() << message << console_colors::remove_all_colors;
+            console_queue.push(ss.str());
+        }
+
+        if (dest.output_in_file) {
+            std::stringstream ss;
+            if (dest.level != LogLevel::Common) ss << time.str() << module.str();
+            ss << message;
+            file_queue.push(ss.str());
+        }
+
+        flush_cond.notify_one();
+    }
+
+    inline static thread_local std::ostringstream buffer;
+    LogLevel log_level; // Will log only with (int)level >= (int)log_level
+
+    std::thread thread;
+    std::condition_variable flush_cond;
+    std::mutex flush_mutex;
+    std::mutex print_mutex;
+    bool is_working;
+
+    std::ofstream file_stream;
+    std::ostream& console_stream;
+
+    std::queue<std::string> file_queue;
+    std::queue<std::string> console_queue;
+};
+
+
+inline Logger::LogStreamProxy ConsoleDebug(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Debug, module, true, false);
+}
+inline Logger::LogStreamProxy LogDebug(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Debug, module, false, true);
+}
+inline Logger::LogStreamProxy LogConsoleDebug(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Debug, module, true, true);
+}
+
+
+inline Logger::LogStreamProxy ConsoleInfo(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Info, module, true, false);
+}
+inline Logger::LogStreamProxy LogInfo(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Info, module, false, true);
+}
+inline Logger::LogStreamProxy LogConsoleInfo(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Info, module, true, true);
+}
+
+
+inline Logger::LogStreamProxy Console() {
+    return Logger::Instance()(LogLevel::Common, "", true, false);
+}
+inline Logger::LogStreamProxy Log() {
+    return Logger::Instance()(LogLevel::Common, "", false, true);
+}
+inline Logger::LogStreamProxy LogConsole() {
+    return Logger::Instance()(LogLevel::Common, "", true, true);
+}
+
+
+inline Logger::LogStreamProxy ConsoleSuccess(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Success, module, true, false);
+}
+inline Logger::LogStreamProxy LogSuccess(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Success, module, false, true);
+}
+inline Logger::LogStreamProxy LogConsoleSuccess(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Success, module, true, true);
+}
+
+
+inline Logger::LogStreamProxy ConsoleWarning(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Warning, module, true, false);
+}
+inline Logger::LogStreamProxy LogWarning(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Warning, module, false, true);
+}
+inline Logger::LogStreamProxy LogConsoleWarning(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Warning, module, true, true);
+}
+
+
+inline Logger::LogStreamProxy ConsoleError(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Error, module, true, false);
+}
+inline Logger::LogStreamProxy LogError(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Error, module, false, true);
+}
+inline Logger::LogStreamProxy LogConsoleError(const std::string& module = "") {
+    return Logger::Instance()(LogLevel::Error, module, true, true);
+}

@@ -48,6 +48,8 @@ add_executable(Painter
         data_representation/paint_plan.cpp
         data_representation/color.cpp
         data_representation/color.h
+        data_representation/canvas.cpp
+        data_representation/canvas.h
         data_representation/computational_efficiency_representation.cpp
         data_representation/computational_efficiency_representation.h
         data_representation/range_rectangle.h
@@ -70,6 +72,10 @@ add_executable(Painter
         tests/image_splitting_test.h
         tests/strokes_to_json_tests.h
         tests/area_counting_test.h
+        tests/param_adapting_test.h
+        tests/test_stroke_sorting.h
+        tests/_test_common_utils.h
+        tests/test_logging.h
 
 
         rasterization/stroke_rasterizer.cpp
@@ -86,6 +92,9 @@ add_executable(Painter
 
         optimization/image_stroke_optimization.cpp
         optimization/image_stroke_optimization.h
+
+        optimization/contrast_color_finding.cpp
+        optimization/contrast_color_finding.h
 
         GA_operations/mutation.cpp
         GA_operations/mutation.h
@@ -107,6 +116,10 @@ add_executable(Painter
         common_operations/stroke_sorting.cpp
         common_operations/stroke_sorting.h
         common_operations/filesystem_primitives.h
+        common_operations/image_color_deduction.cpp
+        common_operations/image_color_deduction.h
+        common_operations/figure_area_and_perimeter.cpp
+        common_operations/figure_area_and_perimeter.h
 
         GA_operations/all.h
         GA_operations/stroke_range_generator.h
@@ -137,18 +150,9 @@ add_executable(Painter
         vector_graphics/SVG_service.h
 
         utils/Progress.h
-        data_representation/canvas.cpp
-        data_representation/canvas.h
-
-        optimization/contrast_color_finding.cpp
-        optimization/contrast_color_finding.h
-
-        common_operations/image_color_deduction.cpp
-        common_operations/image_color_deduction.h
-        common_operations/figure_area_and_perimeter.cpp
-        common_operations/figure_area_and_perimeter.h
-
-        tests/param_adapting_test.h tests/test_stroke_sorting.h tests/_test_common_utils.h utils/glue_video.h)
+        utils/glue_video.h
+        utils/Logger.h
+)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
