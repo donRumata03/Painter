@@ -57,7 +57,7 @@ void SVG_service::split_paths() {
     // Split paths & render
     size_t count = 0;
     lunasvg::SVGElementIter iter(root, "", "path");
-    Progress progress(shapes_count);
+    Logger::NewProgress(shapes_count);
     while (iter.next()) {
         lunasvg::SVGDocument path_doc;
         path_doc.rootElement()->setAttribute("viewBox", root->getAttribute("viewBox"));
@@ -66,7 +66,7 @@ void SVG_service::split_paths() {
         // Setup borders
         auto box = get_shape_bounds(get_raster_image(path_doc));
         if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) {
-            progress.update();
+            Logger::UpdateProgress();
             continue; // TODO: find a better solution
         }
 
@@ -81,7 +81,7 @@ void SVG_service::split_paths() {
         LogInfo("SVG Service") << "Saved raster image of part #" << count << " to " << get_shape_path(count);
 
         count++;
-        progress.update();
+        Logger::UpdateProgress();
     }
 
     shapes_count = count;

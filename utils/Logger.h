@@ -2,6 +2,8 @@
 
 #include "painter_pch.h"
 
+#include "Progress.h"
+
 enum class LogLevel {
     Debug = 0,
     Info = 1,
@@ -83,6 +85,13 @@ public:
     static void SetLoggingLevel(LogLevel level) { Instance().log_level = level; }
     static bool IsNeedToLog(LogLevel level) { return (int)level >= (int)GetLoggingLevel(); }
 
+    static void UpdateProgress(size_t add = 1) {
+        Instance().update_progress(add);
+    }
+    static void NewProgress(size_t total, size_t start = 0) {
+        Instance().new_progress(total, start);
+    }
+
     static Logger& Instance() {
         static Logger logger;
         return logger;
@@ -149,12 +158,27 @@ private:
         while (is_working)
         {
             if (file_queue.empty() && console_queue.empty()) {
-                std::unique_lock<std::mutex> locker(print_mutex);
+                std::unique_lock<std::mutex> locker(wait_mutex);
                 flush_cond.wait(locker, [&](){ return !file_queue.empty() || !console_queue.empty() || !is_working; });
             }
+            print_mutex.lock();
 
             flush_to_file();
-            flush_to_console();
+            if (progress.has_value()) {
+                bool redraw = (std::chrono::duration_cast<std::chrono::milliseconds>(progress->GetLastUpdateTime() - last_draw).count() / 1000.) >= min_draw_delay;
+
+                if (redraw) progress->Clear();
+                flush_to_console();
+                if (redraw) {
+                    progress->Draw();
+                    last_draw = progress->GetLastUpdateTime();
+                }
+
+            } else flush_to_console();
+
+            print_mutex.unlock();
+
+            std::this_thread::sleep_for(100ms);
         }
 
         flush_to_file();
@@ -187,12 +211,32 @@ private:
         flush_cond.notify_one();
     }
 
+    void new_progress(size_t total, size_t start)
+    {
+        print_mutex.lock();
+        if (progress.has_value()) {
+            progress->End();
+            progress.reset();
+        }
+        progress.emplace(total, start);
+        print_mutex.unlock();
+    }
+
+    void update_progress(size_t add = 1)
+    {
+        print_mutex.lock();
+        progress->Update(add);
+        if (!progress->IsWorking()) progress.reset();
+        print_mutex.unlock();
+    }
+
     inline static thread_local std::ostringstream buffer;
     LogLevel log_level; // Will log only with (int)level >= (int)log_level
 
     std::thread thread;
     std::condition_variable flush_cond;
     std::mutex flush_mutex;
+    std::mutex wait_mutex;
     std::mutex print_mutex;
     bool is_working;
 
@@ -201,6 +245,10 @@ private:
 
     std::queue<std::string> file_queue;
     std::queue<std::string> console_queue;
+
+    std::optional<Progress> progress;
+    std::chrono::time_point<std::chrono::system_clock> last_draw;
+    const double min_draw_delay = 1. / 20;
 };
 
 /// UTILS

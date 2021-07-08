@@ -11,12 +11,18 @@
 inline auto default_stroking_parameters = CommonStrokingParams{
 		.stroke_number = 100,
 
-		.stroke_length_to_image_size_fraction = 0.2, // 0.2,
-		.stroke_width_to_length_factor = 0.2,
+        .units = Units::MM,
+		.use_absolute_values = true,
+
+		.stroke_length = 23.78,
+		.stroke_width = 5,
+
+		.stroke_length_to_image_size_fraction = 0.1, // 0.2,
+		.stroke_width_to_length_factor = 0.15,
 		.stroke_coord_mutation_to_stroke_length_factor = 0.4,
 		.stroke_width_mutation_to_stroke_width_factor = 0.4,
 
-		.stroke_param_relative_range = 3,
+		.stroke_param_relative_range = 2.82,
 
 		.move_mutation_probability = 0.2,
 		.logging_percentage = 0.2,
@@ -26,8 +32,8 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 
 
 inline auto default_GA_params = GA_stroking_parameters {
-		.population_size = 200,
-		.epoch_num = 200,
+		.population_size = 100,
+		.epoch_num = 5,
 
 		.allow_multithreading = true,
 };

@@ -73,35 +73,43 @@ private:
         return ss.str();
     }
 public:
-    explicit Progress(size_t total, size_t start = 0, uint8_t barWidth = 50)
+    explicit Progress(size_t total, size_t start = 0, uint8_t barWidth = 30)
             : total(total), start(start), current(start), barWidth(barWidth) {
         _total_str_width = std::to_string(total).size();
-        draw();
+        Draw();
     }
 
-    void end() {
+    void End() {
         is_working = false;
         std::cout << std::endl;
     }
 
-    void update(size_t add = 1) {
+    void Update(size_t add = 1) {
         if (!is_working) return;
 
         current += add;
         t_current = std::chrono::system_clock::now();
-        draw();
-        if (current == total) end();
+        Draw();
+        if (current == total) End();
     }
 
-    void draw() {
+    bool IsWorking() { return is_working; }
+
+    void Clear()
+    {
+        std::cout << std::string(max_width, ' ') << "\r";
+    }
+
+    void Draw() {
         if (!is_working) return;
 
         std::stringstream ss;
         ss << bar_string(get_progress(), barWidth) << " " << get_info();
         std::string result = ss.str();
         max_width = std::max((uint8_t)result.size(), max_width);
-        std::cout << result << std::string(max_width - result.size(), ' ') << "\r";
-        //std::cout << bar_string(get_progress(), barWidth) << " " << info << "\r";
+        std::cout << result << "\r";
         std::cout.flush();
     }
+
+    std::chrono::time_point<std::chrono::system_clock>& GetLastUpdateTime() { return t_current; }
 };

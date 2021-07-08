@@ -12,6 +12,7 @@
 #include <common_operations/image_color_deduction.h>
 #include <optimization/contrast_color_finding.h>
 #include "utils/Logger.h"
+#include "data_representation/units.h"
 
 
 static inline void save_log_json(const std::vector<colored_stroke>& strokes,
@@ -21,6 +22,7 @@ static inline void save_log_json(const std::vector<colored_stroke>& strokes,
     std::ofstream json_file(filepath);
     json_file << j.dump(1, '\t');
     json_file.close();
+    LogConsoleSuccess("Launch") << "Save paint plan to: " << filepath.string();
 }
 
 void launch_single_zone_GA (const std::string &filename)
@@ -133,8 +135,14 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     LogConsoleInfo("Launch") << "Launching SVG zoned stroking…";
 
     CommonStrokingParams common_params = default_stroking_parameters;
-    //typename WorkerType::ParametersType spec_params = get_default_special_params<WorkerType>();
     std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();
+
+    if (common_params.use_absolute_values && common_params.units == Units::MM)
+    {
+        common_params.stroke_length = canvas.mm2px(common_params.stroke_length);
+        common_params.stroke_width = canvas.mm2px(common_params.stroke_width);
+        LogInfo("Launch") << "Stroke Length: " << common_params.stroke_length << ", Stroke Width: " << common_params.stroke_width;
+    }
 
     SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), canvas, not CanBeParallelized<WorkerType>::value);
 
@@ -178,7 +186,8 @@ void launch_svg_stroking(const std::string &filename) {
 
     Image image;
     std::vector<colored_stroke> strokes;
-    Progress progress(service.get_shapes_count());
+    //Progress progress(service.get_shapes_count());
+    Logger::NewProgress(service.get_shapes_count());
     /// Main stroking loop, add new strokes at each iteration:
     while (service.load_current_image(image))
     {
@@ -190,8 +199,8 @@ void launch_svg_stroking(const std::string &filename) {
         cur_params.use_constant_color = true;
         cur_params.stroke_color = cur_color;
 
-        /*std::cout << "[Launch] Run #" << (service.get_it() + 1) << " simulation ("
-                    << cur_params.stroke_number << " strokes, " << cur_color << " color)" << std::endl;*/
+        LogInfo("Launch") << "Run #" << (service.get_it() + 1) << " simulation ("
+                    << cur_params.stroke_number << " strokes, " << cur_color << " color)";
         GA_worker worker(image, cur_params, ga_params,
                          fs::path(painter_base_path) / "log" / "latest" / ("part" + std::to_string(service.get_it())),
                          false);
@@ -202,7 +211,8 @@ void launch_svg_stroking(const std::string &filename) {
 	    service.shift_strokes_to_current_box(cur_strokes);
         strokes.insert(strokes.end(), cur_strokes.begin(), cur_strokes.end());
 
-        progress.update();
+        //progress.update();
+        Logger::UpdateProgress();
         service.next();
 	}
 
@@ -210,7 +220,7 @@ void launch_svg_stroking(const std::string &filename) {
     Image result = make_default_image(original.cols, original.rows);
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
-    std::cout << "[Launch] Result: " << strokes.size() << " strokes." << std::endl;
+    LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
 
     // Save strokes
     save_log_json(strokes);

@@ -6,6 +6,7 @@
 
 #include "painter_pch.h"
 #include "data_representation/computational_efficiency_representation.h"
+#include "data_representation/units.h"
 
 class SingleZoneWorker
 {
@@ -34,6 +35,8 @@ protected:
 struct CommonStrokingParams
 {
 	size_t stroke_number = 0;
+
+    Units units = Units::MM;
 
 	/// Fractions:
 	bool use_absolute_values = false; // Switch between values

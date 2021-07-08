@@ -6,17 +6,7 @@
 #define PAINTER_CANVAS_H
 
 #include "painter_pch.h"
-
-inline constexpr double MM_PER_INCH = 25.4;
-
-inline constexpr size_t default_canvas_width = 300;
-inline constexpr size_t default_canvas_height = 400;
-inline constexpr size_t default_canvas_dpi = 96;
-
-enum class Units {
-    PX = 0,
-    MM
-};
+#include "units.h"
 
 struct TransformImageData {
     point move_vector;
@@ -33,10 +23,12 @@ private:
 public:
     Canvas(size_t mm_width, size_t mm_height, size_t dpi = 96);
 
-	[[nodiscard]] size_t width(Units units = Units::PX) const { return units == Units::PX ? size_t(std::round(double(mm_width) / MM_PER_INCH * double(_dpi))) : mm_width; }
-	[[nodiscard]] size_t height(Units units = Units::PX) const { return units == Units::PX ? size_t(std::round(double(mm_height) / MM_PER_INCH * double(_dpi))) : mm_height; }
+	[[nodiscard]] size_t width(Units units = Units::PX) const { return units == Units::PX ? (size_t)std::round(mm2px(mm_width)) : mm_width; }
+	[[nodiscard]] size_t height(Units units = Units::PX) const { return units == Units::PX ? (size_t)std::round(mm2px(mm_height)) : mm_height; }
 
 	[[nodiscard]] size_t dpi() const { return _dpi; }
+
+	double mm2px(double mm) const { return mm / MM_PER_INCH * double(_dpi); }
 
 public:
 	static Canvas get_default_canvas() { return Canvas(default_canvas_width, default_canvas_height, default_canvas_dpi); }
