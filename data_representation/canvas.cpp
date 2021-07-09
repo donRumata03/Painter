@@ -23,3 +23,19 @@ TransformImageData calc_transform_to_canvas(const Canvas &canvas, size_t w, size
     return TransformImageData { vector, scale };
 }
 
+
+void to_json(json& j, const Canvas& canvas)
+{
+    j["width"] = canvas.width(Units::MM);
+    j["height"] = canvas.height(Units::MM);
+    j["dpi"] = canvas.dpi();
+}
+
+void from_json(const json& j, Canvas& canvas)
+{
+    assert(data.contains("width") && data["width"].is_number());
+    assert(data.contains("height") && data["height"].is_number());
+    assert(data.contains("dpi") && data["dpi"].is_number());
+
+    canvas = Canvas(j["width"], j["height"], j["dpi"]);
+}

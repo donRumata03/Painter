@@ -15,10 +15,10 @@
 #include "data_representation/units.h"
 
 
-static inline void save_log_json(const std::vector<colored_stroke>& strokes,
+static inline void save_log_json(const std::vector<colored_stroke>& strokes, const Canvas& canvas = Canvas(),
                                  const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "plan.json")
 {
-    json j = PaintPlan(strokes);
+    json j = PaintPlan(strokes, canvas);
     std::ofstream json_file(filepath);
     json_file << j.dump(1, '\t');
     json_file.close();
@@ -141,7 +141,7 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     {
         common_params.stroke_length = canvas.mm2px(common_params.stroke_length);
         common_params.stroke_width = canvas.mm2px(common_params.stroke_width);
-        LogInfo("Launch") << "Stroke Length: " << common_params.stroke_length << ", Stroke Width: " << common_params.stroke_width;
+        LogInfo("Launch") << "Typical stroke length: " << common_params.stroke_length << " px, typical stroke width: " << common_params.stroke_width << " px";
     }
 
     SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), canvas, not CanBeParallelized<WorkerType>::value);
@@ -163,8 +163,8 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     save_image(result_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
 
     // Save strokes
-    save_log_json(launcher.get_final_strokes(Units::MM, true));
-    save_log_json(launcher.get_final_strokes(Units::PX, true),
+    save_log_json(launcher.get_final_strokes(Units::MM, true), canvas);
+    save_log_json(launcher.get_final_strokes(Units::PX, true), canvas,
                   fs::path(painter_base_path) / "log" / "latest" / "plan_px.json");
 
     show_image_in_system_viewer(result);

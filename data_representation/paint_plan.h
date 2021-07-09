@@ -6,13 +6,15 @@
 #include "painter_pch.h"
 #include "stroke.h"
 #include "color.h"
+#include "canvas.h"
 
 struct PaintPlan {
     PaintPlan() = default;
-    explicit PaintPlan(std::vector<colored_stroke> strokes);
+    explicit PaintPlan(std::vector<colored_stroke> strokes, Canvas canvas);
 
     std::vector<colored_stroke> strokes;
     std::unordered_set<byte_color> palette;
+    Canvas canvas;
 };
 
 template<class Color>

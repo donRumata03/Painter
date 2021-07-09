@@ -1,7 +1,7 @@
 #include "paint_plan.h"
 
-PaintPlan::PaintPlan(std::vector<colored_stroke> strokes)
-    : strokes(std::move(strokes)), palette(get_palette<byte_color>(this->strokes)) { }
+PaintPlan::PaintPlan(std::vector<colored_stroke> strokes, Canvas canvas)
+    : strokes(std::move(strokes)), palette(get_palette<byte_color>(this->strokes)), canvas(std::move(canvas)) { }
 
 
 template<class Color>
@@ -30,6 +30,7 @@ void to_json(json& j, const PaintPlan& plan)
     }
 
     j["colors"] = plan.palette;
+    j["canvas"] = plan.canvas;
 }
 
 void from_json(const json& j, PaintPlan& plan)
@@ -48,4 +49,5 @@ void from_json(const json& j, PaintPlan& plan)
     }
 
     plan.palette = std::unordered_set<byte_color>(pallete.begin(), pallete.end());
+    plan.canvas = j["canvas"];
 }

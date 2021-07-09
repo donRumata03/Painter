@@ -15,12 +15,13 @@ struct TransformImageData {
 
 class Canvas {
 private:
-    size_t mm_width;
-    size_t mm_height;
+    size_t mm_width = 0;
+    size_t mm_height = 0;
 
-    size_t _dpi;
+    size_t _dpi = 96;
 
 public:
+    Canvas() = default;
     Canvas(size_t mm_width, size_t mm_height, size_t dpi = 96);
 
 	[[nodiscard]] size_t width(Units units = Units::PX) const { return units == Units::PX ? (size_t)std::round(mm2px(mm_width)) : mm_width; }
@@ -35,5 +36,8 @@ public:
 };
 
 TransformImageData calc_transform_to_canvas(const Canvas& canvas, size_t w, size_t h);
+
+void to_json(json& j, const Canvas& canvas);
+void from_json(const json& j, Canvas& canvas);
 
 #endif //PAINTER_CANVAS_H

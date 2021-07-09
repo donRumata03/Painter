@@ -14,7 +14,7 @@
 class SVG_service {
 public:
     SVG_service() = default;
-    explicit SVG_service(const fs::path& filepath, const Canvas& canvas = Canvas::get_default_canvas(), bool is_logging = true,
+    explicit SVG_service(const fs::path& filepath, const Canvas& canvas = Canvas::get_default_canvas(), double critical_path_size = 10, bool is_logging = true,
                 const fs::path& logging_path = fs::path{ painter_base_path } / "log" / "latest" / "svg");
 
     void split_paths();
@@ -69,6 +69,7 @@ private:
     fs::path logging_path;
     mutable size_t it = 0;
     size_t shapes_count = 0;
+    double critical_path_size = 0;
 };
 
 
