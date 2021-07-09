@@ -69,7 +69,8 @@ private:
 	OptimizerParameters optimizer_parameters;
 
 	size_t zone_number = 0;
-	std::optional<Progress> zone_progress;
+	std::vector<size_t> stroke_distribution;
+    //std::vector<size_t> iterations_distribution;
 
 	/// Threading:
 	bool is_threaded = false;
@@ -81,6 +82,7 @@ private:
 
 	/// The common data being modified:
 	std::optional<SVG_service> svg_manager;
+	std::optional<ZoneResourceDistributor> res_distributor;
 	// std::vector<OptimizerType> zone_optimizers;
 
 	std::vector<colored_stroke> collected_strokes;
@@ -126,7 +128,7 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-	svg_manager.emplace(image_path, canvas);
+	svg_manager.emplace(image_path, canvas, stroking_params.stroke_width / 2);
 	svg_manager->split_paths();
 
 	initial_image = svg_manager->get_raster_original_image();
@@ -137,6 +139,9 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
     if (!this->stroking_params.use_absolute_values) {
         this->stroking_params = switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
     }
+
+    res_distributor.emplace(svg_manager.value(), stroking_params.canvas_color);
+    stroke_distribution = res_distributor->distribute_resource(stroking_params.stroke_number, 1);
 
 	/// Make task distribution if parallel:
 
@@ -181,9 +186,11 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 
 			auto this_params = this->stroking_params;
 
+            this_params.stroke_number = stroke_distribution[job_index];
+			/*
 			this_params.stroke_number = calc_strokes_count(
 					this_zone_image, cv::Size { initial_image.rows, initial_image.cols },
-					this->stroking_params.stroke_number, stroking_params.canvas_color);
+					this->stroking_params.stroke_number, stroking_params.canvas_color);*/
 
 			auto this_color = svg_manager->get_current_color();
 			this_params.use_constant_color = true;
@@ -214,7 +221,8 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 
 			std::copy(this_collected_strokes.begin(), this_collected_strokes.end(), std::back_inserter(collected_strokes));
 
-			zone_progress->Update();
+			LogInfo("SVG Zone Launcher", get_current_thread_info(thread_index)) << "Finish stroking zone #" << job_index;
+			Logger::UpdateProgress();
 		}
 	}
 
@@ -233,7 +241,7 @@ template <class OptimizerType>
 void SvgZoneLauncher<OptimizerType>::run ()
 {
     LogConsoleInfo("SVG Zone Launcher") << "Run worker(s)";
-    zone_progress.emplace(zone_number);
+    Logger::NewProgress(zone_number);
 	if(is_threaded) {
 	    cv::setNumThreads(0);
 

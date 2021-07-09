@@ -12,8 +12,6 @@
 #include "utils/Logger.h"
 
 #define PATH_BOX_GOMOTHETY 1.05
-#define CRITICAL_WIDTH 2
-#define CRITICAL_HEIGHT 2
 
 const std::regex SVG_service::color_regex = std::regex("fill:#([a-fA-F0-9]{6})");
 const std::regex SVG_service::path_regex = std::regex("(<path[\\w\\W]+?>)");
@@ -37,8 +35,8 @@ static cv::Rect2i scale_rect(const cv::Rect2i& rect, double scale_factor)
                       scale_factor * rect.height);
 }
 
-SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, bool is_logging, const fs::path& logging_path)
-    : svg(lunasvg::SVGDocument()), canvas(canvas), is_logging(is_logging), logging_path(logging_path), it(0) {
+SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, double critical_path_size, bool is_logging, const fs::path& logging_path)
+    : svg(lunasvg::SVGDocument()), canvas(canvas), critical_path_size(critical_path_size), is_logging(is_logging), logging_path(logging_path), it(0) {
 
     svg.loadFromFile(filepath.string());
     borders = get_shape_bounds(get_raster_image(svg));
@@ -65,7 +63,7 @@ void SVG_service::split_paths() {
 
         // Setup borders
         auto box = get_shape_bounds(get_raster_image(path_doc));
-        if (box.width <= CRITICAL_WIDTH || box.height <= CRITICAL_HEIGHT) {
+        if (box.width <= critical_path_size || box.height <= critical_path_size) {
             Logger::UpdateProgress();
             continue; // TODO: find a better solution
         }
@@ -78,7 +76,7 @@ void SVG_service::split_paths() {
 
         cv::imwrite(get_shape_path(count),
                     get_raster_image(path_doc, transform->scale_factor * box.width, transform->scale_factor * box.height));
-        LogInfo("SVG Service") << "Saved raster image of part #" << count << " to " << get_shape_path(count);
+        LogInfo("SVG Service") << "Saved raster image of path #" << count << " to " << get_shape_path(count);
 
         count++;
         Logger::UpdateProgress();
