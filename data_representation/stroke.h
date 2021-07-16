@@ -12,8 +12,18 @@
 #include "range_rectangle.h"
 
 
+
+enum class StrokeRasterizationAlgorithm
+{
+	vertical_lines,
+	horizontal_lines,
+	vertical_and_horizontal_lines,
+	smooth
+};
+
+
 /**
- * It`s basically a 2nd order Bezier curve => contains 3x 2d-points
+ * It`s basically a 2nd order Bezier curve => contains 3 × 2d-points
 */
 struct stroke {
 	// using Point = std::pair<double, double>;
@@ -49,12 +59,15 @@ struct stroke {
 	*/
 	template<class Functor>
 	void for_each(const Functor& operation, size_t step_number = 10000,
-	              std::optional<RangeRectangle<lint>> range_limits = std::nullopt) const;
+	              std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
+	              StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines
+	) const;
 	// ^^^ TODO: Measure and ...make it parallel?
 
 
 	[[nodiscard]] std::vector<Point> get_points(
-			size_t step_number = 10000, std::optional<RangeRectangle<lint>> range_limits = std::nullopt
+			size_t step_number = 10000, std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
+			StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines
 	) const;
 
 	friend std::ostream &operator<< (std::ostream &os, const stroke &stroke);
@@ -64,8 +77,11 @@ struct stroke {
 
 template < class Functor >
 void stroke::for_each (
-		const Functor& operation, const size_t step_number, std::optional<RangeRectangle<lint>> range_limits) const
+		const Functor& operation, const size_t step_number, std::optional<RangeRectangle<lint>> range_limits,
+		StrokeRasterizationAlgorithm algo) const
 {
+	if (algo != StrokeRasterizationAlgorithm::vertical_lines) throw std::logic_error("this rasterization algorithm is not implemented");
+
 	bool has_range_limitations = bool(range_limits);
 	auto last_x = static_cast<long long>(-1e100);
 

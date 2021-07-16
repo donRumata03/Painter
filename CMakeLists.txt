@@ -60,7 +60,7 @@ add_executable(Painter
         tests/opencv_test.h
         tests/cv_io_test.h
         tests/color_test.h
-        tests/stroke_rasterization_test.h
+        tests/rasterization_tests/stroke_rasterization_test.h
         tests/stroke_counting_test.h
         tests/draw_test.h
         tests/test_base.h

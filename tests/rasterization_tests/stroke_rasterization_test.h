@@ -5,7 +5,7 @@
 #pragma once
 
 #include "rasterization/stroke_rasterizer.h"
-#include "test_base.h"
+#include "tests/test_base.h"
 
 inline void test_stroke_rasterizaton(){
 /*

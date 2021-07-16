@@ -4,7 +4,7 @@
 
 #include <tests/cv_io_test.h>
 #include <tests/color_test.h>
-#include <tests/stroke_rasterization_test.h>
+#include <tests/rasterization_tests/stroke_rasterization_test.h>
 #include <tests/stroke_counting_test.h>
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>

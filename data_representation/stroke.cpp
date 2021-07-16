@@ -135,7 +135,7 @@ double stroke::length () const
 
 
 std::vector<point> stroke::get_points (
-		size_t step_number, std::optional<RangeRectangle<lint>> range_limits) const
+		size_t step_number, std::optional<RangeRectangle<lint>> range_limits, StrokeRasterizationAlgorithm algo) const
 {
 	std::vector<Point> res;
 
