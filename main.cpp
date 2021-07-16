@@ -4,7 +4,7 @@
 
 #include <tests/cv_io_test.h>
 #include <tests/color_test.h>
-#include <tests/rasterization_tests/stroke_rasterization_test.h>
+#include <tests/rasterization_tests/stroke_rasterization_algorithm_demonstration.h>
 #include <tests/stroke_counting_test.h>
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>
@@ -93,7 +93,7 @@ int main ()
 	// test_painted_figures_perimeters_counting();
 
 	/// Rasterization:
-	// test_stroke_rasterizaton();
+	compare_stroke_rasterizaton_algos();
 	// draw_circle_test();
 	// draw_line_test();
 
@@ -140,7 +140,7 @@ int main ()
 
 	/// SVG launch:
     // launch_svg_stroking(image_path);
-    launch_svg_zone_stroking<GA_worker>(image_path, canvas);
+    // launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
     Logger::Stop();

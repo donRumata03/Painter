@@ -60,7 +60,7 @@ add_executable(Painter
         tests/opencv_test.h
         tests/cv_io_test.h
         tests/color_test.h
-        tests/rasterization_tests/stroke_rasterization_test.h
+        tests/rasterization_tests/stroke_rasterization_algorithm_demonstration.h
         tests/stroke_counting_test.h
         tests/draw_test.h
         tests/test_base.h
@@ -213,6 +213,7 @@ find_package(LunaSVG REQUIRED)
 
 # Add LunaSVG
 include_directories(${LunaSVG_INCLUDE_DIRS})
+# message(${LunaSVG_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message("Debug ${LunaSVG_LIBRARY}")
     target_link_libraries(Painter ${LunaSVG_LIBRARY})
