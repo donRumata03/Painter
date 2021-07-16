@@ -7,5 +7,9 @@ else()
 endif()
 
 set(LunaSVG_INCLUDE_DIRS ${LunaSVG_DIR}/include)
-set(LunaSVG_LIBRARY ${lunasvg_build_dir}/lunasvg.lib)
 
+if (WIN32)
+    set(LunaSVG_LIBRARY ${lunasvg_build_dir}/lunasvg.lib)
+elseif(UNIX)
+    set(LunaSVG_LIBRARY ${lunasvg_build_dir}/liblunasvg.a)
+endif()

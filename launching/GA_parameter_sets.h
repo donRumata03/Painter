@@ -34,8 +34,8 @@ inline auto default_stroking_parameters = CommonStrokingParams{
 
 
 inline auto default_GA_params = GA_stroking_parameters {
-		.population_size = 100,
-		.epoch_num = 20,
+		.population_size = 10,
+		.epoch_num = 10,
 
 		.allow_multithreading = true,
 };
