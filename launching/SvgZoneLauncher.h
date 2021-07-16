@@ -54,7 +54,7 @@ public:
 	[[nodiscard]] ComputationalEfficiencyRepresentation get_efficiency_account() const { return efficiency_account; }
 
     std::vector<colored_stroke> get_final_strokes(Units units = Units::PX, bool shift_strokes = false);
-    cv::Size get_image_size() const { return cv::Size(initial_image.cols, initial_image.rows); }
+    cv::Size get_image_size() const { return svg_manager->get_workspace_size(); }
 
 private:
 
@@ -128,7 +128,9 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 	ensure_log_cleared();
 
 	// Determine the number of zones and what the zones actually are
-	svg_manager.emplace(image_path, canvas, stroking_params.stroke_width / 2);
+	svg_manager.emplace(image_path,
+                        canvas,
+                        (this->stroking_params.units == Units::MM ? stroking_params.stroke_width : canvas.px2mm(stroking_params.stroke_width)) / 2);
 	svg_manager->split_paths();
 
 	initial_image = svg_manager->get_raster_original_image();
@@ -138,6 +140,10 @@ SvgZoneLauncher<OptimizerType>::SvgZoneLauncher (const fs::path& image_path, con
 
     if (!this->stroking_params.use_absolute_values) {
         this->stroking_params = switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
+    } else if (this->stroking_params.use_absolute_values && this->stroking_params.units == Units::MM) {
+        this->stroking_params.stroke_length = canvas.mm2px(this->stroking_params.stroke_length);
+        this->stroking_params.stroke_width = canvas.mm2px(this->stroking_params.stroke_width);
+        LogInfo("SVG Zone Launcher") << "Typical stroke length: " << this->stroking_params.stroke_length << " px, typical stroke width: " << this->stroking_params.stroke_width << " px";
     }
 
     res_distributor.emplace(svg_manager.value(), stroking_params.canvas_color);
@@ -260,8 +266,19 @@ std::vector<colored_stroke> SvgZoneLauncher<OptimizerType>::get_final_strokes(Un
 {
     std::vector<colored_stroke> strokes(collected_strokes.size());
     std::copy(collected_strokes.begin(), collected_strokes.end(), strokes.begin());
+    svg_manager->transform_strokes_into_mm(strokes);
     if (shift_strokes) svg_manager->shift_strokes_to_canvas(strokes);
-    if (units == Units::MM) svg_manager->transform_strokes_into_mm(strokes);
+    if (units == Units::PX) svg_manager->transform_strokes_into_px(strokes);
+    /*if (units == Units::MM) {
+        svg_manager->transform_strokes_into_mm(strokes);
+        if (shift_strokes) svg_manager->shift_strokes_to_canvas(strokes);
+    } else {
+        if (shift_strokes) {
+            svg_manager->transform_strokes_into_mm(strokes);
+            svg_manager->shift_strokes_to_canvas(strokes);
+            svg_manager->transform_strokes_into_px(strokes);
+        }
+    }*/
     return strokes;
 }
 

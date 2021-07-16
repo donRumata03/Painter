@@ -30,6 +30,7 @@ public:
 	[[nodiscard]] size_t dpi() const { return _dpi; }
 
 	double mm2px(double mm) const { return mm / MM_PER_INCH * double(_dpi); }
+    double px2mm(double px) const { return px * MM_PER_INCH / double(_dpi); }
 
 public:
 	static Canvas get_default_canvas() { return Canvas(default_canvas_width, default_canvas_height, default_canvas_dpi); }

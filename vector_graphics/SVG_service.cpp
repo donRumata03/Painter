@@ -39,10 +39,12 @@ SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, double 
     : svg(lunasvg::SVGDocument()), canvas(canvas), critical_path_size(critical_path_size), is_logging(is_logging), logging_path(logging_path), it(0) {
 
     svg.loadFromFile(filepath.string());
-    borders = get_shape_bounds(get_raster_image(svg));
+    svg_borders = from_viewbox(svg);
     shapes_count = count_substrings(svg.toString(), "<path");
 
-    transform.emplace(calc_transform_to_canvas(canvas, borders.width, borders.height));
+    transform.emplace(calc_transform_to_canvas(canvas, svg_borders.width, svg_borders.height));
+    canvas_borders = scale_rect(svg_borders, transform->scale_factor);
+    workspace_size = cv::Size(canvas.mm2px(canvas_borders.width), canvas.mm2px(canvas_borders.height));
 
 	ensure_log_cleared(logging_path);
 
@@ -51,6 +53,7 @@ SVG_service::SVG_service(const fs::path& filepath, const Canvas& canvas, double 
 
 void SVG_service::split_paths() {
     auto root = svg.rootElement();
+    //auto canvas_borders = scale_rect(svg_borders, transform->scale_factor);
 
     // Split paths & render
     size_t count = 0;
@@ -62,20 +65,24 @@ void SVG_service::split_paths() {
         path_doc.appendElement(iter.currentElement());
 
         // Setup borders
-        auto box = get_shape_bounds(get_raster_image(path_doc));
+        auto svg_box = get_shape_bounds(get_raster_image(path_doc));
+        auto box = scale_rect(svg_box, transform->scale_factor);
+        LogInfo("SVG Service") << "Path #" << Logger::GetCurrentProgress() << ": " << box.width << " mm, " << box.height << " mm";
         if (box.width <= critical_path_size || box.height <= critical_path_size) {
             Logger::UpdateProgress();
             continue; // TODO: find a better solution
         }
 
 
-        box = limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY), borders);
-        path_doc.rootElement()->setAttribute("viewBox", to_viewbox(box));
+        svg_box = limit_bounds(gomothety_bounds(svg_box, PATH_BOX_GOMOTHETY, 5), svg_borders);
+        box = scale_rect(limit_bounds(gomothety_bounds(box, PATH_BOX_GOMOTHETY, 5), canvas_borders),
+                         1. / MM_PER_INCH * canvas->dpi());
+        path_doc.rootElement()->setAttribute("viewBox", to_viewbox(svg_box));
         boxes.emplace_back(box);
         colors.emplace_back(get_element_color(iter.currentElement()));
 
         cv::imwrite(get_shape_path(count),
-                    get_raster_image(path_doc, transform->scale_factor * box.width, transform->scale_factor * box.height));
+                    get_raster_image(path_doc, box.width, box.height));
         LogInfo("SVG Service") << "Saved raster image of path #" << count << " to " << get_shape_path(count);
 
         count++;
@@ -148,12 +155,17 @@ color SVG_service::get_element_color(const lunasvg::SVGElement* elem)
     } else throw std::runtime_error("Invalid color tried to parse");
 }
 
-cv::Rect SVG_service::gomothety_bounds(const cv::Rect &bounds, double coeff) {
+cv::Rect SVG_service::gomothety_bounds(const cv::Rect &bounds, double coeff, double min_padding) {
     assert(coeff > 0);
-    return cv::Rect(bounds.x - (coeff-1)/2 * bounds.width,
-                    bounds.y - (coeff-1)/2 * bounds.height,
-                    coeff * bounds.width,
-                    coeff * bounds.height);
+    double dx = (coeff-1)/2 * bounds.width, dy = (coeff-1)/2 * bounds.height;
+    if (dx < min_padding || dy < min_padding) {
+        dx = min_padding;
+        dy = min_padding;
+    }
+    return cv::Rect(bounds.x - min_padding,
+                    bounds.y - min_padding,
+                    bounds.width + 2 * min_padding,
+                    bounds.height + 2 * min_padding);
 }
 
 cv::Rect SVG_service::limit_bounds(const cv::Rect& original, const cv::Rect& limit) {

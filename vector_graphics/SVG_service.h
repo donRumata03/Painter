@@ -29,12 +29,16 @@ public:
     template<class StrokeType>
     void transform_strokes_into_mm(std::vector<StrokeType>& strokes);
 
-    cv::Mat get_raster_original_image() { return get_raster_image(svg, transform->scale_factor * borders.width, transform->scale_factor * borders.height); }
-    [[nodiscard]] cv::Rect get_borders() const { return borders; }
+    template<class StrokeType>
+    void transform_strokes_into_px(std::vector<StrokeType>& strokes);
+
+    cv::Mat get_raster_original_image() { return get_raster_image(svg, svg_borders.width, svg_borders.height); }
+    [[nodiscard]] cv::Rect get_borders() const { return svg_borders; }
     [[nodiscard]] color get_current_color() const { return colors[it]; }
 
     [[nodiscard]] size_t get_it() const { return it; }
     [[nodiscard]] size_t get_shapes_count() const { return shapes_count; }
+    [[nodiscard]]cv::Size get_workspace_size() const { return workspace_size; }
 
     void set_iterator(size_t desired_iterator_value) const { it = desired_iterator_value; }
     void next() const { ++it; }
@@ -46,7 +50,7 @@ private:
     std::string get_shape_path(size_t i) const;
 
     cv::Rect get_shape_bounds(const cv::Mat& img);
-    cv::Rect gomothety_bounds(const cv::Rect& bounds, double coeff);
+    cv::Rect gomothety_bounds(const cv::Rect &bounds, double coeff, double min_padding = 0);
     cv::Rect limit_bounds(const cv::Rect& original, const cv::Rect& limit);
     std::string to_viewbox(const cv::Rect& rect);
     cv::Rect from_viewbox(const lunasvg::SVGDocument& doc);
@@ -60,7 +64,9 @@ private:
     lunasvg::SVGDocument svg;
     std::vector<cv::Rect> boxes;
     std::vector<color> colors;
-    cv::Rect borders;
+    cv::Rect svg_borders;
+    cv::Rect canvas_borders;
+    cv::Size workspace_size;
 
     std::optional<Canvas> canvas;
     std::optional<TransformImageData> transform;
@@ -75,7 +81,7 @@ private:
 
 template<class StrokeType>
 void SVG_service::shift_strokes_to_current_box(std::vector<StrokeType>& strokes) {
-	point shifting_vector(transform->scale_factor * boxes[it].x, transform->scale_factor * boxes[it].y);
+	point shifting_vector(boxes[it].x, boxes[it].y);
 	for (auto& stroke : strokes) {
 		shift_stroke(stroke, shifting_vector);
 	}
@@ -92,6 +98,13 @@ template<class StrokeType>
 void SVG_service::transform_strokes_into_mm(std::vector<StrokeType>& strokes) {
     for (auto& stroke : strokes) {
         scale_stroke(stroke, 1. / canvas->dpi() * MM_PER_INCH);
+    }
+}
+
+template<class StrokeType>
+void SVG_service::transform_strokes_into_px(std::vector<StrokeType>& strokes) {
+    for (auto& stroke : strokes) {
+        scale_stroke(stroke, 1. / MM_PER_INCH * canvas->dpi());
     }
 }
 

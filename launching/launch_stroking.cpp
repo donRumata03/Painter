@@ -13,12 +13,13 @@
 #include <optimization/contrast_color_finding.h>
 #include "utils/Logger.h"
 #include "data_representation/units.h"
+#include "common_operations/stroke_sorting.h"
 
 
-static inline void save_log_json(const std::vector<colored_stroke>& strokes, const Canvas& canvas = Canvas(),
+static inline void save_log_json(const std::vector<colored_stroke>& strokes, const Canvas& canvas = Canvas(), Units units = Units::MM,
                                  const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "plan.json")
 {
-    json j = PaintPlan(strokes, canvas);
+    json j = PaintPlan(sort_strokes(strokes, canvas.width(units), canvas.height(units)), canvas);
     std::ofstream json_file(filepath);
     json_file << j.dump(1, '\t');
     json_file.close();
@@ -137,13 +138,6 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     CommonStrokingParams common_params = default_stroking_parameters;
     std::optional<typename WorkerType::ParametersType> spec_params = get_default_special_params<WorkerType>();
 
-    if (common_params.use_absolute_values && common_params.units == Units::MM)
-    {
-        common_params.stroke_length = canvas.mm2px(common_params.stroke_length);
-        common_params.stroke_width = canvas.mm2px(common_params.stroke_width);
-        LogInfo("Launch") << "Typical stroke length: " << common_params.stroke_length << " px, typical stroke width: " << common_params.stroke_width << " px";
-    }
-
     SvgZoneLauncher<WorkerType> launcher(filename, common_params, spec_params.value(), canvas, not CanBeParallelized<WorkerType>::value);
 
     launcher.run();
@@ -151,21 +145,21 @@ void launch_svg_zone_stroking(const std::string& filename, const Canvas& canvas)
     // View result
     // Full size, only result
     auto size = launcher.get_image_size();
-    Image result = make_default_image(size.width, size.height);
+    Image result = make_default_image(size.width, size.height, common_params.canvas_color);
     auto strokes = launcher.get_final_strokes();
     rasterize_strokes(result, strokes);
     save_image(result, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
     LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
 
     // Full size, result on canvas (in px)
-    Image result_mm = make_default_image(canvas.width(), canvas.height());
+    Image result_mm = make_default_image(canvas.width(Units::PX), canvas.height(Units::PX), common_params.canvas_color);
     rasterize_strokes(result_mm, launcher.get_final_strokes(Units::PX, true));
     save_image(result_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
 
     // Save strokes
     save_log_json(launcher.get_final_strokes(Units::MM, true), canvas);
-    save_log_json(launcher.get_final_strokes(Units::PX, true), canvas,
-                  fs::path(painter_base_path) / "log" / "latest" / "plan_px.json");
+    /*save_log_json(launcher.get_final_strokes(Units::PX, false), canvas, Units::PX,
+                  fs::path(painter_base_path) / "log" / "latest" / "plan_px.json");*/
 
     show_image_in_system_viewer(result);
 }

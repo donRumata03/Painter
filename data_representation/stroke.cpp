@@ -222,7 +222,7 @@ void stroke::for_each (const Functor &operation, size_t step_number,
 
 void to_json(json& j, const stroke& stroke)
 {
-	j["type"] = "bezier_curve";
+	j["type"] = "quadratic_bezier";
 
 	j["p0"] = stroke.p0;
 	j["p1"] = stroke.p1;
@@ -246,7 +246,7 @@ void to_json(json& j, const std::vector<colored_stroke>& strokes)
 
 void from_json(const json& j, stroke& stroke)
 {
-	assert(j["type"] == "bezier_curve");
+	assert(j["type"] == "quadratic_bezier");
 
 	stroke.p0 = j["p0"].get<point>();
 	stroke.p1 = j["p1"].get<point>();

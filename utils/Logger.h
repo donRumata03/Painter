@@ -91,6 +91,9 @@ public:
     static void NewProgress(size_t total, size_t start = 0) {
         Instance().new_progress(total, start);
     }
+    static size_t GetCurrentProgress() {
+        return Instance().progress->GetCurrent();
+    }
 
     static Logger& Instance() {
         static Logger logger;

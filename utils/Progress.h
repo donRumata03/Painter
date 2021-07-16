@@ -111,5 +111,7 @@ public:
         std::cout.flush();
     }
 
+    size_t GetCurrent() const { return current; }
+
     std::chrono::time_point<std::chrono::system_clock>& GetLastUpdateTime() { return t_current; }
 };
