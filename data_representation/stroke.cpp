@@ -257,7 +257,7 @@ void from_json(const json& j, stroke& stroke)
 
 void from_json(const json& j, colored_stroke& col_stroke)
 {
-    assert(!j.at("color").empty());
+    assert(not j.at("color").empty());
 
     from_json(j, (stroke&)col_stroke);
     byte_color col = j.at("color");

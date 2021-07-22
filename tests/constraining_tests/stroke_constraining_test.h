@@ -10,6 +10,7 @@
 #include "rasterization/stroke_rasterizer.h"
 #include "rasterization/drawer.h"
 
+
 inline void visualize_stroke_constraining(const std::vector<stroke>& strokes_to_show_constraining,
 											stroke_limit_descriptor& limit_descriptor,
 											const std::string& example_name)

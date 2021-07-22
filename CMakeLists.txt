@@ -65,7 +65,7 @@ add_executable(Painter
         tests/draw_test.h
         tests/test_base.h
         tests/error_computing_tests/image_mse_test.h
-        tests/GA_tests/stroke_constraining_test.h
+        tests/constraining_tests/stroke_constraining_test.h
         tests/GA_tests/population_generation_tests.h
         tests/example_stroke_image_generation.h
         tests/stroke_color_optimization_test.h
@@ -152,7 +152,7 @@ add_executable(Painter
         utils/Progress.h
         utils/glue_video.h
         utils/Logger.h
-        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h)
+        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h tests/constraining_tests/problem_constraining_test.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

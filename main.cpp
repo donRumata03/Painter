@@ -9,7 +9,7 @@
 #include <tests/draw_test.h>
 #include <tests/stroke_color_optimization_test.h>
 #include <tests/error_computing_tests/image_mse_test.h>
-#include <tests/GA_tests/stroke_constraining_test.h>
+#include <tests/constraining_tests/stroke_constraining_test.h>
 #include <launching/launch_stroking.h>
 #include <tests/GA_tests/population_generation_tests.h>
 #include <tests/example_stroke_image_generation.h>
@@ -21,6 +21,7 @@
 #include <tests/test_stroke_sorting.h>
 #include "tests/opencv_test.h"
 #include <tests/test_logging.h>
+#include <tests/constraining_tests/problem_constraining_test.h>
 #include "utils/Logger.h"
 
 
@@ -62,7 +63,7 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = simple_svg_path;
+	const auto& image_path = van_gogh_svg_path;
 	LogConsoleInfo("Main") << "Example Image Path: " << image_path;
 	Console() << "_________________________________________________________________________";
 
@@ -93,7 +94,7 @@ int main ()
 	// test_painted_figures_perimeters_counting();
 
 	/// Rasterization:
-	compare_stroke_rasterizaton_algos();
+	// compare_stroke_rasterizaton_algos();
 	// draw_circle_test();
 	// draw_line_test();
 
@@ -117,6 +118,7 @@ int main ()
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
 	// launch_stroke_constraining_visualizing_test();
+	problematic_stroke_constraining_test();
 	// generate_stoke_image_example();
 
 	/// Working with Zones:
