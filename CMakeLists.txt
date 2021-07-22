@@ -152,7 +152,7 @@ add_executable(Painter
         utils/Progress.h
         utils/glue_video.h
         utils/Logger.h
-)
+        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
