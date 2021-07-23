@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ostream>
+#include <utils/Logger.h>
 #include "painter_pch.h"
 #include "color.h"
 
@@ -33,6 +34,19 @@ struct RangeRectangle {
 	void constrain_point(point& point) const {
 		point.x = std::clamp(point.x, double(min_x), double(max_x));
 		point.y = std::clamp(point.y, double(min_y), double(max_y));
+	}
+
+	void constrain_rect_to_fit_into_me(RangeRectangle& other) {
+		other.min_x = std::clamp(other.min_x, min_x, max_x);
+		other.max_x = std::clamp(other.max_x, min_x, max_x);
+
+		other.min_y = std::clamp(other.min_y, min_y, max_y);
+		other.max_y = std::clamp(other.max_y, min_y, max_y);
+
+		if (other.min_x == other.max_x or other.min_y == other.max_y) {
+			LogConsoleError("RangeRectangle", "constrain_rect_to_fit_into_me")
+				<< "Through one of dimensions the range intersection size is 0 ==> the result is ≈invalid!";
+		}
 	}
 
 	[[nodiscard]] point get_center () const {
