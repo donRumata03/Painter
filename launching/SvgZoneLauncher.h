@@ -22,8 +22,9 @@
 
 #include <common_operations/filesystem_primitives.h>
 
-#include <utility>
 #include "utils/Logger.h"
+#include "utils/formatted_output.h"
+
 
 /**
  * Is responsible for dividing the image into several zones
@@ -97,24 +98,6 @@ private:
 /// ________________________________________________________________________________________________________________________________________________
 /// 															Implementations:
 /// ________________________________________________________________________________________________________________________________________________
-
-
-// TODO: find better place for that function
-inline std::string get_current_thread_info(size_t thread_index = 0)
-{
-    std::stringstream ss;
-    ss << "Thread " << thread_index << " (" << std::this_thread::get_id() << ")";
-    return ss.str();
-}
-
-// TODO: find better place for that function
-inline std::string get_range_string(std::pair<size_t, size_t> job_range)
-{
-    std::stringstream ss;
-    if (job_range.first < job_range.second) ss << "[" << job_range.first << ", " << job_range.second - 1 << "]";
-    else ss << "ø";
-    return ss.str();
-}
 
 
 template <class OptimizerType>
@@ -241,8 +224,6 @@ void SvgZoneLauncher<OptimizerType>::worker_function (size_t thread_index)
 }
 
 
-
-
 template <class OptimizerType>
 void SvgZoneLauncher<OptimizerType>::run ()
 {
@@ -260,6 +241,9 @@ void SvgZoneLauncher<OptimizerType>::run ()
 	}
     LogConsoleSuccess("SVG Zone Launcher") << "End running";
 }
+
+
+
 
 template <class OptimizerType>
 std::vector<colored_stroke> SvgZoneLauncher<OptimizerType>::get_final_strokes(Units units, bool shift_strokes)
