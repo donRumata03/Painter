@@ -51,8 +51,8 @@ struct RangeRectangle {
 
 	[[nodiscard]] point get_center () const {
 		return {
-				(min_x + max_x) / 2,
-				(min_y + max_y) / 2,
+				(min_x + max_x) / 2.,
+				(min_y + max_y) / 2.,
 		};
 	}
 

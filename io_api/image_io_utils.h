@@ -6,6 +6,8 @@
 
 #include "data_representation/color.h"
 
+cv::Size make_ocv_size(size_t width, size_t height);
+
 Image make_default_image(size_t w, size_t h, const color& color = {}); // Resultant image is in RGB, type is double
 Image make_default_image (size_t w, size_t h, double grey_brightness);
 

@@ -8,6 +8,12 @@
  * Default image constructing:
  */
 
+
+cv::Size make_ocv_size (size_t width, size_t height)
+{
+	return cv::Size{ int(width), int(height) };
+}
+
 Image make_default_image (size_t w, size_t h, const color& color)
 {
 	// std::cout << "Creating" << std::endl;

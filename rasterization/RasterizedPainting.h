@@ -10,14 +10,16 @@
 struct RasterizedPainting
 {
 	Image image;
-	std::vector<std::vector<size_t>> layer_matrix;
+	Image layer_tracker;
+	// std::vector<std::vector<size_t>> layer_matrix;
 
-	RasterizedPainting(Image external_image) {
-		image = external_image;
-		layer_matrix = std::vector<std::vector<size_t>>(
-				image.rows, std::vector<size_t>(image.cols, size_t(0))
-				);
-	}
+
+//	RasterizedPainting(Image external_image) {
+//		image = external_image;
+//		layer_matrix = std::vector<std::vector<size_t>>(
+//				image.rows, std::vector<size_t>(image.cols, size_t(0))
+//				);
+//	}
 };
 
 
