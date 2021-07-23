@@ -31,6 +31,9 @@ void scale_stroke(stroke &stroke, double factor) {
     stroke.width *= factor;
 }
 
+bool segment_inside_segment(const std::pair<double, double>& inner, const std::pair<double, double>& outer) {
+	return inner.first >= outer.first and inner.second <= outer.second;
+}
 
 double get_best_shift(const std::pair<double, double>& target_coords, const std::pair<double, double>& rect_coords, double randomness_coefficient = 0.1) {
 	// assert(target_coords.second > target_coords.first);
@@ -42,6 +45,8 @@ double get_best_shift(const std::pair<double, double>& target_coords, const std:
         LogError("Constrain") << "Rect coords: " << rect_coords;
 		assert(false);
 	}
+
+	if (segment_inside_segment(target_coords, rect_coords)) return 0;
 
 	// TODO: add some randomness here to prevent concentrating many strokes on the border
 	// double sigma = (rect_coords.second - rect_coords.first) * randomness_coefficient;

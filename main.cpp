@@ -63,7 +63,7 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = van_gogh_svg_path;
+	const auto& image_path = van_gogh_path;
 	LogConsoleInfo("Main") << "Example Image Path: " << image_path;
 	Console() << "_________________________________________________________________________";
 
@@ -118,7 +118,7 @@ int main ()
 	// test_stroke_generation_with_rasterization();
 	// test_stroke_generation();
 	// launch_stroke_constraining_visualizing_test();
-	problematic_stroke_constraining_test();
+	problematic_stroke_constraining_test(image_path);
 	// generate_stoke_image_example();
 
 	/// Working with Zones:

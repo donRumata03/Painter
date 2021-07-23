@@ -50,7 +50,12 @@ struct stroke_limit_descriptor
 		process_point(stroke.p1);
 		process_point(stroke.p2);
 */
+
 		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
+
+		/// Check being inside image:
+		if (not image_rectangle.check_other_being_fully_inside(stroke_bounding_box))
+			return false;
 
 		auto dx = stroke_bounding_box.max_x - stroke_bounding_box.min_x;
 		auto dy = stroke_bounding_box.max_y - stroke_bounding_box.min_y;

@@ -20,6 +20,16 @@ struct RangeRectangle {
 		return (point.x >= min_x and point.x <= max_x) and (point.y >= min_y and point.y <= max_y);
 	}
 
+	[[nodiscard]] bool check_being_fully_inside_of(const RangeRectangle& parent) const {
+		return
+				parent.point_satisfies_requirements(point{ min_x, min_y })
+				and parent.point_satisfies_requirements(point{ max_x, max_y });
+	}
+
+	[[nodiscard]] bool check_other_being_fully_inside(const RangeRectangle& parent) const {
+		return parent.check_being_fully_inside_of(*this);
+	}
+
 	void constrain_point(point& point) const {
 		point.x = std::clamp(point.x, double(min_x), double(max_x));
 		point.y = std::clamp(point.y, double(min_y), double(max_y));
