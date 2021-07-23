@@ -9,7 +9,7 @@
 
 
 inline void test_intersection_alpha_channel_in_opencv() {
-	Image image(make_ocv_size(1920, 1080), CV_8UC4, { 0, 0, 0, 255 });
+	Image image(make_ocv_size(1920, 1080), CV_8UC4, { 0, 0, 0, 0 });
 
 	auto image_center = get_image_range_limits(image).get_center();
 	circle circle(
@@ -21,7 +21,7 @@ inline void test_intersection_alpha_channel_in_opencv() {
 		cv::circle(
 				image,
 				cv::Point{ int(std::round(circle.center.x)), int(std::round(circle.center.y)) }, int(std::round(circle.r)),
-				{ 255, 255, 255, 13 }, cv::FILLED
+				{ 255, 255, 255, 250 }, cv::FILLED
 		);
 
 		circle.center.x += image_center.x * 0.05;
@@ -35,9 +35,32 @@ inline void test_intersection_alpha_channel_in_opencv() {
 	// show_image_in_system_viewer(image);
 	// cv_show_image(image);
 
+}
 
-//	cv::namedWindow("AlphaCircle", cv::WINDOW_NORMAL);
-//	cv::imshow("AlphaCircle", image);
-//
-//	cv::waitKey(0);
+
+inline void targeted_alpha_test() {
+	Image image(make_ocv_size(1920, 1080), CV_8UC4, { 0, 0, 0, 0 });
+
+	auto image_center = get_image_range_limits(image).get_center();
+
+	circle circle(
+			{ image_center.x, image_center.y },
+			0.3 * (1080. / 2)
+	);
+
+	std::vector<cv::Vec4b> pixel_sequence;
+
+	for (size_t i = 0; i < 10; ++i) {
+		pixel_sequence.push_back(image.at<cv::Vec4b>(int(image_center.y), int(image_center.x)));
+
+		cv::circle(
+				image,
+				cv::Point { int(std::round(circle.center.x)), int(std::round(circle.center.y)) },
+				int(std::round(circle.r)),
+				{ 255, 255, 255, 1 }, cv::FILLED
+		);
+	}
+
+	std::cout << pixel_sequence << std::endl;
+
 }

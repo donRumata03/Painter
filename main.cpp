@@ -96,7 +96,8 @@ int main ()
 
 	/// Rasterization:
 	// compare_stroke_rasterizaton_algos();
-	test_intersection_alpha_channel_in_opencv();
+	// test_intersection_alpha_channel_in_opencv();
+	targeted_alpha_test();
 	// draw_circle_test();
 	// draw_line_test();
 
