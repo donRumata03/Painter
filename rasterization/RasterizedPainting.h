@@ -10,6 +10,8 @@
 
 struct RasterizedPainting
 {
+	using PixelSet = std::vector<std::pair<size_t, size_t>>;
+
 	Image image;
 	Image layer_tracker;
 	std::vector<std::vector<size_t>> layer_matrix;
@@ -26,7 +28,7 @@ struct RasterizedPainting
 				);
 	}
 
-	std::vector<std::pair<size_t, size_t>> get_pixel_list(const RangeRectangle<size_t>& bounding_box) {
+	PixelSet get_pixel_list(const RangeRectangle<size_t>& bounding_box) {
 		std::vector<std::pair<size_t, size_t>> res;
 
 		for (size_t y = bounding_box.min_y; y < bounding_box.max_y; ++y) {
@@ -39,6 +41,19 @@ struct RasterizedPainting
 
 		return res;
 	}
+
+	void erase_pixels(const PixelSet& pixels) {
+		for (const auto& pixel : pixels) {
+			layer_tracker.at<cv::Vec3d>(pixel.first, pixel.second) = m_canvas_color.to_OpenCV_Vec3();
+		}
+	}
+
+	void apply_layers(const PixelSet& pixels) {
+		for (const auto& pixel : pixels) {
+			layer_matrix[pixel.first][pixel.second] += 1;
+		}
+	}
+
 };
 
 
