@@ -14,16 +14,16 @@ void rasterize_stroke (Image &target_image, const colored_stroke &stroke, size_t
 	if (algo == StrokeRasterizationAlgorithm::smooth) {
 		std::vector<cv::Point> cv_points;
 		for (double t = 0; t <= 1; t += 0.01) {
-			auto p = stroke.coords_at(t);/*
-		    if (!range_rectangle.point_satisfies_requirements(p)) {
-		        LogError("Rasterization") << "Problem: x = " << p.x << ", y = " << p.y <<
-	                " | rect (" << range_rectangle.min_x << ", " << range_rectangle.min_y << ", " << range_rectangle.max_x << ", " << range_rectangle.max_y << ")";
-		    }*/
+			auto p = stroke.coords_at(t);
+
 			if (range_rectangle.point_satisfies_requirements(p)) cv_points.emplace_back(cv::Point(p.x, p.y));
+			else LogError("Rasterization") << "Problem: x = " << p.x << ", y = " << p.y <<
+                                           " | rect (" << range_rectangle.min_x << ", " << range_rectangle.min_y << ", " << range_rectangle.max_x << ", " << range_rectangle.max_y << ")";
 		}
 
 
 		cv::polylines(target_image, cv_points, false, opencv_stroke_color, stroke.width);
+		//cv::line(target_image, cv::Point(stroke.p0.x, stroke.p0.y), cv::Point(stroke.p2.x, stroke.p2.y), opencv_stroke_color, stroke.width);
 	}
 	else {
 		stroke.for_each([&] (size_t x, size_t y) {

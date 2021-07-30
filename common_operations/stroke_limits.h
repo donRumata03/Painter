@@ -91,6 +91,14 @@ struct stroke_limit_descriptor
 		                                 min_width,
 		                                 max_width);
 
+		point middle = (stroke.p0 + stroke.p2) / 2;
+		double max_dist = point::dist(stroke.p0, stroke.p2) / 2;
+		point vec = middle - stroke.p1;
+
+		if (vec.module() > max_dist) {
+		    stroke.p1 = stroke.p1 + vec * (vec.module() - max_dist) / vec.module();
+		}
+
 		// Move it:
 		carefully_constrain_stroke_to_fit_into_rect(stroke, image_rectangle);
 
