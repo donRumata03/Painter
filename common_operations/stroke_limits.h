@@ -51,7 +51,7 @@ struct stroke_limit_descriptor
 		process_point(stroke.p2);
 */
 
-		RangeRectangle<double> stroke_bounding_box = stroke.get_bounding_box();
+		RangeRectangle<double> stroke_bounding_box = stroke.get_curve_bounding_box();
 
 		/// Check being inside image:
 		if (not image_rectangle.check_other_being_fully_inside(stroke_bounding_box))

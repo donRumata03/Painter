@@ -37,7 +37,7 @@ stroke generate_stroke (const stroke_limit_descriptor &stroke_descriptor)
 	res_stroke.p2.y = gen_y();
 
 	// Find its bounding box:
-	auto bounding_box = res_stroke.get_bounding_box();
+	auto bounding_box = res_stroke.get_curve_bounding_box();
 	double max_shift_x = image_dx - bounding_box.dx();
 	double max_shift_y = image_dy - bounding_box.dy();
 
