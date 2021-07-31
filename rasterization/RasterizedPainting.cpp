@@ -42,3 +42,11 @@ void RasterizedPainting::apply_layers (const RasterizedPainting::PixelSet& pixel
 		layer_matrix[pixel.first][pixel.second] += 1;
 	}
 }
+
+void RasterizedPainting::copy_pixels_to_painting (const RasterizedPainting::PixelSet& pixels)
+{
+	for (const auto& pixel : pixels) {
+		image.at<cv::Vec3d>(pixel.first, pixel.second) =
+		        layer_tracker.at<cv::Vec3d>(pixel.first, pixel.second);
+	}
+}

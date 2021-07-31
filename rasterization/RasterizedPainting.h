@@ -23,6 +23,7 @@ struct RasterizedPainting
 	PixelSet get_pixel_list(const RangeRectangle<size_t>& bounding_box);
 
 	void erase_pixels(const PixelSet& pixels);
+	void copy_pixels_to_painting(const PixelSet& pixels);
 	void apply_layers(const PixelSet& pixels);
 };
 

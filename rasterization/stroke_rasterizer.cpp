@@ -31,19 +31,26 @@ void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke
 		}, point_number, image_range_rectangle, algo);
 	}
 
+	/// Prepare bounding-box:
 	auto stroke_float_rect = stroke.get_stroke_bounding_box();
 	auto stroke_int_rect = convert_rect<li>(stroke_float_rect);
 	image_range_rectangle.constrain_rect_to_fit_into_me(stroke_int_rect);
+	auto unsigned_rectangle = convert_rect<size_t>(stroke_int_rect);
 
-	auto unsigned_rectangle = image_range_rectangle.constrain_rect_to_fit_into_me()
+	/// Get stroke pixels:
+	auto pixels = target_painting.get_pixel_list(unsigned_rectangle);
 
-	auto points = target_painting.get_pixel_list();
+	/// Use pixels:
+	target_painting.apply_layers(pixels);
+	target_painting.copy_pixels_to_painting(pixels);
 
+	/// Delete pixels:
+	target_painting.erase_pixels(pixels);
 }
 
 void rasterize_strokes (RasterizedPainting& target_painting, const std::vector<colored_stroke> &strokes, size_t point_number, StrokeRasterizationAlgorithm algo)
 {
-	for (const auto& stroke : strokes) rasterize_stroke(target_image, stroke, point_number, algo);
+	for (const auto& stroke : strokes) rasterize_stroke(target_painting, stroke, point_number, algo);
 }
 
 
