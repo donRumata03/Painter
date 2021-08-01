@@ -71,3 +71,35 @@ RangeRectangle<ReturnType> get_image_range_limits(const Image& image) {
 	};
 }
 
+
+
+template<class T, class F>
+RangeRectangle<T> convert_rect(const RangeRectangle<F>& source) {
+	for (const auto& value : { source.min_x, source.min_y, source.max_x, source.max_y }) {
+		auto min_allowed_T = std::numeric_limits<T>::min();
+		auto max_allowed_T = std::numeric_limits<T>::max();
+
+		if (double(min_allowed_T) > double(value)) {
+			LogConsoleError("convert_rect")
+				<< "Value " << value << " from initial rect is smaller than MIN value of output type ("
+				<< type_name<T>() << ", " << min_allowed_T << ")" << std::endl;
+			throw std::runtime_error("Number doesn't fit into new type");
+		}
+		if (double(max_allowed_T) < double(value)) {
+			LogConsoleError("convert_rect")
+				<< "Value " << value << " from initial rect is bigger than MAX value of output type ("
+				<< type_name<T>() << ", " << max_allowed_T << ")" << std::endl;
+			throw std::runtime_error("Number doesn't fit into new type");
+		}
+	}
+
+	RangeRectangle<T> res = {
+			T {source.min_x},
+			T {source.max_x},
+
+			T {source.min_y},
+			T {source.max_x},
+	};
+
+	return res;
+}

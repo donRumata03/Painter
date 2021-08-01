@@ -45,7 +45,8 @@ struct stroke {
 	/**
 	 * Width isn`t used to determine the rectangle
 	 */
-	[[nodiscard]] RangeRectangle<double> get_bounding_box() const;
+	[[nodiscard]] RangeRectangle<double> get_curve_bounding_box() const;
+	[[nodiscard]] RangeRectangle<double> get_stroke_bounding_box() const;
 	[[nodiscard]] Point center() const { return (p0 + p1 + p2) / 3; }
 	void scale_x_from_center(double scale_factor);
 	void scale_y_from_center(double scale_factor);

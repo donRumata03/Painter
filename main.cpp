@@ -97,7 +97,6 @@ int main ()
 	/// Rasterization:
 	// compare_stroke_rasterizaton_algos();
 	// test_intersection_alpha_channel_in_opencv();
-	targeted_alpha_test();
 	// draw_circle_test();
 	// draw_line_test();
 
@@ -147,6 +146,8 @@ int main ()
     // launch_svg_stroking(image_path);
 	// launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
+
+
 
     Logger::Stop();
 	return 0;

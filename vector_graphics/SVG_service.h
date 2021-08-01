@@ -38,7 +38,7 @@ public:
 
     [[nodiscard]] size_t get_it() const { return it; }
     [[nodiscard]] size_t get_shapes_count() const { return shapes_count; }
-    [[nodiscard]]cv::Size get_workspace_size() const { return workspace_size; }
+    [[nodiscard]] cv::Size get_workspace_size() const { return workspace_size; }
 
     void set_iterator(size_t desired_iterator_value) const { it = desired_iterator_value; }
     void next() const { ++it; }

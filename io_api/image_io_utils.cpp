@@ -14,18 +14,26 @@ cv::Size make_ocv_size (size_t width, size_t height)
 	return cv::Size{ int(width), int(height) };
 }
 
+Image make_default_image (const cv::Size& size, const color& color)
+{
+	return cv::Mat(size, CV_64FC3, { color.r, color.g, color.b });
+}
+
+
 Image make_default_image (size_t w, size_t h, const color& color)
 {
-	// std::cout << "Creating" << std::endl;
 	auto size = cv::Size{ int(w), int(h) };
-	// std::cout << "Created size" << std::endl;
-
-	return cv::Mat(size, CV_64FC3, { color.r, color.g, color.b });
+	return make_default_image(size, color);
 }
 
 Image make_default_image (size_t w, size_t h, double grey_brightness)
 {
 	return make_default_image(w, h, { grey_brightness, grey_brightness, grey_brightness });
+}
+
+Image make_default_image (cv::Size& size, double grey_brightness)
+{
+	return make_default_image(size, { grey_brightness, grey_brightness, grey_brightness });
 }
 
 
@@ -209,5 +217,28 @@ std::string get_sample_image_path ()
 {
 	return (painter_base_path / "resources"s / "test_input_images"s / "coffee.jpg"s).string();
 }
+
+/// Common operations:
+
+void fill_image (Image& image, const color& fill_color, bool parallelize)
+{
+	if (parallelize) {
+		image.forEach<Pixel>([&fill_color] (Pixel &pixel, const int position[]) {
+			pixel.x = fill_color.r;
+			pixel.y = fill_color.g;
+			pixel.z = fill_color.b;
+		});
+	}
+	else{
+		auto cv_color = fill_color.to_OpenCV_Vec3();
+
+		for (size_t y = 0; y < image.rows; ++y) {
+			for (size_t x = 0; x < image.cols; ++x) {
+				image.at<cv::Vec3d>(y, x) = cv_color;
+			}
+		}
+	}
+}
+
 
 

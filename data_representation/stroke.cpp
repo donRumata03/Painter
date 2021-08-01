@@ -182,7 +182,7 @@ void stroke::scale_from_center (double scale_factor)
 	p2.scale_from(center, scale_factor);
 }
 
-RangeRectangle<double> stroke::get_bounding_box () const
+RangeRectangle<double> stroke::get_curve_bounding_box () const
 {
 	RangeRectangle<double> res{};
 
@@ -204,6 +204,19 @@ RangeRectangle<double> stroke::get_bounding_box () const
 	process_point(p2);
 
 	return res;
+}
+
+RangeRectangle<double> stroke::get_stroke_bounding_box () const
+{
+	RangeRectangle<double> box = get_curve_bounding_box();
+
+	box.min_y -= width;
+	box.min_x -= width;
+
+	box.max_y += width;
+	box.max_x += width;
+
+	return box;
 }
 
 

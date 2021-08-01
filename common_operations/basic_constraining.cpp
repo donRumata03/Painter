@@ -84,7 +84,7 @@ void carefully_constrain_stroke_to_fit_into_rect (stroke &stroke, const RangeRec
 
 	// Move it (x and y independently)
 
-	auto stroke_rectangle = stroke.get_bounding_box();
+	auto stroke_rectangle = stroke.get_curve_bounding_box();
 
 	double dx = get_best_shift( { stroke_rectangle.min_x, stroke_rectangle.max_x }, { rectangle.min_x, rectangle.max_x } );
 	double dy = get_best_shift( { stroke_rectangle.min_y, stroke_rectangle.max_y }, { rectangle.min_y, rectangle.max_y } );
@@ -101,7 +101,7 @@ void constrain_stroke_size_parameters (stroke &stroke,
                                        double min_dy, double max_dy,
                                        double min_width, double max_width)
 {
-	auto bounding_box = stroke.get_bounding_box();
+	auto bounding_box = stroke.get_curve_bounding_box();
 
 	auto stroke_dx = bounding_box.max_x - bounding_box.min_x;
 	auto stroke_dy = bounding_box.max_y - bounding_box.min_y;

@@ -309,19 +309,6 @@ color get_color_from_hex(const std::string& hex);
 void to_json(json& j, const byte_color& col);
 void from_json(const json& j, byte_color& col);
 
-/**
- * Color number reduction functions:
- */
-
-std::unordered_set<rgb_color<uint8_t>> get_unique_colors(const Image& img);
-std::vector<byte_color> get_image_color_list();
-std::vector<rgb_color<uint8_t>> get_color_top_top(const std::unordered_set<rgb_color<uint8_t>>& color_top, size_t amount);
-
-std::vector<rgb_color<uint8_t>> dummy_get_compressed_unique_colors(const Image& img, size_t amount);
-
-std::unordered_set<byte_color> iterative_get_compressed_unique_colors(const Image& img, size_t amount);
-
-// TODO: Use 3d distribution and binary search to detect color segments!!!
 
 
 #endif //PAINTER_COLOR_H
