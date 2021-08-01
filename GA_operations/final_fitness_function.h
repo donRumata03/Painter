@@ -81,7 +81,7 @@ public:
 
 	/**
 	 * @param is_run_sequentially: if it`s set to true, is stores only one buffer allocated in the constructor
-	 * and uses it everywhere. This approach isn`t only applicable for sequential running!!
+	 * and uses it everywhere. This approach is only applicable for sequential running!!
 	 */
 	explicit final_fitness_function(
 			const ImageStrokingData& imageData,
@@ -136,15 +136,18 @@ public:
 		// Clean-up the buffer for this thread:
 		auto this_canvas_color = canvas_color;
 
-		auto clean_up_image = [this_canvas_color](Image& image_to_clean_up){
-			image_to_clean_up.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
-				pixel.x = this_canvas_color.r;
-				pixel.y = this_canvas_color.g;
-				pixel.z = this_canvas_color.b;
-			});
-		};
+//		auto clean_up_image = [this_canvas_color](Image& image_to_clean_up){
+//			image_to_clean_up.forEach<Pixel>([this_canvas_color] (Pixel &pixel, const int position[]) {
+//				pixel.x = this_canvas_color.r;
+//				pixel.y = this_canvas_color.g;
+//				pixel.z = this_canvas_color.b;
+//			});
+//		};
+//
+//		clean_up_image(this_buffer);
 
-		clean_up_image(this_buffer);
+		// fill_image(this_buffer, this_canvas_color, is_run_sequentially);
+		fill_image(this_buffer, this_canvas_color, false);
 
 		rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));
 		rt_counter.total_runs->operator++();

@@ -27,7 +27,7 @@ public:
 
 /**
  * The returning buffer actually doesn`t have colors.
- * The strokes are marked as colored ror performance reasons.
+ * The strokes are marked as colored for performance reasons.
  */
 // template<bool color_stored = false>
 inline std::vector<colored_stroke> unpack_stroke_data_buffer(const std::vector<double>& stroke_data_buffer) {

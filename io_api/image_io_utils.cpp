@@ -218,4 +218,27 @@ std::string get_sample_image_path ()
 	return (painter_base_path / "resources"s / "test_input_images"s / "coffee.jpg"s).string();
 }
 
+/// Common operations:
+
+void fill_image (Image& image, const color& fill_color, bool parallelize)
+{
+	if (parallelize) {
+		image.forEach<Pixel>([&fill_color] (Pixel &pixel, const int position[]) {
+			pixel.x = fill_color.r;
+			pixel.y = fill_color.g;
+			pixel.z = fill_color.b;
+		});
+	}
+	else{
+		auto cv_color = fill_color.to_OpenCV_Vec3();
+
+		for (size_t y = 0; y < image.rows; ++y) {
+			for (size_t x = 0; x < image.cols; ++x) {
+				image.at<cv::Vec3d>(y, x) = cv_color;
+			}
+		}
+	}
+}
+
+
 

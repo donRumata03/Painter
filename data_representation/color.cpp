@@ -26,7 +26,7 @@ void to_json(json& j, const byte_color& col)
 
 void from_json(const json& j, byte_color& col)
 {
-    // TODO: assert
+    assert(j.contains("r") and j.contains("g") and j.contains("b"));
 
     col = byte_color(j.at("r"), j.at("g"), j.at("b"));
 }
