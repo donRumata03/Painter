@@ -23,6 +23,7 @@
 #include <tests/test_logging.h>
 #include <tests/constraining_tests/problem_constraining_test.h>
 #include <tests/rasterization_tests/opencv_alpha_chanel_test.h>
+#include <tests/cv_tests/threading_test.h>
 #include "utils/Logger.h"
 
 
@@ -76,6 +77,7 @@ int main ()
 	// test_opencv();
 	// test_image_processing_cycle();
 	// test_image_creation();
+	test_cv_threading();
 
 	/// Color converting:
 	// test_color_converting_to_floating_point();

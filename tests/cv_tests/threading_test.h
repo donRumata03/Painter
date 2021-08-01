@@ -12,7 +12,7 @@
  */
 inline void test_cv_threading() {
 	auto print_threads = [](){
-		std::cout << "Num Threads" << cv::getNumThreads() << std::endl;
+		std::cout << "Num Threads: " << cv::getNumThreads() << std::endl;
 	};
 
 	Image i = make_default_image(1920, 1080);
@@ -21,7 +21,15 @@ inline void test_cv_threading() {
 		fill_image(i, { 1, 0, 1 });
 	};
 
+	print_threads();
 	cv::setNumThreads(0);
+	print_threads();
+	par_cv_operation();
+	par_cv_operation();
+	par_cv_operation();
+	print_threads();
+	par_cv_operation();
+	print_threads();
 
 
 }

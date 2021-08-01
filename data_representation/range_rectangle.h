@@ -82,23 +82,26 @@ RangeRectangle<T> convert_rect(const RangeRectangle<F>& source) {
 		if (double(min_allowed_T) > double(value)) {
 			LogConsoleError("convert_rect")
 				<< "Value " << value << " from initial rect is smaller than MIN value of output type ("
-				<< type_name<T>() << ", " << min_allowed_T << ")" << std::endl;
+				<< type_name<T>()
+				        << ", "
+				        << min_allowed_T
+				        << ")\n";
 			throw std::runtime_error("Number doesn't fit into new type");
 		}
 		if (double(max_allowed_T) < double(value)) {
 			LogConsoleError("convert_rect")
 				<< "Value " << value << " from initial rect is bigger than MAX value of output type ("
-				<< type_name<T>() << ", " << max_allowed_T << ")" << std::endl;
+				<< type_name<T>() << ", " << max_allowed_T << ")\n";
 			throw std::runtime_error("Number doesn't fit into new type");
 		}
 	}
 
 	RangeRectangle<T> res = {
-			T {source.min_x},
-			T {source.max_x},
+			T (source.min_x),
+			T (source.max_x),
 
-			T {source.min_y},
-			T {source.max_x},
+			T (source.min_y),
+			T (source.max_x),
 	};
 
 	return res;
