@@ -53,7 +53,7 @@ void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke
 	auto pixels = target_painting.get_pixel_list(unsigned_rectangle);
 
 	/// Use pixels:
-	target_painting.apply_layers(pixels);
+	target_painting.add_pixel_layers(pixels);
 	target_painting.copy_pixels_to_painting(pixels);
 
 	/// Delete pixels:

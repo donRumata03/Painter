@@ -38,10 +38,10 @@ void RasterizedPainting::erase_pixels (const RasterizedPainting::PixelSet& pixel
 	}
 }
 
-void RasterizedPainting::apply_layers (const RasterizedPainting::PixelSet& pixels)
+void RasterizedPainting::add_pixel_layers (const RasterizedPainting::PixelSet& pixels, size_t layer_index)
 {
 	for (const auto& pixel : pixels) {
-		layer_matrix[pixel.first][pixel.second] += 1;
+		layer_matrix[pixel.first][pixel.second].add_color_layer(layer_index, );
 	}
 }
 
