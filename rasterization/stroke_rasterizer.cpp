@@ -54,7 +54,7 @@ void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke
 
 	/// Use pixels:
 	target_painting.add_pixel_layers(pixels);
-	target_painting.copy_pixels_to_painting(pixels);
+	target_painting.paint_pixels(pixels);
 
 	/// Delete pixels:
 	target_painting.erase_pixels(pixels);

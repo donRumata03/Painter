@@ -11,8 +11,9 @@
 
 struct ColoredPosition
 {
-	size_t y, x;
-	color c;
+	li y = 0;
+	li x = 0;
+	color c {};
 };
 
 
@@ -20,18 +21,20 @@ struct RasterizedPainting
 {
 	using PixelSet = std::vector<ColoredPosition>;
 
+
 	Image image;
-	Image layer_tracker;
+	Image cv_stroke_trap;
 	std::vector<std::vector<PixelLayerTracker>> layer_matrix;
 
 	color m_canvas_color;
 
+public:
 	explicit RasterizedPainting(size_t h, size_t w, color canvas_color);
 
 	PixelSet get_pixel_list(const RangeRectangle<size_t>& bounding_box);
 
 	void erase_pixels(const PixelSet& pixels);
-	void copy_pixels_to_painting(const PixelSet& pixels);
+	void paint_pixels(const PixelSet& pixels);
 	void add_pixel_layers(const PixelSet& pixels, size_t layer_index);
 };
 
