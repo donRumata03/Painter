@@ -46,7 +46,7 @@ void from_json(const json& j, PaintPlan& plan)
         assert(0 <= data["color_id"] && data["color_id"] < pallete.size());
 
         colored_stroke col_stroke;
-        from_json(data, (stroke&)col_stroke, cv::Size(plan.canvas.width(), plan.canvas.height()));
+        from_json(data, (stroke&)col_stroke, cv::Size(plan.canvas.width(Units::MM), plan.canvas.height(Units::MM)));
         col_stroke.background_color = convert_color<double>(pallete[data["color_id"]]);
         plan.strokes.emplace_back(col_stroke);
     }

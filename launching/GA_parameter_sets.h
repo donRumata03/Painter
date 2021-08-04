@@ -9,7 +9,7 @@
 
 
 inline auto default_stroking_parameters = CommonStrokingParams{
-		.stroke_number = 100,
+		.stroke_number = 3,
 
         .units = Units::MM,
 		.use_absolute_values = true,

@@ -65,7 +65,7 @@ int main ()
 	std::string strange_zone_path = (fs::path(painter_base_path) / "images_for_testing" / "strange_zone.png").string();
 
 
-	const auto& image_path = van_gogh_svg_path;
+	const auto& image_path = simple_svg_path;
 	LogConsoleInfo("Main") << "Example Image Path: " << image_path;
 	Console() << "_________________________________________________________________________";
 
@@ -77,7 +77,7 @@ int main ()
 	// test_opencv();
 	// test_image_processing_cycle();
 	// test_image_creation();
-	test_cv_threading();
+	// test_cv_threading();
 
 	/// Color converting:
 	// test_color_converting_to_floating_point();
@@ -145,7 +145,7 @@ int main ()
 	// launch_multizone_GA(image_path);
 
 	/// SVG launch:
-    // launch_svg_stroking(image_path);
+    launch_svg_stroking(image_path);
 	// launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
