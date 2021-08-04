@@ -25,7 +25,10 @@ void to_json(json& j, const PaintPlan& plan)
     }
 
     for (size_t i = 0; i < plan.strokes.size(); i++) {
-        j["strokes"][i] = (stroke&)plan.strokes[i];
+        j["strokes"][i] = WithImageSize<stroke> {
+        	plan.strokes[i],
+        	{ int(plan.canvas.width()), int(plan.canvas.width()) }
+        };
         j["strokes"][i]["color_id"] = color_idx[convert_color<uint8_t>(plan.strokes[i].background_color)];
     }
 
@@ -43,7 +46,7 @@ void from_json(const json& j, PaintPlan& plan)
         assert(0 <= data["color_id"] && data["color_id"] < pallete.size());
 
         colored_stroke col_stroke;
-        from_json(data, (stroke&)col_stroke);
+        from_json(data, (stroke&)col_stroke, cv::Size(plan.canvas.width(), plan.canvas.height()));
         col_stroke.background_color = convert_color<double>(pallete[data["color_id"]]);
         plan.strokes.emplace_back(col_stroke);
     }

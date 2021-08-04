@@ -42,9 +42,11 @@ inline void test_stroke_to_json() {
 	std::vector<stroke> strokes(10);
 	std::generate(strokes.begin(), strokes.end(), [&stroke_limit] { return generate_stroke(stroke_limit); });
 
-	json json_strokes = strokes;
+	/// (!!!) Doesn't work:
 
-	std::string json_to_output = json_strokes.dump(1, '\t');
+	// json json_strokes = WithImageSize<std::vector<stroke>> { strokes, cv::Size{int(w), int(h)} };
 
-	write_file(json_to_output, path);
+	// std::string json_to_output = json_strokes.dump(1, '\t');
+
+	// write_file(json_to_output, path);
 }

@@ -13,10 +13,13 @@
 
 inline void problematic_stroke_constraining_test(const fs::path& image_path)
 {
+	cv::Size image_size = { 1920, 1080 };
+
 	// fs::path image_path = painter_base_path / "resources" / "";
 
 	auto stroke_json = json::parse(*read_file(painter_base_path / "tests" / "constraining_tests" / "problematic_stroke_to_test_constraining.json"));
-	auto problematic_stroke = stroke_json.get<colored_stroke>();
+	colored_stroke problematic_stroke;
+	from_json(stroke_json, problematic_stroke, image_size); // stroke_json.get<colored_stroke>();
 
 	stroke_limit_descriptor descriptor = {
 		.min_dx = 0.,
@@ -34,7 +37,7 @@ inline void problematic_stroke_constraining_test(const fs::path& image_path)
 	bool was_already_OK = descriptor.constrain_stroke_to_requirements(problematic_stroke);
 	std::cout << std::boolalpha << "Was already OK: " << was_already_OK << std::endl;
 
-	json output_stroke {problematic_stroke};
+	json output_stroke {WithImageSize<colored_stroke>{problematic_stroke, image_size}};
 	// std::cout << output_stroke << std::endl;
 	fs::path out_path = painter_base_path / "tests" / "constraining_tests" / "constrained_prob_stroke.json";
 	write_file(output_stroke.dump(4), out_path);

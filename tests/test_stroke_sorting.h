@@ -31,9 +31,9 @@ inline void test_stroke_sorting_function(const fs::path& sample_image_path) {
 	if (ends_with(sample_image_path.string(), ".json")) {
 		json j = json::parse(*read_file(sample_image_path));
 
-		stroke_list = j.get<std::vector<colored_stroke>>();
-
 		// TODO: get w, h from json
+		// stroke_list = j.get<std::vector<colored_stroke>>();
+
 	}
 	else if (ends_with(sample_image_path.string(), ".svg")) {
 		/// Get rasterized image:

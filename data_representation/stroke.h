@@ -130,7 +130,8 @@ struct rgb_colored_stroke : stroke
 
 	rgb_color<T> background_color;
 
-	friend std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<T> &stroke);
+	template<class E>
+	friend std::ostream &operator<< (std::ostream &os, const rgb_colored_stroke<E> &stroke);
 
 	template<class NewColorType, std::enable_if_t<not std::is_same_v<ColorDataType, NewColorType>, void*> = nullptr>
 	explicit operator rgb_colored_stroke<NewColorType> () const;
@@ -163,12 +164,20 @@ rgb_colored_stroke<T>::operator rgb_colored_stroke<NewColorType>  () const
 
 
 /// For json:
-void to_json(json& j, const stroke& stroke);
-void to_json(json& j, const colored_stroke& col_stroke);
-void to_json(json& j, const std::vector<colored_stroke>& strokes);
 
-void from_json(const json& j, stroke& stroke);
-void from_json(const json& j, colored_stroke& col_stroke);
-void from_json(const json& j, std::vector<colored_stroke>& strokes);
+template<class Type>
+struct WithImageSize
+{
+	Type object;
+	cv::Size image_size;
+};
+
+void to_json(json& j, const WithImageSize<stroke>& stroke_with_size);
+void to_json(json& j, const WithImageSize<colored_stroke>& col_stroke);
+void to_json(json& j, const WithImageSize<std::vector<colored_stroke>>& strokes);
+
+ void from_json(const json& j, stroke& target_stroke, const cv::Size& image_size);
+// void from_json(const json& j, colored_stroke& col_stroke);
+// void from_json(const json& j, std::vector<colored_stroke>& strokes);
 
 #endif //PAINTER_STROKE_H

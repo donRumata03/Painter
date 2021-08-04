@@ -233,51 +233,74 @@ void stroke::for_each (const Functor &operation, size_t step_number,
 
 /// Json
 
-void to_json(json& j, const stroke& stroke)
+void to_json(json& j, const WithImageSize<stroke>& stroke_with_size)
 {
+	stroke temp_stroke = stroke_with_size.object;
+	auto invert_y = [&](point& p) {
+		p.y = stroke_with_size.image_size.height - p.y - 1;
+	};
+
+	invert_y(temp_stroke.p0);
+	invert_y(temp_stroke.p1);
+	invert_y(temp_stroke.p2);
+
+
 	j["type"] = "quadratic_bezier";
 
-	j["p0"] = stroke.p0;
-	j["p1"] = stroke.p1;
-	j["p2"] = stroke.p2;
+	j["p0"] = temp_stroke.p0;
+	j["p1"] = temp_stroke.p1;
+	j["p2"] = temp_stroke.p2;
 
-	j["width"] = stroke.width;
+	j["width"] = temp_stroke.width;
 }
 
-void to_json(json& j, const colored_stroke& col_stroke)
+void to_json(json& j, const WithImageSize<colored_stroke>& col_stroke)
 {
-    to_json(j, (stroke&)col_stroke);
+    to_json(j, (WithImageSize<stroke>&)col_stroke);
 
-    j["color"] = convert_color<uint8_t>(col_stroke.background_color);
+    j["color"] = convert_color<uint8_t>(col_stroke.object.background_color);
 }
 
 
-void to_json(json& j, const std::vector<colored_stroke>& strokes)
+void to_json(json& j, const WithImageSize<std::vector<colored_stroke>>& strokes)
 {
-    for (size_t i = 0; i < strokes.size(); i++) j[i] = strokes[i];
+    for (size_t i = 0; i < strokes.object.size(); i++)
+    	j[i] = WithImageSize<colored_stroke>{ strokes.object[i], strokes.image_size };
 }
 
-void from_json(const json& j, stroke& stroke)
+void from_json(const json& j, stroke& target_stroke, const cv::Size& image_size)
 {
 	assert(j["type"] == "quadratic_bezier");
 
-	stroke.p0 = j["p0"].get<point>();
-	stroke.p1 = j["p1"].get<point>();
-	stroke.p2 = j["p2"].get<point>();
+	auto temp_stroke = stroke{};
 
-	stroke.width = j["width"].get<double>();
+	temp_stroke.p0 = j["p0"].get<point>();
+	temp_stroke.p1 = j["p1"].get<point>();
+	temp_stroke.p2 = j["p2"].get<point>();
+
+	temp_stroke.width = j["width"].get<double>();
+
+	target_stroke = temp_stroke;
+
+	auto invert_y = [&](point& p) {
+		p.y = image_size.height - p.y - 1;
+	};
+
+	invert_y(target_stroke.p0);
+	invert_y(target_stroke.p1);
+	invert_y(target_stroke.p2);
 }
 
-void from_json(const json& j, colored_stroke& col_stroke)
-{
-    assert(not j.at("color").empty());
-
-    from_json(j, (stroke&)col_stroke);
-    byte_color col = j.at("color");
-    col_stroke.background_color = convert_color<double>(col);
-}
-
-void from_json(const json& j, std::vector<colored_stroke>& strokes)
-{
-    for (size_t i = 0; i < strokes.size(); i++) strokes[i] = j[i];
-}
+//void from_json(const json& j, colored_stroke& col_stroke)
+//{
+//    assert(not j.at("color").empty());
+//
+//    from_json(j, (stroke&)col_stroke);
+//    byte_color col = j.at("color");
+//    col_stroke.background_color = convert_color<double>(col);
+//}
+//
+//void from_json(const json& j, std::vector<colored_stroke>& strokes)
+//{
+//    for (size_t i = 0; i < strokes.size(); i++) strokes[i] = j[i];
+//}
