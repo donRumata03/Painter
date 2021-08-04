@@ -24,6 +24,7 @@
 #include <tests/constraining_tests/problem_constraining_test.h>
 #include <tests/rasterization_tests/opencv_alpha_chanel_test.h>
 #include <tests/cv_tests/threading_test.h>
+#include <tests/rasterization_tests/layer_tracker_test.h>
 #include "utils/Logger.h"
 
 
@@ -101,6 +102,7 @@ int main ()
 	// test_intersection_alpha_channel_in_opencv();
 	// draw_circle_test();
 	// draw_line_test();
+	test_pixel_layer_tracking();
 
 	/// Error counting:
 	// test_image_mse();
@@ -145,7 +147,7 @@ int main ()
 	// launch_multizone_GA(image_path);
 
 	/// SVG launch:
-    launch_svg_stroking(image_path);
+    // launch_svg_stroking(image_path);
 	// launch_svg_zone_stroking<GA_worker>(image_path, canvas);
     // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 

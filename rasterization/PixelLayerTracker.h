@@ -30,5 +30,5 @@ private:
 public:
 	void add_color_layer(li priority, color c);
 	color remove_layer_by_priority(li priority);
-	color get_pixel_color();
+	std::optional<color> get_pixel_color();
 };

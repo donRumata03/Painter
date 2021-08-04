@@ -4,6 +4,8 @@
 
 #include "RasterizedPainting.h"
 
+
+
 RasterizedPainting::RasterizedPainting (size_t h, size_t w, color canvas_color)
 		: m_canvas_color(canvas_color)
 {

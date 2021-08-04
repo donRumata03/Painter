@@ -28,11 +28,14 @@ bool PixelColorByPriority::operator>= (const PixelColorByPriority& rhs) const
 
 ///												Pixel Layer Tracker
 
-color PixelLayerTracker::get_pixel_color()
+std::optional<color> PixelLayerTracker::get_pixel_color()
 {
-	// TODO: add color blending!
+	if (m_data.empty()) {
+		return {};
+	}
 
-	return m_data.end()->second;
+	// TODO: add color blending!
+	return m_data.rbegin()->second;
 }
 
 void PixelLayerTracker::add_color_layer (li priority, color c)
@@ -43,6 +46,10 @@ void PixelLayerTracker::add_color_layer (li priority, color c)
 color PixelLayerTracker::remove_layer_by_priority (li priority)
 {
 	auto it = m_data.find(priority);
+	if (it == m_data.end()) {
+		throw std::runtime_error("Can't find layer with given priority!");
+	}
+
 	color c = it->second;
 	m_data.erase(it);
 
