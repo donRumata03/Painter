@@ -152,7 +152,7 @@ add_executable(Painter
         utils/Progress.h
         utils/glue_video.h
         utils/Logger.h
-        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h tests/constraining_tests/problem_constraining_test.h utils/formatted_output.h tests/rasterization_tests/opencv_alpha_chanel_test.h tests/cv_tests/threading_test.h coloring/color_zone_splitting.cpp coloring/color_zone_splitting.h)
+        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h tests/constraining_tests/problem_constraining_test.h utils/formatted_output.h tests/rasterization_tests/opencv_alpha_chanel_test.h tests/cv_tests/threading_test.h coloring/color_zone_splitting.cpp coloring/color_zone_splitting.h rasterization/PixelLayerTracker.cpp rasterization/PixelLayerTracker.h)
 
 include_directories(./)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)

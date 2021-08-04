@@ -50,3 +50,4 @@ void RasterizedPainting::copy_pixels_to_painting (const RasterizedPainting::Pixe
 		        layer_tracker.at<cv::Vec3d>(pixel.first, pixel.second);
 	}
 }
+
