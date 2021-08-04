@@ -5,27 +5,6 @@
 #include "PixelLayerTracker.h"
 
 
-bool PixelColorByPriority::operator< (const PixelColorByPriority& rhs) const
-{
-	return priority < rhs.priority;
-}
-
-bool PixelColorByPriority::operator> (const PixelColorByPriority& rhs) const
-{
-	return rhs < *this;
-}
-
-bool PixelColorByPriority::operator<= (const PixelColorByPriority& rhs) const
-{
-	return !(rhs < *this);
-}
-
-bool PixelColorByPriority::operator>= (const PixelColorByPriority& rhs) const
-{
-	return !(*this < rhs);
-}
-
-
 ///												Pixel Layer Tracker
 
 std::optional<color> PixelLayerTracker::get_pixel_color()

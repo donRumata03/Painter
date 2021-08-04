@@ -6,19 +6,6 @@
 
 #include "io_api/image_io_utils.h"
 
-
-struct PixelColorByPriority
-{
-	size_t priority = 0;
-	color c{};
-
-	bool operator< (const PixelColorByPriority& rhs) const;
-	bool operator> (const PixelColorByPriority& rhs) const;
-	bool operator<= (const PixelColorByPriority& rhs) const;
-	bool operator>= (const PixelColorByPriority& rhs) const;
-};
-
-
 /**
  * Stores color layers with priority for pixels
  */
