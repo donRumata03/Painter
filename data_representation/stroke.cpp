@@ -210,11 +210,13 @@ RangeRectangle<double> stroke::get_stroke_bounding_box () const
 {
 	RangeRectangle<double> box = get_curve_bounding_box();
 
-	box.min_y -= width;
-	box.min_x -= width;
+	double padding = (width / 2) * 1.1;
 
-	box.max_y += width;
-	box.max_x += width;
+	box.min_y -= padding;
+	box.min_x -= padding;
+
+	box.max_y += padding;
+	box.max_x += padding;
 
 	return box;
 }

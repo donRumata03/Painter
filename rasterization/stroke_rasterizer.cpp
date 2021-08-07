@@ -37,32 +37,21 @@ void rasterize_stroke (Image& target_image, const colored_stroke& stroke, size_t
 
 
 
-void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke &stroke, size_t point_number, StrokeRasterizationAlgorithm algo)
+void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke& stroke, li layer_index,
+                       size_t point_number, StrokeRasterizationAlgorithm algo)
 {
+	rasterize_stroke(target_painting.cv_stroke_trap, stroke, point_number, algo);
 
 	/// Prepare bounding-box:
-	RangeRectangle<li> image_range_rectangle = get_image_range_limits(target_painting.image);
-
 	auto stroke_float_rect = stroke.get_stroke_bounding_box();
 	auto stroke_int_rect = convert_rect<li>(stroke_float_rect);
 
-	image_range_rectangle.constrain_rect_to_fit_into_me(stroke_int_rect);
-	auto unsigned_rectangle = convert_rect<size_t>(stroke_int_rect);
-
-	/// Get stroke pixels:
-	auto pixels = target_painting.get_pixel_list(unsigned_rectangle);
-
-	/// Use pixels:
-	target_painting.add_pixel_layers(pixels);
-	target_painting.paint_pixels(pixels);
-
-	/// Delete pixels:
-	target_painting.erase_pixels(pixels);
+	target_painting.process_pixels_from_trap(stroke_int_rect, layer_index);
 }
 
 void rasterize_strokes (RasterizedPainting& target_painting, const std::vector<colored_stroke> &strokes, size_t point_number, StrokeRasterizationAlgorithm algo)
 {
-	for (const auto& stroke : strokes) rasterize_stroke(target_painting, stroke, point_number, algo);
+	for (const auto& stroke : strokes) rasterize_stroke(target_painting, stroke, 0, point_number, algo);
 }
 
 void rasterize_strokes (Image& target_image, const std::vector<colored_stroke> &strokes, size_t point_number, StrokeRasterizationAlgorithm algo)

@@ -22,20 +22,31 @@ struct RasterizedPainting
 	using PixelSet = std::vector<ColoredPosition>;
 
 
-	Image image;
+	// Image image;
+
 	Image cv_stroke_trap;
 	std::vector<std::vector<PixelLayerTracker>> layer_matrix;
 
 	color m_canvas_color;
 
 public:
-	explicit RasterizedPainting(size_t h, size_t w, color canvas_color);
+	explicit RasterizedPainting(li h, li w, color canvas_color);
 
-	PixelSet get_pixel_list(const RangeRectangle<size_t>& bounding_box);
+	/// Working with pixel lists:
+	PixelSet get_pixel_list(const RangeRectangle<li>& bounding_box);
 
-	void erase_pixels(const PixelSet& pixels);
-	void paint_pixels(const PixelSet& pixels);
-	void add_pixel_layers(const PixelSet& pixels, size_t layer_index);
+	void erase_trap_pixels(const PixelSet& pixels);
+	// void paint_pixels(const PixelSet& pixels);
+	void add_pixel_layer(const PixelSet& pixels, size_t layer_index);
+
+	void process_pixels_from_trap (const RangeRectangle<li>& possible_bounding_box, li layer_index);
+
+	/// Indexing:
+	PixelLayerTracker& layers_at(li y, li x) { return layer_matrix[y][x]; }
+	color color_at(li y, li x) { return *layers_at(y, x).get_pixel_color(); }
+
+	///
+	Image render_image();
 };
 
 
