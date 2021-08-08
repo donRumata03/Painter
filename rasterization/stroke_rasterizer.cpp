@@ -51,7 +51,9 @@ void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke
 
 void rasterize_strokes (RasterizedPainting& target_painting, const std::vector<colored_stroke> &strokes, size_t point_number, StrokeRasterizationAlgorithm algo)
 {
-	for (const auto& stroke : strokes) rasterize_stroke(target_painting, stroke, 0, point_number, algo);
+	for (li stroke_index = 0; stroke_index < strokes.size(); ++stroke_index) {
+		rasterize_stroke(target_painting, strokes[stroke_index], stroke_index, point_number, algo);
+	}
 }
 
 void rasterize_strokes (Image& target_image, const std::vector<colored_stroke> &strokes, size_t point_number, StrokeRasterizationAlgorithm algo)

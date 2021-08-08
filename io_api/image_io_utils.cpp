@@ -2,6 +2,7 @@
 // Created by Vova on 13.07.2020.
 //
 
+#include <utils/Logger.h>
 #include "image_io_utils.h"
 
 /*
@@ -103,6 +104,12 @@ void save_image (const Image &img, const fs::path &filename)
 void show_image_in_system_viewer (const Image &img, const std::string &temp_name)
 {
 	std::string temp_folder = (painter_base_path / "resources"s / "temp"s).string();
+	if (not fs::exists(temp_folder)) {
+		LogConsoleWarning("Show image in system viewer") << "Temp folder for showing image image saving doesn't exist "
+													  "==> creating the folder: " << temp_folder;
+
+		fs::create_directory(temp_folder);
+	}
 	// std::cout << "temp folder is: " << temp_folder << std::endl;
 
 	auto space_checker = [](const std::string& which_path, const std::string& path_name){
@@ -164,7 +171,11 @@ void show_image_in_system_viewer (const Image &img, const std::string &temp_name
 
 	save_image(img, filename);
 
+#ifdef PYTHONIC_IS_LINUX
+	system(("xdg-open " + filename).c_str());
+#else
 	system(filename.c_str());
+#endif
 }
 
 

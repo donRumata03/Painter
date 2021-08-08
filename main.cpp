@@ -149,7 +149,7 @@ int main ()
 	/// SVG launch:
     // launch_svg_stroking(image_path);
 	// launch_svg_zone_stroking<GA_worker>(image_path, canvas);
-    // launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
+    launch_svg_zone_stroking<AnnealingWorker>(image_path, canvas);
 
 
 

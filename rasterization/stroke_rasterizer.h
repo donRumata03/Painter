@@ -17,5 +17,5 @@ void rasterize_stroke(Image& target_image, const colored_stroke& stroke,
 void rasterize_stroke (RasterizedPainting& target_painting, const colored_stroke& stroke, li layer_index,
                        size_t point_number = 100, StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::smooth);
 
-void rasterize_strokes(RasterizedPainting& target_painting, const std::vector<colored_stroke>& strokes, li layer_index, size_t point_number = 100, StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::smooth);
+void rasterize_strokes(RasterizedPainting& target_painting, const std::vector<colored_stroke>& strokes, size_t point_number = 100, StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::smooth);
 void rasterize_strokes(Image& target_image, const std::vector<colored_stroke>& strokes, size_t point_number = 100, StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::smooth);
