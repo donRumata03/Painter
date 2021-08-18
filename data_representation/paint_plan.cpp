@@ -25,9 +25,9 @@ void to_json(json& j, const PaintPlan& plan)
     }
 
     for (size_t i = 0; i < plan.strokes.size(); i++) {
-        j["strokes"][i] = WithImageSize<stroke> {
+        j["strokes"][i] = ContextWrapper<stroke> {
         	plan.strokes[i],
-        	{ int(plan.canvas.width()), int(plan.canvas.width()) }
+        	plan.canvas
         };
         j["strokes"][i]["color_id"] = color_idx[convert_color<uint8_t>(plan.strokes[i].background_color)];
     }
@@ -38,6 +38,8 @@ void to_json(json& j, const PaintPlan& plan)
 
 void from_json(const json& j, PaintPlan& plan)
 {
+    plan.canvas = j["canvas"];
+
     std::vector<byte_color> pallete = j["colors"];
 
     for (const auto &data : j["strokes"])
@@ -46,11 +48,10 @@ void from_json(const json& j, PaintPlan& plan)
         assert(0 <= data["color_id"] && data["color_id"] < pallete.size());
 
         colored_stroke col_stroke;
-        from_json(data, (stroke&)col_stroke, cv::Size(plan.canvas.width(Units::MM), plan.canvas.height(Units::MM)));
+        from_json(data, (stroke&)col_stroke, plan.canvas);
         col_stroke.background_color = convert_color<double>(pallete[data["color_id"]]);
         plan.strokes.emplace_back(col_stroke);
     }
 
     plan.palette = std::unordered_set<byte_color>(pallete.begin(), pallete.end());
-    plan.canvas = j["canvas"];
 }

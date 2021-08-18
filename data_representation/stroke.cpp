@@ -235,11 +235,11 @@ void stroke::for_each (const Functor &operation, size_t step_number,
 
 /// Json
 
-void to_json(json& j, const WithImageSize<stroke>& stroke_with_size)
+void to_json(json& j, const ContextWrapper<stroke>& wrapped_stroke)
 {
-	stroke temp_stroke = stroke_with_size.object;
+	stroke temp_stroke = wrapped_stroke.object;
 	auto invert_y = [&](point& p) {
-		p.y = stroke_with_size.image_size.height - p.y - 1;
+	    p.y = wrapped_stroke.canvas.height(Units::MM) - p.y;
 	};
 
 	invert_y(temp_stroke.p0);
@@ -256,21 +256,21 @@ void to_json(json& j, const WithImageSize<stroke>& stroke_with_size)
 	j["width"] = temp_stroke.width;
 }
 
-void to_json(json& j, const WithImageSize<colored_stroke>& col_stroke)
+void to_json(json& j, const ContextWrapper<colored_stroke>& col_stroke)
 {
-    to_json(j, (WithImageSize<stroke>&)col_stroke);
+    to_json(j, (ContextWrapper<stroke>&)col_stroke);
 
     j["color"] = convert_color<uint8_t>(col_stroke.object.background_color);
 }
 
 
-void to_json(json& j, const WithImageSize<std::vector<colored_stroke>>& strokes)
+void to_json(json& j, const ContextWrapper<std::vector<colored_stroke>>& strokes)
 {
     for (size_t i = 0; i < strokes.object.size(); i++)
-    	j[i] = WithImageSize<colored_stroke>{ strokes.object[i], strokes.image_size };
+    	j[i] = ContextWrapper<colored_stroke>{ strokes.object[i], strokes.canvas };
 }
 
-void from_json(const json& j, stroke& target_stroke, const cv::Size& image_size)
+void from_json(const json& j, stroke& target_stroke, const Canvas& canvas)
 {
 	assert(j["type"] == "quadratic_bezier");
 
@@ -285,7 +285,7 @@ void from_json(const json& j, stroke& target_stroke, const cv::Size& image_size)
 	target_stroke = temp_stroke;
 
 	auto invert_y = [&](point& p) {
-		p.y = image_size.height - p.y - 1;
+		p.y = canvas.height(Units::MM) - p.y;
 	};
 
 	invert_y(target_stroke.p0);

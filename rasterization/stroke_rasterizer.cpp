@@ -10,6 +10,11 @@
 void rasterize_stroke (Image& target_image, const colored_stroke& stroke, size_t point_number,
                        StrokeRasterizationAlgorithm algo)
 {
+    if (stroke.width <= 0) {
+        LogError("Rasterization") << "Invalid stroke width: " << stroke;
+        return;
+    }
+
 	auto opencv_stroke_color = stroke.background_color.to_OpenCV_Vec3();
 
 	RangeRectangle<li> image_range_rectangle = get_image_range_limits(target_image);
@@ -20,7 +25,7 @@ void rasterize_stroke (Image& target_image, const colored_stroke& stroke, size_t
 			auto p = stroke.coords_at(t);
 
 			if (image_range_rectangle.point_satisfies_requirements(p)) cv_points.emplace_back(int(std::round(p.x)), int(std::round(p.y)));
-			else LogError("Rasterization") << "Problem: x = " << p.x << ", y = " << p.y <<
+			else LogError("Rasterization") << "Not in rect: x = " << p.x << ", y = " << p.y <<
 			                               " | rect (" << image_range_rectangle.min_x << ", " << image_range_rectangle.min_y << ", " << image_range_rectangle.max_x << ", " << image_range_rectangle.max_y << ")";
 		}
 

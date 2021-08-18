@@ -9,6 +9,7 @@
 #include <ostream>
 
 #include "color.h"
+#include "canvas.h"
 #include "range_rectangle.h"
 
 
@@ -166,17 +167,17 @@ rgb_colored_stroke<T>::operator rgb_colored_stroke<NewColorType>  () const
 /// For json:
 
 template<class Type>
-struct WithImageSize
+struct ContextWrapper
 {
 	Type object;
-	cv::Size image_size;
+	const Canvas& canvas;
 };
 
-void to_json(json& j, const WithImageSize<stroke>& stroke_with_size);
-void to_json(json& j, const WithImageSize<colored_stroke>& col_stroke);
-void to_json(json& j, const WithImageSize<std::vector<colored_stroke>>& strokes);
+void to_json(json& j, const ContextWrapper<stroke>& stroke_with_size);
+void to_json(json& j, const ContextWrapper<colored_stroke>& col_stroke);
+void to_json(json& j, const ContextWrapper<std::vector<colored_stroke>>& strokes);
 
- void from_json(const json& j, stroke& target_stroke, const cv::Size& image_size);
+ void from_json(const json& j, stroke& target_stroke, const Canvas& image_size);
 // void from_json(const json& j, colored_stroke& col_stroke);
 // void from_json(const json& j, std::vector<colored_stroke>& strokes);
 
