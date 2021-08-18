@@ -7,3 +7,6 @@
 [submodule "dependencies/lunasvg"]
 	path = dependencies/lunasvg
 	url = https://github.com/sammycage/lunasvg
+[submodule "dependencies/argparse"]
+	path = dependencies/argparse
+	url = https://github.com/p-ranav/argparse.git
