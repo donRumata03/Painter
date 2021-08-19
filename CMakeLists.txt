@@ -23,6 +23,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export build command to analyze them in 
 add_executable(Painter
 
         main.cpp
+
+        # Data
+
+
+        # Launch
+        launch/launch.cpp
         )
 
 include_directories(./)
