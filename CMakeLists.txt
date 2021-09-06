@@ -7,8 +7,6 @@ if (UNIX)
     set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 endif()
 
-include("CMake/LibraryConfig.cmake") # Library locations
-
 ################################################################################
 
 project(Painter)
@@ -18,18 +16,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export build command to analyze them in CppDepend
 
-
-# Main program
-add_executable(Painter
-
-        main.cpp
-
+set(SOURCE_FILES
         # Data
-
+        data/color.cpp
+        data/canvas.cpp
+        data/paint_plan.cpp
+        data/range_rectangle.cpp
+        data/stroke.cpp
+        data/units.cpp
 
         # Launch
-        launch/launch.cpp
-        )
+        launch/launch.cpp)
+
+add_library(Painter-lib STATIC ${SOURCE_FILES})
+
+# Main program
+add_executable(Painter main.cpp)
+target_link_libraries(Painter PRIVATE Painter-lib)
 
 include_directories(./)
 
@@ -38,6 +41,7 @@ include_directories(./)
 set(PROJECT_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/dependencies)
 message(STATUS "Loading dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
 
+include("CMake/LibraryConfig.cmake") # Library locations
 
 ## OpenCV
 message(STATUS "Load OpenCV")
@@ -51,10 +55,10 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message("Debug ${OpenCV_LIBS}")
-    target_link_libraries(Painter debug ${OpenCV_LIBS})
+    target_link_libraries(Painter-lib debug ${OpenCV_LIBS})
 else()
     message("Release ${OpenCV_LIBS}")
-    target_link_libraries(Painter ${OpenCV_LIBS})
+    target_link_libraries(Painter-lib ${OpenCV_LIBS})
 endif()
 
 
@@ -73,10 +77,10 @@ find_package(LunaSVG REQUIRED)
 include_directories(${LunaSVG_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message("Debug ${LunaSVG_LIBRARY}")
-    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+    target_link_libraries(Painter-lib ${LunaSVG_LIBRARY})
 else()
     message("Release ${LunaSVG_LIBRARY}")
-    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+    target_link_libraries(Painter-lib ${LunaSVG_LIBRARY})
 endif()
 
 
@@ -103,7 +107,7 @@ set(Pythonic_DIR ${CURRENT_PYTHONIC_DIR})
 find_package(Pythonic REQUIRED)
 
 include_directories(${pythonic_include_directories})
-target_link_libraries(Painter ${pythonic_static_libraries})
+target_link_libraries(Painter-lib ${pythonic_static_libraries})
 
 
 ## PowerfulGA
@@ -113,9 +117,14 @@ set(PowerfulGA_DIR ${CURRENT_GA_DIR})
 find_package(PowerfulGA REQUIRED)
 
 include_directories(${PowerfulGA_include_directories})
-target_link_libraries(Painter ${PowerfulGA_static_libraries})
+target_link_libraries(Painter-lib ${PowerfulGA_static_libraries})
 
+
+# Testing
+add_subdirectory(${CURRENT_GTEST_DIR})
+add_subdirectory(tests)
 
 # Run Cotire on the project in order to speed the build up by deducting precompiled headers
 include(cotire)
+cotire(Painter-lib)
 cotire(Painter)
