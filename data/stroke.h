@@ -4,6 +4,7 @@
 
 #include "data/color.h"
 #include "data/canvas.h"
+#include "data/range_rectangle.h"
 
 
 enum class StrokeRasterizationAlgorithm { // TODO: move to /rasterization/
@@ -15,24 +16,30 @@ enum class StrokeRasterizationAlgorithm { // TODO: move to /rasterization/
 
 
 /**
- * It`s basically a 2nd order Bezier curve => contains 3 × 2d-points
-*/
+ * A quadratic Bezier curve with thickness
+ */
 struct Stroke {
-  using Point = point;
-
   Point p0{}, p1{}, p2{};
-  double width = -1;
+  double width;
 
+  Stroke() = default;
+  Stroke(Point p0, Point p1, Point p2, double width = 1) : p0(p0), p1(p1), p2(p2), width(width) {}
 
-  [[nodiscard]] Point coords_at(double t) const; // Count the Point of Bezier curve corresponding to t value given as the argument
-  [[nodiscard]] double height_at(double t) const; // The height of the curve at x corresponding to time Point t
-  [[nodiscard]] Point derivative_at(double t) const; // Returns pair of dx/dt and dy/dt
+  /**
+   * Count the Point of Bezier curve corresponding to t value given as the argument
+   */
+  [[nodiscard]] Point coords_at(double t) const;
+  /**
+   * The height of the curve at x corresponding to time Point t
+   */
+  [[nodiscard]] double height_at(double t) const;
+  /**
+   * @return A pair of dx/dt and dy/dt
+   */
+  [[nodiscard]] Point derivative_at(double t) const;
   [[nodiscard]] double t_at(const Point& point_in_stroke) const;
   [[nodiscard]] double length() const;
 
-  /**
-   * Width isn`t used to determine the rectangle
-   */
   [[nodiscard]] RangeRectangle<double> get_curve_bounding_box() const;
   [[nodiscard]] RangeRectangle<double> get_stroke_bounding_box() const;
   [[nodiscard]] Point center() const { return (p0 + p1 + p2) / 3; }
@@ -41,16 +48,14 @@ struct Stroke {
   void scale_from_center(double scale_factor);
 
   /**
-   * @param range_limits: if it`s not std::nullopt, only pixels
-   * for x in [range_params->min_x, range_params->max_x)
-   * and for y in [range_params->min_y, range_params->max_y)
-   * are processed.
+   * @param range_limits If it`s not std::nullopt, only pixels for x in [range_params->min_x, range_params->max_x) and
+   * for y in [range_params->min_y, range_params->max_y) are processed.
   */
   template<class Functor>
   void for_each(const Functor& operation, size_t step_number = 10000,
                 std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
                 StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines) const;
-  // ^^^ TODO: Measure and ...make it parallel?
+  // TODO: Measure and make it parallel?
 
 
   [[nodiscard]] std::vector<Point> get_points(
@@ -58,11 +63,11 @@ struct Stroke {
           std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
           StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines) const;
 
-  friend std::ostream &operator<< (std::ostream &os, const stroke &stroke);
+  friend std::ostream &operator<< (std::ostream &os, const Stroke &stroke);
 };
 
 
-/// Template function implementations:
+/// Template function implementations
 
 template <class Functor>
 void Stroke::for_each (const Functor& operation, const size_t step_number,
@@ -106,14 +111,16 @@ void Stroke::for_each (const Functor& operation, const size_t step_number,
 
 
 /**
- * Colored version of stroke:
+ * Colored version of stroke
  */
-
 template<class T>
 struct RgbColoredStroke : Stroke {
   using ColorDataType = T;
 
   RgbColor<T> background_color;
+
+  RgbColoredStroke() = default;
+  RgbColoredStroke(Point p0, Point p1, Point p2, double width = 1) : Stroke(p0, p1, p2, width) {}
 
   template<class E>
   friend std::ostream &operator<< (std::ostream &os, const RgbColoredStroke<E> &stroke);
@@ -147,6 +154,10 @@ RgbColoredStroke<OldColorType>::operator RgbColoredStroke<NewColorType>() const 
 
 
 /// Json
+
+/**
+ * Wrapper for objects e.g. Stroke, combining it with context information about painting
+ */
 template<class Type>
 struct ContextWrapper {
   Type object;
@@ -157,4 +168,4 @@ void to_json(json& j, const ContextWrapper<Stroke>& stroke_with_size);
 void to_json(json& j, const ContextWrapper<ColoredStroke>& col_stroke);
 void to_json(json& j, const ContextWrapper<std::vector<ByteColoredStroke>>& strokes);
 
-void from_json(const json& j, Stroke& target_stroke, const Canvas& image_size);
+void from_json(const json& j, Stroke& target_stroke, const Canvas& canvas);

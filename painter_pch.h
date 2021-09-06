@@ -13,8 +13,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-// Constants
+// Typedefs
+using Image = cv::Mat;
+using Point = point;
 
+// Constants
 #include "utils_constexpr/stringing.h"
 inline constexpr const char* painter_pch_file_path = __FILE__;
 inline std::filesystem::path painter_base_path = get_path_folder(painter_pch_file_path);

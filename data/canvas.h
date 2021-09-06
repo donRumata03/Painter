@@ -5,7 +5,7 @@
 
 
 struct TransformImageData {
-  point move_vector;
+  Point move_vector;
   double scale_factor;
 };
 
@@ -19,10 +19,16 @@ class Canvas {
 
  public:
   Canvas() = default;
-  Canvas(size_t mm_width, size_t mm_height, size_t dpi = 96);
 
-  [[nodiscard]] size_t width(Units units = Units::PX) const { return units == Units::PX ? (size_t)std::round(mm2px(mm_width)) : mm_width; }
-  [[nodiscard]] size_t height(Units units = Units::PX) const { return units == Units::PX ? (size_t)std::round(mm2px(mm_height)) : mm_height; }
+  Canvas(size_t mm_width, size_t mm_height, size_t dpi = 96) : mm_width(mm_width), mm_height(mm_height), _dpi(dpi) {}
+
+  [[nodiscard]] size_t width(Units units = Units::PX) const {
+    return units == Units::PX ? (size_t) std::round(mm2px(mm_width)) : mm_width;
+  }
+
+  [[nodiscard]] size_t height(Units units = Units::PX) const {
+    return units == Units::PX ? (size_t) std::round(mm2px(mm_height)) : mm_height;
+  }
 
   [[nodiscard]] size_t dpi() const { return _dpi; }
 

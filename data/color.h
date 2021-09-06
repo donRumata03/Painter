@@ -2,8 +2,6 @@
 
 #include "painter_pch.h"
 
-using Image = cv::Mat;
-// using for_each_Pixel = cv::Point2d;
 
 class BgrVec {}; // A tag type
 class RgbVec {}; // A tag type
@@ -22,11 +20,23 @@ struct RgbColor {
   T r{}, g{}, b{};
 
   RgbColor() = default;
-  RgbColor(T _r, T _g, T _b) : r(_r), g(_g), b(_b) {  }
+  RgbColor(T _r, T _g, T _b) : r(_r), g(_g), b(_b) {}
   RgbColor(BgrVec, const cv::Vec<T, 3>& cv_bgr_color) : r(cv_bgr_color[2]), g(cv_bgr_color[1]), b(cv_bgr_color[0]) {}
   RgbColor(RgbVec, const cv::Vec<T, 3>& cv_rgb_color) : r(cv_rgb_color[0]), g(cv_rgb_color[1]), b(cv_rgb_color[2]) {}
-  explicit RgbColor(const std::vector<T>& vector) { assert(vector.size() == 3);r = vector[0]; g = vector[1]; b = vector[2]; }
-  explicit RgbColor(const std::array<T, 3>& array) { r = array[0]; g = array[1]; b = array[2]; }
+
+  [[noreturn]] explicit RgbColor(const std::vector<T>& vector) {
+    assert(vector.size() == 3);
+    r = vector[0];
+    g = vector[1];
+    b = vector[2];
+  }
+
+  explicit RgbColor(const std::array<T, 3>& array) {
+    r = array[0];
+    g = array[1];
+    b = array[2];
+  }
+
   explicit RgbColor(const cv::Point3_<T>& cv_point);
 
   cv::Vec<T, 3> to_OpenCV_Vec3() const;
@@ -34,12 +44,13 @@ struct RgbColor {
   std::vector<T> to_vector() const;
   std::array<T, 3> to_array() const;
 
-  T& operator [](size_t color_index);
-  const T& operator [](size_t index) const;
+  T& operator[](size_t color_index);
+  const T& operator[](size_t index) const;
 
-  template<class Type> friend std::ostream &operator<<(std::ostream &os, const RgbColor<Type> &rgb_color);
+  template <class Type>
+  friend std::ostream& operator<<(std::ostream& os, const RgbColor<Type>& rgb_color);
 
-  auto operator <=>(const RgbColor<T>&) const = default;
+  auto operator<=>(const RgbColor<T>&) const = default;
 
   double brightness();
 };
@@ -57,34 +68,33 @@ std::array<T, 3> RgbColor<T>::to_array() const {
 }
 
 template <class T>
-RgbColor<T>::RgbColor(const cv::Point3_<T> &cv_point) : r(cv_point.x), g(cv_point.y), b(cv_point.z) {}
+RgbColor<T>::RgbColor(const cv::Point3_<T>& cv_point) : r(cv_point.x), g(cv_point.y), b(cv_point.z) {}
 
 
 /// RgbColor float convertors
 template <class F, class I>
 RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>> to_floating_point(
-    const RgbColor<std::enable_if_t<std::is_integral_v<I>, I>>& initial_color);
+        const RgbColor<std::enable_if_t<std::is_integral_v<I>, I>>& initial_color);
 
 template <class I, class F>
 RgbColor<std::enable_if_t<std::is_integral_v<I>, I>> from_floating_point(
-    const RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color);
+        const RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color);
 
 template <class E, class T>
 auto convert_color(const RgbColor<T>& initial_color) {
-  static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>, "Exactly one of the types should be floating Point!");
+  static_assert(std::is_floating_point_v<T> ^ std::is_floating_point_v<E>,
+                "Exactly one of the types should be floating Point!");
   if constexpr(std::is_floating_point_v<T>) {
     return from_floating_point<E, T>(initial_color);
-  }
-  else {
+  } else {
     return to_floating_point<E, T>(initial_color);
   }
 }
 
 
-
 template <class F, class I>
 RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>> to_floating_point(
-    const RgbColor<std::enable_if_t<std::is_integral_v<I>, I>>& initial_color) {
+        const RgbColor<std::enable_if_t<std::is_integral_v<I>, I>>& initial_color) {
   F div_factor = 1 / F(std::numeric_limits<I>::max() - std::numeric_limits<I>::min());
   F offset = std::numeric_limits<I>::min();
   RgbColor<F> res = {
@@ -98,7 +108,7 @@ RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>> to_floating_point(
 template <class I, class F>
 RgbColor<std::enable_if_t<std::is_integral_v<I>, I>> from_floating_point(
         const RgbColor<std::enable_if_t<std::is_floating_point_v<F>, F>>& initial_color) {
-  auto range_checker = [](F value){ return F(0) <= value && F(1) >= value; };
+  auto range_checker = [](F value) { return F(0) <= value && F(1) >= value; };
   assert(range_checker(initial_color.r));
   assert(range_checker(initial_color.g));
   assert(range_checker(initial_color.b));
@@ -116,7 +126,7 @@ RgbColor<std::enable_if_t<std::is_integral_v<I>, I>> from_floating_point(
 
 /// RGB_color operators
 template <class T>
-inline void hash_combine(std::size_t & seed, const T & v) {
+inline void hash_combine(std::size_t& seed, const T& v) {
   std::hash<T> hasher;
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
@@ -124,7 +134,7 @@ inline void hash_combine(std::size_t & seed, const T & v) {
 // TODO: make it converting operator
 template <class T>
 cv::Vec<T, 3> RgbColor<T>::to_OpenCV_Vec3() const {
-  return cv::Vec<T, 3> {r, g, b};
+  return cv::Vec<T, 3>{r, g, b};
 }
 
 template <class T>
@@ -134,14 +144,14 @@ cv::Scalar RgbColor<T>::to_OpenCV_Scalar() const {
 
 
 template <class T>
-std::ostream &operator<<(std::ostream &os, const RgbColor<T> &rgb_color) {
+std::ostream& operator<<(std::ostream& os, const RgbColor<T>& rgb_color) {
   os << "RGB_Color { r: " << double(rgb_color.r) << " g: " << double(rgb_color.g) << " b: " << double(rgb_color.b)
      << " }";
   return os;
 }
 
 template <class T>
-T &RgbColor<T>::operator[](size_t index) {
+T& RgbColor<T>::operator[](size_t index) {
   assert(index <= 2);
 
   if (index == 0) return r;
@@ -151,8 +161,8 @@ T &RgbColor<T>::operator[](size_t index) {
 }
 
 template <class T>
-const T &RgbColor<T>::operator[] (size_t index) const {
-  return const_cast<const T&>(const_cast<RgbColor<T>*>(this)->operator[](index));
+const T& RgbColor<T>::operator[](size_t index) const {
+  return const_cast<const T&>(const_cast<RgbColor<T> *>(this)->operator[](index));
 }
 
 template <class T>
@@ -162,8 +172,9 @@ double RgbColor<T>::brightness() {
 
 // To be able to put it into hash tables
 namespace std {
-  template<typename T> struct hash<RgbColor<T>> {
-    inline size_t operator()(const RgbColor<T> & col) const {
+  template <typename T>
+  struct hash<RgbColor<T>> {
+    inline size_t operator()(const RgbColor<T>& col) const {
       size_t seed = 0;
       ::hash_combine(seed, col.r);
       ::hash_combine(seed, col.g);
@@ -183,31 +194,37 @@ struct RgbaColor {
   T r, g, b, a;
 };
 
+/// Typedefs
+
 using Pixel = cv::Point3_<double>;
-using byte_Pixel = cv::Point3_<uint8_t>;
+using BytePixel = cv::Point3_<uint8_t>;
 
-
-/// Color traits for template programming
 using ByteColor = RgbColor<uint8_t>;
 using Color = RgbColor<double>;
 
 
 template <class ColorType>
-struct ColorTraits {};
+struct ColorTraits {
+};
 
-template <> struct ColorTraits<ByteColor> {
+template <>
+struct ColorTraits<ByteColor> {
   static constexpr uint8_t min = 0;
   static constexpr uint8_t max = 255;
   static constexpr uint8_t middle = 127;
 };
 
-template <> struct ColorTraits<Color> {
+template <>
+struct ColorTraits<Color> {
   static constexpr double min = 0.;
   static constexpr double max = 1.;
   static constexpr double middle = 0.5;
 };
 
-
+/**
+ * @param hex Representation of color in hexadecimal code
+ * @return A color identical to hex code
+ */
 Color get_color_from_hex(const std::string& hex);
 
 void to_json(json& j, const ByteColor& col);

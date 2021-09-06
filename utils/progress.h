@@ -114,5 +114,5 @@ class Progress {
 
   [[nodiscard]] size_t GetCurrent() const { return current; }
 
-  [[nodiscard]] std::chrono::time_point<std::chrono::system_clock> &GetLastUpdateTime() const { return t_current; }
+  [[nodiscard]] const std::chrono::time_point<std::chrono::system_clock>& GetLastUpdateTime() const { return t_current; }
 };
