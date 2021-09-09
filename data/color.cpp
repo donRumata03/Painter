@@ -12,6 +12,7 @@ Color get_color_from_hex(const std::string& hex) {
                ((x & 0x00FF00u) >> 8u) / 255.,
                ((x & 0x0000FFu)) / 255.);
 }
+/*
 
 void to_json(json& j, const ByteColor& col) {
   j["r"] = col.r;
@@ -25,3 +26,4 @@ void from_json(const json& j, ByteColor& col) {
   col = ByteColor(j.at("r"), j.at("g"), j.at("b"));
 }
 
+*/

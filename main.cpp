@@ -11,10 +11,11 @@
 #include "launch/launch.h"
 #include "data/color.h"
 
+
 int main(int argc, char *argv[]) {
   set_utf8_in_console();
 
-  Logger::SetLogFile(painter_base_path / "log" / "logs.txt");
+  Logger::SetLogFile(std::filesystem::current_path() / "log" / "logs.txt");
   Logger::SetLoggingLevel(LogLevel::Info);
 
   argparse::ArgumentParser program("Painter");
@@ -22,6 +23,9 @@ int main(int argc, char *argv[]) {
   program.add_argument("path")
           .required()
           .help("Path to target image");
+
+  program.add_argument("--params")
+          .help("Path to common stroking params");
 
   try {
     program.parse_args(argc, argv);
@@ -41,12 +45,24 @@ int main(int argc, char *argv[]) {
 
   if (!std::filesystem::exists(image_path)) {
     LogConsoleError("Main") << "Invalid image path: " << image_path;
-
     Logger::Stop();
-    exit(0);
+    exit(1);
+  }
+  LogConsoleInfo("Main") << "Image path: " << image_path;
+
+  CommonStrokingParams params;
+  auto params_path = program.get("--params");
+  if (!params_path.empty()) {
+    if (!std::filesystem::exists(params_path)) {
+      LogConsoleError("Main") << "Invalid params path: " << params_path;
+      Logger::Stop();
+      exit(1);
+    }
+    params = load_params(params_path);
+    LogConsoleSuccess("Main") << "Params loaded from: " << params_path;
   }
 
-  LaunchStroking(image_path);
+  launch_stroking(image_path, params);
 
   Logger::Stop();
   return 0;

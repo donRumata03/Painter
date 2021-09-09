@@ -124,7 +124,7 @@ RgbColor<std::enable_if_t<std::is_integral_v<I>, I>> from_floating_point(
 }
 
 
-/// RGB_color operators
+/// RgbColor operators
 template <class T>
 inline void hash_combine(std::size_t& seed, const T& v) {
   std::hash<T> hasher;
@@ -195,7 +195,6 @@ struct RgbaColor {
 };
 
 /// Typedefs
-
 using Pixel = cv::Point3_<double>;
 using BytePixel = cv::Point3_<uint8_t>;
 
@@ -227,5 +226,17 @@ struct ColorTraits<Color> {
  */
 Color get_color_from_hex(const std::string& hex);
 
-void to_json(json& j, const ByteColor& col);
-void from_json(const json& j, ByteColor& col);
+template <class T>
+void to_json(json& j, const RgbColor<T>& col) {
+  j["r"] = col.r;
+  j["g"] = col.g;
+  j["b"] = col.b;
+}
+
+template <class T>
+void from_json(const json& j, RgbColor<T>& col) {
+  assert(j.contains("r") and j.contains("g") and j.contains("b"));
+
+  col = RgbColor<T>(j.at("r"), j.at("g"), j.at("b"));
+}
+

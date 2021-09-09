@@ -141,6 +141,9 @@ class Logger {
   };
 
   void set_log_file(const fs::path &output_path) {
+    if (!std::filesystem::exists(output_path.parent_path())) {
+      std::filesystem::create_directories(output_path.parent_path());
+    }
     file_stream = std::ofstream(output_path);
   }
 

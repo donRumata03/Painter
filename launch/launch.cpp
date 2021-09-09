@@ -1,6 +1,7 @@
 #include "launch.h"
 
-void LaunchStroking(const std::string& filename)
-{
-    
+
+void launch_stroking(const std::string& filename, CommonStrokingParams params) {
+
+
 }

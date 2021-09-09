@@ -16,6 +16,7 @@
 // Typedefs
 using Image = cv::Mat;
 using Point = point;
+using Limit = std::pair<double, double>;
 
 // Constants
 #include "utils_constexpr/stringing.h"

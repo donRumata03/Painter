@@ -24,9 +24,14 @@ set(SOURCE_FILES
         data/range_rectangle.cpp
         data/stroke.cpp
         data/units.cpp
+        data/common_stroking_params.cpp
 
         # Launch
-        launch/launch.cpp)
+        launch/launch.cpp
+
+        # Utils
+        utils/image.cpp
+        )
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 
@@ -42,7 +47,7 @@ set(PROJECT_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/dependencies)
 message(STATUS "Loading dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
 
 include("CMake/LibraryConfig.cmake") # Library locations
-
+set(OpenCV_STATIC ON)
 ## OpenCV
 message(STATUS "Load OpenCV")
 ### Find OpenCV:

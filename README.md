@@ -11,3 +11,13 @@ So, to make the prject work, clone it with --recusive option
   `git clone --recusive https://github.com/donRumata03/Painter`
   
   After that you should go to CMakeLists.txt and provide the corresponding paths.
+
+## Setup
+
+To link libraries, add *CMake/LibraryConfig.cmake* with following content:
+``
+set(CURRENT_OPENCV_DIR <...>)
+set(CURRENT_GA_DIR <...>)
+set(CURRENT_PYTHONIC_DIR <...>)
+set(CURRENT_GTEST_DIR <...>)
+``

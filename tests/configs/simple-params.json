@@ -1,0 +1,20 @@
+{
+  "is_relative": false,
+  "stroke_length": [
+    15.0,
+    25.0
+  ],
+  "stroke_number": 0,
+  "stroke_width": [
+    4.0,
+    6.0
+  ],
+  "units": "mm",
+  "canvas_color": {
+    "b": 1.0,
+    "g": 1.0,
+    "r": 1.0
+  },
+  "logging_percentage": 0.0,
+  "move_mutation_probability": 0.2
+}
