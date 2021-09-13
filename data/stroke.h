@@ -23,16 +23,19 @@ struct Stroke {
   double width;
 
   Stroke() = default;
+
   Stroke(Point p0, Point p1, Point p2, double width = 1) : p0(p0), p1(p1), p2(p2), width(width) {}
 
   /**
    * Count the Point of Bezier curve corresponding to t value given as the argument
    */
   [[nodiscard]] Point coords_at(double t) const;
+
   /**
    * The height of the curve at x corresponding to time Point t
    */
   [[nodiscard]] double height_at(double t) const;
+
   /**
    * @return A pair of dx/dt and dy/dt
    */
@@ -51,7 +54,7 @@ struct Stroke {
    * @param range_limits If it`s not std::nullopt, only pixels for x in [range_params->min_x, range_params->max_x) and
    * for y in [range_params->min_y, range_params->max_y) are processed.
   */
-  template<class Functor>
+  template <class Functor>
   void for_each(const Functor& operation, size_t step_number = 10000,
                 std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
                 StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines) const;
@@ -63,22 +66,23 @@ struct Stroke {
           std::optional<RangeRectangle<lint>> range_limits = std::nullopt,
           StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines) const;
 
-  friend std::ostream &operator<< (std::ostream &os, const Stroke &stroke);
+  friend std::ostream& operator<<(std::ostream& os, const Stroke& stroke);
+  auto operator<=>(const Stroke& stroke) const = default;
 };
 
 
 /// Template function implementations
 
 template <class Functor>
-void Stroke::for_each (const Functor& operation, const size_t step_number,
-                       std::optional<RangeRectangle<lint>> range_limits, StrokeRasterizationAlgorithm algo) const {
+void Stroke::for_each(const Functor& operation, const size_t step_number,
+                      std::optional<RangeRectangle<lint>> range_limits, StrokeRasterizationAlgorithm algo) const {
   if (algo != StrokeRasterizationAlgorithm::vertical_lines)
     throw std::logic_error("This rasterization algorithm is not implemented");
 
   bool has_range_limitations = bool(range_limits);
   auto last_x = static_cast<long long>(-1e100);
 
-  for (size_t point_index = 0; point_index<step_number; ++point_index) {
+  for (size_t point_index = 0; point_index < step_number; ++point_index) {
     double t = double(point_index) / step_number;
 
     auto[central_x, central_y] = coords_at(t);
@@ -87,7 +91,7 @@ void Stroke::for_each (const Functor& operation, const size_t step_number,
     if (x == last_x) continue; // To avoid repetitions
     last_x = x;
 
-    if (has_range_limitations && x<range_limits->min_x || x >= range_limits->max_x) {
+    if (has_range_limitations && x < range_limits->min_x || x >= range_limits->max_x) {
       continue; // To satisfy range
     }
 
@@ -113,40 +117,44 @@ void Stroke::for_each (const Functor& operation, const size_t step_number,
 /**
  * Colored version of stroke
  */
-template<class T>
+template <class T>
 struct RgbColoredStroke : Stroke {
   using ColorDataType = T;
 
   RgbColor<T> background_color;
 
   RgbColoredStroke() = default;
-  RgbColoredStroke(Point p0, Point p1, Point p2, double width = 1) : Stroke(p0, p1, p2, width) {}
 
-  template<class E>
-  friend std::ostream &operator<< (std::ostream &os, const RgbColoredStroke<E> &stroke);
+  RgbColoredStroke(Point p0, Point p1, Point p2, double width = 1, RgbColor<T> color = {0, 0, 0}) : Stroke(p0, p1, p2, width),
+                                                                                          background_color(color) {}
 
-  template<class NewColorType, std::enable_if_t<not std::is_same_v<ColorDataType, NewColorType>, void*> = nullptr>
-  explicit operator RgbColoredStroke<NewColorType> () const;
+  template <class E>
+  friend std::ostream& operator<<(std::ostream& os, const RgbColoredStroke<E>& stroke);
+
+  template <class NewColorType, std::enable_if_t<not std::is_same_v<ColorDataType, NewColorType>, void *> = nullptr>
+  explicit operator RgbColoredStroke<NewColorType>() const;
+
+  auto operator<=>(const RgbColoredStroke& stroke) const = default;
 };
 
 using ColoredStroke = RgbColoredStroke<double>;
 using ByteColoredStroke = RgbColoredStroke<uint8_t>;
 
 
-template<class T>
-std::ostream &operator<< (std::ostream &os, const RgbColoredStroke<T> &stroke) {
-  os << reinterpret_cast<const struct Stroke &>(stroke) << " background_color: " << stroke.background_color;
+template <class T>
+std::ostream& operator<<(std::ostream& os, const RgbColoredStroke<T>& stroke) {
+  os << reinterpret_cast<const struct Stroke&>(stroke) << " background_color: " << stroke.background_color;
   return os;
 }
 
 template <class OldColorType>
-template <class NewColorType, std::enable_if_t<not std::is_same_v<OldColorType, NewColorType>, void*>>
+template <class NewColorType, std::enable_if_t<not std::is_same_v<OldColorType, NewColorType>, void *>>
 RgbColoredStroke<OldColorType>::operator RgbColoredStroke<NewColorType>() const {
   using OldStrokeType = RgbColoredStroke<OldColorType>;
   using NewStrokeType = RgbColoredStroke<NewColorType>;
 
   NewStrokeType res;
-  *reinterpret_cast<Stroke*>(&res) = *reinterpret_cast<const Stroke*>(this);
+  *reinterpret_cast<Stroke *>(&res) = *reinterpret_cast<const Stroke *>(this);
   res.background_color = convert_color<NewColorType>(this->background_color);
 
   return res;
@@ -158,7 +166,7 @@ RgbColoredStroke<OldColorType>::operator RgbColoredStroke<NewColorType>() const 
 /**
  * Wrapper for objects e.g. Stroke, combining it with context information about painting
  */
-template<class Type>
+template <class Type>
 struct ContextWrapper {
   Type object;
   const Canvas& canvas;
@@ -166,6 +174,6 @@ struct ContextWrapper {
 
 void to_json(json& j, const ContextWrapper<Stroke>& stroke_with_size);
 void to_json(json& j, const ContextWrapper<ColoredStroke>& col_stroke);
-void to_json(json& j, const ContextWrapper<std::vector<ByteColoredStroke>>& strokes);
+void to_json(json& j, const ContextWrapper<std::vector<ColoredStroke>>& strokes);
 
 void from_json(const json& j, Stroke& target_stroke, const Canvas& canvas);

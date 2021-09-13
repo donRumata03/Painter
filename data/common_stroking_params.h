@@ -26,6 +26,8 @@ struct CommonStrokingParams {
 
   /// Utils
   double logging_percentage = 0.00;
+
+  auto operator<=>(const CommonStrokingParams& common_stroking_params) const = default;
 };
 
 CommonStrokingParams load_params(const std::string& path);

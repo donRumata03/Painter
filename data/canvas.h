@@ -36,6 +36,8 @@ class Canvas {
   double px2mm(double px) const { return px * kMmPerInch / double(_dpi); }
 
   static Canvas get_default_canvas() { return Canvas(kDefaultCanvasWidth, kDefaultCanvasHeight, kDefaultCanvasDpi); }
+
+  auto operator<=>(const Canvas& canvas) const = default;
 };
 
 TransformImageData calc_transform_to_canvas(const Canvas& canvas, size_t w, size_t h);

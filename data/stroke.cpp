@@ -196,7 +196,8 @@ void to_json(json& j, const ContextWrapper<Stroke>& wrapped_stroke) {
 }
 
 void to_json(json& j, const ContextWrapper<ColoredStroke>& col_stroke) {
-  to_json(j, (ContextWrapper<Stroke>&) col_stroke);
+  ContextWrapper<Stroke> stroke_wrapper{(Stroke&) col_stroke.object, col_stroke.canvas};
+  to_json(j, stroke_wrapper);
 
   j["color"] = convert_color<uint8_t>(col_stroke.object.background_color);
 }

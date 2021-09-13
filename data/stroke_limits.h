@@ -29,30 +29,12 @@ struct StrokeLimits {
   }
 
   [[nodiscard]] bool stroke_satisfies_requirements(const Stroke& stroke) const {
-    /// Check width:
+    // Check width
     if (stroke.width < min_width or stroke.width > max_width) return false;
-
-/*
-		/// Check x and y:
-		double min_x_found = std::numeric_limits<double>::max(), min_y_found = std::numeric_limits<double>::max(),
-			   max_x_found = std::numeric_limits<double>::min(), max_y_found = std::numeric_limits<double>::min();
-
-		auto process_point = [&](const stroke::Point& p) {
-			min_x_found = std::min(min_x_found, p.x);
-			min_y_found = std::min(min_y_found, p.y);
-
-			max_x_found = std::max(max_x_found, p.x);
-			max_y_found = std::max(max_y_found, p.y);
-		};
-
-		process_point(stroke.p0);
-		process_point(stroke.p1);
-		process_point(stroke.p2);
-*/
 
     RangeRectangle<double> stroke_bounding_box = stroke.get_curve_bounding_box();
 
-    /// Check being inside image:
+    // Check being inside image
     if (not image_rectangle.check_other_being_fully_inside(stroke_bounding_box))
       return false;
 
@@ -66,30 +48,10 @@ struct StrokeLimits {
     // Returns initial state of stroke
     if (stroke_satisfies_requirements(stroke)) return true;
 
-    // Constrain width independently:
-    stroke.width = std::clamp(stroke.width, min_width, max_width);
-/*
-		stroke.width = std::max(stroke.width, min_width);
-		stroke.width = std::min(stroke.width, max_width);
-*/
-/*
+    // Scale it
+    constrain_stroke_size_parameters(stroke, min_dx, max_dx, min_dy, max_dy, min_width, max_width);
 
-		auto constrain_point = [&](stroke::Point& Point){
-			Point.x = std::clamp(Point.x, min_);
-		};
-*/
-
-    // Scale it:
-    constrain_stroke_size_parameters(stroke,
-                                     min_dx,
-                                     max_dx,
-
-                                     min_dy,
-                                     max_dy,
-
-                                     min_width,
-                                     max_width);
-
+    // Constrain curvature of stroke
     point middle = (stroke.p0 + stroke.p2) / 2;
     double max_dist = point::dist(stroke.p0, stroke.p2) / 2;
     point vec = middle - stroke.p1;
@@ -98,8 +60,8 @@ struct StrokeLimits {
       stroke.p1 = stroke.p1 + vec * (vec.module() - max_dist) / vec.module();
     }
 
-    // Move it:
-    carefully_constrain_stroke_to_fit_into_rect(stroke, image_rectangle);
+    // Move it
+    fit_stroke_into_rect(stroke, image_rectangle);
 
 
     return false;

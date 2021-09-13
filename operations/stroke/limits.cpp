@@ -1,5 +1,6 @@
 #include "limits.h"
-#include "utils/Logger.h"
+#include "data/stroke_limits.h"
+#include "utils/logger.h"
 
 
 bool is_fitting(const Stroke& stroke, const RangeRectangle<double>& rectangle) {
@@ -8,7 +9,7 @@ bool is_fitting(const Stroke& stroke, const RangeRectangle<double>& rectangle) {
          rectangle.point_satisfies_requirements(stroke.p2);
 }
 
-void shift_point(Point& point, const Stroke::Point& shifting_vector) {
+void shift_point(Point& point, const Point& shifting_vector) {
   point.x += shifting_vector.x;
   point.y += shifting_vector.y;
 }

@@ -23,6 +23,7 @@ void to_json(json& j, const PaintPlan& plan) {
     color_idx[*it] = i;
   }
 
+  j["strokes"] = json::array();
   for (size_t i = 0; i < plan.strokes.size(); i++) {
     j["strokes"][i] = ContextWrapper<Stroke>{
             plan.strokes[i],

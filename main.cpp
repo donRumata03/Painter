@@ -9,7 +9,6 @@
 // Project headers
 #include "utils/logger.h"
 #include "launch/launch.h"
-#include "data/color.h"
 
 
 int main(int argc, char *argv[]) {

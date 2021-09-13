@@ -67,19 +67,6 @@ struct stroke_limit_descriptor
 		// Returns initial state of stroke
 		if (stroke_satisfies_requirements(stroke)) return true;
 
-		// Constrain width independently:
-		stroke.width = std::clamp(stroke.width, min_width, max_width);
-/*
-		stroke.width = std::max(stroke.width, min_width);
-		stroke.width = std::min(stroke.width, max_width);
-*/
-/*
-
-		auto constrain_point = [&](stroke::Point& Point){
-			Point.x = std::clamp(Point.x, min_);
-		};
-*/
-
 		// Scale it:
 		constrain_stroke_size_parameters(stroke,
 		                                 min_dx,
@@ -91,6 +78,7 @@ struct stroke_limit_descriptor
 		                                 min_width,
 		                                 max_width);
 
+		// Constrain curvature
 		point middle = (stroke.p0 + stroke.p2) / 2;
 		double max_dist = point::dist(stroke.p0, stroke.p2) / 2;
 		point vec = middle - stroke.p1;

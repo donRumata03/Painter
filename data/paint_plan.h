@@ -9,6 +9,8 @@ struct PaintPlan {
   PaintPlan() = default;
   explicit PaintPlan(std::vector<ColoredStroke> strokes, Canvas canvas);
 
+  auto operator<=>(const PaintPlan& paint_plan) const = default;
+
   std::vector<ColoredStroke> strokes;
   std::unordered_set<ByteColor> palette;
   Canvas canvas;

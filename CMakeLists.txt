@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-# Setup compiler:
+# Setup compiler
 if (UNIX)
     message("UNIX => Setting Compiler to gcc-10")
     set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
@@ -15,6 +15,7 @@ project(Painter)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export build command to analyze them in CppDepend
+add_compile_options(/utf-8)
 
 set(SOURCE_FILES
         # Data
@@ -25,6 +26,10 @@ set(SOURCE_FILES
         data/stroke.cpp
         data/units.cpp
         data/common_stroking_params.cpp
+        data/stroke_limits.cpp
+
+        # Operations
+        operations/stroke/limits.cpp
 
         # Launch
         launch/launch.cpp
