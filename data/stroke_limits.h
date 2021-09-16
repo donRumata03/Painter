@@ -44,6 +44,7 @@ struct StrokeLimits {
     return dx <= max_dx and dx >= min_dx and dy <= max_dy and dy >= min_dy;
   }
 
+  // TODO: Rework with constraining by rotated bounding box
   bool constrain_stroke_to_requirements(Stroke& stroke) const {
     // Returns initial state of stroke
     if (stroke_satisfies_requirements(stroke)) return true;

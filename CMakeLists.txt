@@ -30,6 +30,7 @@ set(SOURCE_FILES
 
         # Operations
         operations/stroke/limits.cpp
+        operations/stroke/generation.cpp
 
         # Launch
         launch/launch.cpp

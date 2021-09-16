@@ -4,7 +4,9 @@ add_executable(Painter_tests
         main.cpp
 
         convert.cpp
-        json.cpp)
+        json.cpp
+        generation.cpp
+        )
 
 target_link_libraries(Painter_tests gtest gtest_main Painter-lib)
 

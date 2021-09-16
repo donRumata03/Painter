@@ -1,9 +1,11 @@
 [submodule "dependencies/pythonic"]
 	path = dependencies/pythonic
 	url = https://github.com/donRumata03/pythonic
+	ignore = dirty
 [submodule "dependencies/PowerfulGA"]
 	path = dependencies/PowerfulGA
 	url = https://github.com/donRumata03/PowerfulGA
+	ignore = dirty
 [submodule "dependencies/lunasvg"]
 	path = dependencies/lunasvg
 	url = https://github.com/sammycage/lunasvg
