@@ -11,8 +11,6 @@ TEST(GenerationTest, StrokeGeneration) {
   for (size_t i = 0; i < 100; i++) {
     auto stroke = generate_stroke(limits);
 
-    std::cout << "[" << std::setw(3) << i << "] " << stroke << std::endl;
-
-    ASSERT_TRUE(limits.stroke_satisfies_requirements(stroke));
+    EXPECT_TRUE(limits.stroke_satisfies_requirements(stroke)) << "[" << std::setw(3) << i << "] " << stroke;
   }
 }

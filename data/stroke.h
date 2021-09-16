@@ -125,8 +125,14 @@ struct RgbColoredStroke : Stroke {
 
   RgbColoredStroke() = default;
 
-  RgbColoredStroke(Point p0, Point p1, Point p2, double width = 1, RgbColor<T> color = {0, 0, 0}) : Stroke(p0, p1, p2, width),
-                                                                                          background_color(color) {}
+  RgbColoredStroke(Point p0, Point p1, Point p2, double width = 1, RgbColor<T> color = {0, 0, 0}) : Stroke(p0, p1, p2,
+                                                                                                           width),
+                                                                                                    background_color(
+                                                                                                            color) {}
+
+  RgbColoredStroke(const Stroke& stroke, RgbColor<T> color = {0, 0, 0}) : Stroke(stroke.p0, stroke.p1, stroke.p2,
+                                                                                 stroke.width),
+                                                                          background_color(color) {}
 
   template <class E>
   friend std::ostream& operator<<(std::ostream& os, const RgbColoredStroke<E>& stroke);

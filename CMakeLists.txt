@@ -31,6 +31,8 @@ set(SOURCE_FILES
         # Operations
         operations/stroke/limits.cpp
         operations/stroke/generation.cpp
+        operations/stroke/sorting.cpp
+        operations/color/deduction.cpp
 
         # Launch
         launch/launch.cpp

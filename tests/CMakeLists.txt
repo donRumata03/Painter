@@ -6,6 +6,7 @@ add_executable(Painter_tests
         convert.cpp
         json.cpp
         generation.cpp
+        sorting.cpp
         )
 
 target_link_libraries(Painter_tests gtest gtest_main Painter-lib)
