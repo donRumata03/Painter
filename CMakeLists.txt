@@ -33,6 +33,16 @@ set(SOURCE_FILES
         operations/stroke/generation.cpp
         operations/stroke/sorting.cpp
         operations/color/deduction.cpp
+        operations/color/optimization.cpp
+        operations/error.cpp
+
+        # Rasterization
+        rasterization/strokes.cpp
+        rasterization/pixel_layer_tracker.cpp
+        rasterization/rasterized_painting.cpp
+
+        # Optimization adapters
+        optimization_adapters/utils.cpp
 
         # Launch
         launch/launch.cpp
