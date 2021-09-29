@@ -43,6 +43,12 @@ set(SOURCE_FILES
 
         # Optimization adapters
         optimization_adapters/utils.cpp
+        optimization_adapters/fitness.cpp
+        optimization_adapters/GA/constrainer.cpp
+        optimization_adapters/GA/crossover.cpp
+        optimization_adapters/GA/mutator.cpp
+        optimization_adapters/GA/generator.cpp
+        optimization_adapters/GA/logging_callback.cpp
 
         # Launch
         launch/launch.cpp

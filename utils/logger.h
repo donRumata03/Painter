@@ -367,3 +367,12 @@ template <class ...T>
 inline Logger::LogStreamProxy LogConsoleError(const std::string &module = "", const T &... submodules) {
   return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, true);
 }
+
+inline void ensure_log_cleared(const fs::path& log_path = painter_base_path / "log" / "latest")
+{
+  if(fs::exists(log_path)) {
+    // std::cout << "Clearing log path: " << log_path.string() << "…" << std::endl;
+    fs::remove_all(log_path);
+  }
+  fs::create_directories(log_path);
+}
