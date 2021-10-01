@@ -24,7 +24,7 @@ class GaMutator {
     auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
 
     if (pythonic_random() < move_probability) {
-      assert(sizeof(stroke) / sizeof(double) == 7);
+      assert(sizeof(Stroke) / sizeof(double) == 7);
       assert(stroke_data_buffer.size() == sigmas.size());
 
       double per_gene_move_probability = target_gene_number / double(stroke_data_buffer.size());

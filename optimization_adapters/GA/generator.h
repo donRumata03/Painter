@@ -19,7 +19,7 @@ class GaGenomeGenerator
   std::vector<double> operator() (size_t amount) const
   {
     // Amount isn't the the number of strokes, it's the amount of pieces
-    assert(not(amount % (sizeof(stroke) / sizeof(double))));
+    assert(not(amount % (sizeof(Stroke) / sizeof(double))));
 
     size_t number_of_strokes = amount / 7;
     assert(number_of_strokes == strokes_in_image);
