@@ -27,6 +27,7 @@ set(SOURCE_FILES
         data/units.cpp
         data/common_stroking_params.cpp
         data/stroke_limits.cpp
+        data/vector_region.cpp
 
         # Operations
         operations/stroke/limits.cpp
@@ -49,6 +50,10 @@ set(SOURCE_FILES
         optimization_adapters/GA/mutator.cpp
         optimization_adapters/GA/generator.cpp
         optimization_adapters/GA/logging_callback.cpp
+
+        # Vector graphics
+        vector_graphics/svg_service.cpp
+        vector_graphics/utils.cpp
 
         # Launch
         launch/launch.cpp
