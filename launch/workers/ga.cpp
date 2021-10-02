@@ -2,7 +2,7 @@
 
 
 GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_params,
-                   const GaStrokingParameters& optimizer_params, const fs::path& logging_path,
+                   const GaStrokingParams& optimizer_params, const fs::path& logging_path,
                    bool enable_console_output)
         : stroking_params(stroking_params), GA_params(optimizer_params) {
   image.copyTo(initial_image);

@@ -12,22 +12,12 @@
 #include "utils/image.h"
 
 
-struct GaStrokingParameters : public OptimizerParams {
-  size_t population_size = 0;
-  size_t epoch_num = 0;
-
-  bool allow_multithreading = false;
-
-  [[nodiscard]] size_t computations_expected() const { return epoch_num * population_size; }
-};
-
-
 class GaWorker : public SimpleWorker {
  public:
-  using ParametersType = GaStrokingParameters;
+  using ParametersType = GaStrokingParams;
 
   GaWorker(const Image& image,
-            const CommonStrokingParams& stroking_params, const GaStrokingParameters& optimizer_params,
+            const CommonStrokingParams& stroking_params, const GaStrokingParams& optimizer_params,
             const fs::path& logging_path = fs::path{painter_base_path} / "log" / "latest",
             bool enable_console_output = true);
 
@@ -48,7 +38,7 @@ class GaWorker : public SimpleWorker {
 
   // Params
   CommonStrokingParams stroking_params;
-  GaStrokingParameters GA_params;
+  GaStrokingParams GA_params;
 
   StrokeLimits limits;
 
