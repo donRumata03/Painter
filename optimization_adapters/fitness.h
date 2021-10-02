@@ -79,7 +79,7 @@ class FitnessFunction {
 
   double operator()(const std::vector<double>& stroke_data_buffer) const;
 
-  auto get_efficiency_account() const;
+  AlgorithmStatistics get_efficiency_account() const;
 };
 
 

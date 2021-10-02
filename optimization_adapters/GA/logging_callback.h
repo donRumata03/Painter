@@ -3,7 +3,7 @@
 #include "painter_pch.h"
 
 #include "optimization_adapters/utils.h"
-#include "rasterization/strokes.h"
+#include "rasterization/stroke.h"
 #include "utils/logger.h"
 
 

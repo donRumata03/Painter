@@ -38,7 +38,7 @@ set(SOURCE_FILES
         operations/error.cpp
 
         # Rasterization
-        rasterization/strokes.cpp
+        rasterization/stroke.cpp
         rasterization/pixel_layer_tracker.cpp
         rasterization/rasterized_painting.cpp
 
@@ -49,7 +49,9 @@ set(SOURCE_FILES
         optimization_adapters/GA/crossover.cpp
         optimization_adapters/GA/mutator.cpp
         optimization_adapters/GA/generator.cpp
+        optimization_adapters/GA/population_generator.cpp
         optimization_adapters/GA/logging_callback.cpp
+        optimization_adapters/GA/informer.cpp
 
         # Vector graphics
         vector_graphics/svg_service.cpp
@@ -57,6 +59,8 @@ set(SOURCE_FILES
 
         # Launch
         launch/launch.cpp
+        launch/workers/simple.cpp
+        launch/workers/ga.cpp
 
         # Utils
         utils/image.cpp

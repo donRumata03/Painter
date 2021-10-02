@@ -16,6 +16,7 @@ void to_json(json& j, const CommonStrokingParams& params) {
   j["stroke_length"] = params.stroke_length;
   j["stroke_width"] = params.stroke_width;
   j["move_mutation_probability"] = params.move_mutation_probability;
+  j["sigma"] = params.sigma;
   j["canvas_color"] = params.canvas_color;
   j["stroke_color"] = params.stroke_color;
   j["use_constant_color"] = params.use_constant_color;
@@ -49,6 +50,10 @@ void from_json(const json& j, CommonStrokingParams& params) {
 
   if (j.contains("move_mutation_probability")) {
     new_params.move_mutation_probability = j["move_mutation_probability"];
+  }
+
+  if (j.contains("sigma")) {
+    new_params.sigma = j["sigma"];
   }
 
   if (j.contains("canvas_color")) {

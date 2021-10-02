@@ -16,5 +16,6 @@
     "r": 1.0
   },
   "logging_percentage": 0.0,
-  "move_mutation_probability": 0.2
+  "move_mutation_probability": 0.2,
+  "sigma": 0.5
 }
