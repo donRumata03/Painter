@@ -21,6 +21,16 @@ void to_json(json& j, const CommonStrokingParams& params) {
   j["stroke_color"] = params.stroke_color;
   j["use_constant_color"] = params.use_constant_color;
   j["logging_percentage"] = params.logging_percentage;
+
+  if (!params.sequence.empty()) {
+    j["optimize_sequence"] = {};
+    for (auto& optimizer_params : params.sequence) {
+      json j_optimizer;
+      std::visit([&](const auto& obj) { j_optimizer = obj; }, optimizer_params);
+      j_optimizer["type"] = optimizer_params.index() == 0 ? "GA" : "annealing";
+      j["optimize_sequence"].emplace_back(j_optimizer);
+    }
+  }
 }
 
 void from_json(const json& j, CommonStrokingParams& params) {
@@ -70,6 +80,23 @@ void from_json(const json& j, CommonStrokingParams& params) {
 
   if (j.contains("logging_percentage")) {
     new_params.logging_percentage = j["logging_percentage"];
+  }
+
+  if (j.contains("optimize_sequence")) {
+    for (auto& item : j["optimize_sequence"].items()) {
+      auto& value = item.value();
+      auto type = value["type"].get<std::string>();
+
+      OptimizerParams optimizer_params;
+
+      if (type == "GA") {
+        optimizer_params = value.get<GaStrokingParams>();
+      } else if (type == "annealing"){
+        optimizer_params = value.get<AnnealingStrokingParams>();
+      }
+
+      new_params.sequence.emplace_back(optimizer_params);
+    }
   }
 
   params = new_params;

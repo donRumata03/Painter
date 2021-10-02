@@ -62,6 +62,9 @@ TEST(JsonTest, PaintPlanConversion) {
 
 TEST(JsonTest, CommonStrokingParamsConversion) {
   CommonStrokingParams params;
+
+  params.sequence = {GaStrokingParams{}, AnnealingStrokingParams{}};
+
   json j_params = params;
   auto converted_params = j_params.get<CommonStrokingParams>();
 

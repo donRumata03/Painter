@@ -52,6 +52,9 @@ set(SOURCE_FILES
         optimization_adapters/GA/population_generator.cpp
         optimization_adapters/GA/logging_callback.cpp
         optimization_adapters/GA/informer.cpp
+        optimization_adapters/annealing/generator.cpp
+        optimization_adapters/annealing/logging_callback.cpp
+        optimization_adapters/annealing/mutator.cpp
 
         # Vector graphics
         vector_graphics/svg_service.cpp
@@ -59,8 +62,11 @@ set(SOURCE_FILES
 
         # Launch
         launch/launch.cpp
+        launch/multizone.cpp
+        launch/vector.cpp
         launch/workers/simple.cpp
         launch/workers/ga.cpp
+        launch/workers/annealing.cpp
 
         # Utils
         utils/image.cpp

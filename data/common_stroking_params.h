@@ -1,13 +1,39 @@
 #pragma once
 
+#include <variant>
+
 #include "painter_pch.h"
 #include "data/color.h"
 #include "data/units.h"
 
 
-struct OptimizerParams {
-  auto operator<=>(const OptimizerParams& optimizer_params) const = default;
+struct GaStrokingParams {
+  size_t population_size = 0;
+  size_t epoch_num = 0;
+
+  bool allow_multithreading = false;
+
+  [[nodiscard]] size_t computations_expected() const { return epoch_num * population_size; }
+  auto operator<=>(const GaStrokingParams& params) const = default;
+
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(GaStrokingParams, population_size, epoch_num, allow_multithreading)
 };
+
+struct AnnealingStrokingParams {
+  size_t iterations = 0;
+  double typical_temperature = 1.;
+  double gene_mutation_fraction = 0.1;
+
+  // No multithreading: Single annealing optimization operation can't be performed multithreadingly!
+
+  [[nodiscard]] size_t computations_expected() const { return iterations; }
+  auto operator<=>(const AnnealingStrokingParams& params) const = default;
+
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(AnnealingStrokingParams, iterations, typical_temperature, gene_mutation_fraction)
+};
+
+using OptimizerParams = std::variant<GaStrokingParams, AnnealingStrokingParams>;
+
 
 struct CommonStrokingParams {
   size_t stroke_number = 0;
@@ -30,7 +56,7 @@ struct CommonStrokingParams {
   bool use_constant_color = false; // Ignore optimization for strokes' color
 
   /// Optimizers sequence
-  //std::vector<OptimizerParams> params;
+  std::vector<OptimizerParams> sequence;
 
   /// Utils
   double logging_percentage = 0.00;

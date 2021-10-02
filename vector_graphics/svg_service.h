@@ -41,6 +41,8 @@ class SvgService {
 
   [[nodiscard]] cv::Size get_workspace_size() const { return workspace_size; }
 
+  [[nodiscard]] const VectorRegion& get_region(size_t i) const { return regions[i]; }
+
  private:
   [[nodiscard]] std::string get_region_path(size_t i) const;
 
@@ -61,7 +63,7 @@ class SvgService {
 };
 
 
-template<class StrokeType>
+template <class StrokeType>
 void SvgService::shift_strokes_to_box(std::vector<StrokeType>& strokes, size_t i) {
   point shifting_vector(regions[i].box.x, regions[i].box.y);
   for (auto& stroke : strokes) {
@@ -69,21 +71,21 @@ void SvgService::shift_strokes_to_box(std::vector<StrokeType>& strokes, size_t i
   }
 }
 
-template<class StrokeType>
+template <class StrokeType>
 void SvgService::shift_strokes_to_canvas(std::vector<StrokeType>& strokes) {
   for (auto& stroke : strokes) {
     shift_stroke(stroke, transform->move_vector);
   }
 }
 
-template<class StrokeType>
+template <class StrokeType>
 void SvgService::transform_strokes_into_mm(std::vector<StrokeType>& strokes) {
   for (auto& stroke : strokes) {
     scale_stroke(stroke, 1. / canvas->dpi() * kMmPerInch);
   }
 }
 
-template<class StrokeType>
+template <class StrokeType>
 void SvgService::transform_strokes_into_px(std::vector<StrokeType>& strokes) {
   for (auto& stroke : strokes) {
     scale_stroke(stroke, 1. / kMmPerInch * canvas->dpi());

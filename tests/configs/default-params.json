@@ -10,6 +10,20 @@
     0.0
   ],
   "units": "mm",
+  "optimize_sequence": [
+    {
+      "allow_multithreading": false,
+      "epoch_num": 0,
+      "population_size": 0,
+      "type": "GA"
+    },
+    {
+      "gene_mutation_fraction": 0.1,
+      "iterations": 0,
+      "type": "annealing",
+      "typical_temperature": 1.0
+    }
+  ],
   "use_constant_color": false,
   "stroke_color": {
     "b": 1.0,
