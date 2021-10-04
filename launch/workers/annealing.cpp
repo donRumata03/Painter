@@ -16,7 +16,7 @@ AnnealingWorker::AnnealingWorker(const Image& image, const CommonStrokingParams&
           ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
           common_stroking_params.stroke_number,
           true,
-          true,
+          false,
           common_stroking_params.canvas_color
   );
 

@@ -4,7 +4,7 @@
     10.0,
     40.0
   ],
-  "stroke_number": 15,
+  "stroke_number": 10,
   "stroke_width": [
     3.0,
     6.0
@@ -18,9 +18,15 @@
   "optimize_sequence": [
     {
       "type": "GA",
-      "epoch_num": 20,
+      "epoch_num": 50,
       "population_size": 100,
       "allow_multithreading": false
+    },
+    {
+      "type": "annealing",
+      "gene_mutation_fraction": 0.1,
+      "iterations": 1000,
+      "typical_temperature": 1e-4
     }
   ],
   "use_constant_color": true,

@@ -128,4 +128,19 @@ void launch_stroking(const std::string& filename, const CommonStrokingParams& pa
 void launch_multizone_stroking(const std::string& filename, const CommonStrokingParams& params,
                                const fs::path& logging_path) {
   assert(false);
+
+  /*
+  CommonStrokingParams this_common_params = default_stroking_parameters;
+  GA_stroking_parameters this_ga_params = default_GA_params;
+  image_splitting_params this_splitting_params = van_gogh_splitting_params;
+
+  Image image = open_image(filename);
+  MultizoneLaunchWrapper<GA_worker> launcher(image,
+                                             this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
+                                             this_common_params, this_ga_params);
+  std::cout << "[main launching function]: Performed initialization. Running.." << std::endl;
+
+  launcher.run();
+
+  launcher.save_result(painter_base_path / "log" / "latest" / "result.png");*/
 }
