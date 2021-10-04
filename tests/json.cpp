@@ -26,7 +26,7 @@ TEST(JsonTest, StrokeConversion) {
   Canvas canvas(300, 400);
 
   Stroke stroke({1, 2}, {3, 4}, {5, 6}, 7);
-  ContextWrapper<Stroke> wrapper{ stroke, canvas};
+  ContextWrapper<Stroke> wrapper{stroke, canvas};
   json j_wrapper = wrapper;
   Stroke converted_stroke;
   from_json(j_wrapper, converted_stroke, canvas);
@@ -34,7 +34,7 @@ TEST(JsonTest, StrokeConversion) {
   ASSERT_EQ(stroke, converted_stroke);
 
   ColoredStroke col_stroke({1, 2}, {3, 4}, {5, 6}, 7);
-  ContextWrapper<ColoredStroke> col_wrapper{ col_stroke, canvas};
+  ContextWrapper<ColoredStroke> col_wrapper{col_stroke, canvas};
   json j_col_wrapper = col_wrapper;
   ColoredStroke converted_col_stroke;
   from_json(j_col_wrapper, converted_col_stroke, canvas);
@@ -66,6 +66,7 @@ TEST(JsonTest, CommonStrokingParamsConversion) {
   params.sequence = {GaStrokingParams{}, AnnealingStrokingParams{}};
 
   json j_params = params;
+  std::cout << j_params;
   auto converted_params = j_params.get<CommonStrokingParams>();
 
   ASSERT_EQ(params, converted_params);

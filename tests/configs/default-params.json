@@ -10,12 +10,17 @@
     0.0
   ],
   "units": "mm",
+  "canvas": {
+    "dpi": 96,
+    "height": 400,
+    "width": 300
+  },
   "optimize_sequence": [
     {
       "type": "GA"
       "allow_multithreading": false,
       "epoch_num": 0,
-      "population_size": 0,
+      "population_size": 0
     },
     {
       "type": "annealing",

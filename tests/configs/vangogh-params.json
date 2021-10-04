@@ -1,13 +1,13 @@
 {
   "is_relative": false,
   "stroke_length": [
-    20.0,
-    100.0
+    5.0,
+    30.0
   ],
-  "stroke_number": 30,
+  "stroke_number": 1000,
   "stroke_width": [
-    10.0,
-    20.0
+    2.0,
+    6.0
   ],
   "units": "mm",
   "canvas": {
@@ -18,29 +18,23 @@
   "optimize_sequence": [
     {
       "type": "GA",
-      "epoch_num": 20,
-      "population_size": 200,
-      "allow_multithreading": true
+      "epoch_num": 10,
+      "population_size": 100,
+      "allow_multithreading": false
     },
     {
       "type": "annealing",
-      "gene_mutation_fraction": 0.1,
-      "iterations": 1000,
+      "gene_mutation_fraction": 0.2,
+      "iterations": 500,
       "typical_temperature": 1e-4
     }
   ],
-  "use_constant_color": true,
-  "stroke_color": {
-    "r": 1.0,
-    "b": 0.0,
-    "g": 1.0
-  },
   "canvas_color": {
     "r": 0.0,
     "b": 0.0,
     "g": 0.0
   },
   "logging_percentage": 0.0,
-  "move_mutation_probability": 0.2,
-  "sigma": 0.5
+  "move_mutation_probability": 0.25,
+  "sigma": 1
 }

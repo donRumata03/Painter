@@ -33,8 +33,7 @@ class VectorZoneLauncher {
 
 
   VectorZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params,
-                     const Canvas& canvas, bool parallelize = false,
-                     size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
+                     bool parallelize = false, size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
                      fs::path logging_path = fs::path{painter_base_path} / "log" / "latest");
 
   void run();
@@ -49,7 +48,7 @@ class VectorZoneLauncher {
   void worker_function(size_t thread_index);
 
   Image initial_image;
-  std::optional<Canvas> canvas;
+  Canvas canvas;
   fs::path logging_path;
 
   CommonStrokingParams stroking_params;
@@ -78,22 +77,10 @@ class VectorZoneLauncher {
 
 VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
                                        const CommonStrokingParams& stroking_params,
-                                       const Canvas& canvas,
                                        bool parallelize,
                                        size_t worker_thread_number, fs::path logging_path)
         : logging_path(std::move(logging_path)), stroking_params(stroking_params),
-          canvas(canvas), is_threaded(parallelize), thread_worker_number(worker_thread_number) {
-  // Determine the number of zones and what the zones actually are
-  svg_service.emplace(image_path,
-                      canvas,
-                      (this->stroking_params.units == Units::MM ? stroking_params.stroke_width.second :
-                       canvas.px2mm(stroking_params.stroke_width.second)) / 2);
-  svg_service->split_paths();
-
-  initial_image = svg_service->get_raster_original_image();
-  save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
-
-  zone_number = svg_service->get_regions_count();
+          canvas(stroking_params.canvas), is_threaded(parallelize), thread_worker_number(worker_thread_number) {
 
   if (this->stroking_params.is_relative) {
     this->stroking_params = switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
@@ -106,6 +93,19 @@ VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
     LogInfo("Vector Zone Launcher") << "Limits for stroke length: " << this->stroking_params.stroke_length
                                     << " px, for stroke width: " << this->stroking_params.stroke_width << " px";
   }
+
+  // Determine the number of zones and what the zones actually are
+  svg_service.emplace(image_path,
+                      canvas,
+                      (this->stroking_params.units == Units::MM ? stroking_params.stroke_width.second :
+                       canvas.px2mm(stroking_params.stroke_width.second)) / 2);
+  svg_service->split_paths();
+
+  initial_image = svg_service->get_raster_original_image();
+  save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
+
+  zone_number = svg_service->get_regions_count();
+
 
   res_distributor.emplace(svg_service.value(), stroking_params.canvas_color);
   stroke_distribution = res_distributor->distribute_resource(stroking_params.stroke_number, 1);
@@ -171,6 +171,10 @@ void VectorZoneLauncher::worker_function(size_t thread_index) {
       LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index), "Region #" + std::to_string(job_index))
               << "Start " << (chain.index() == 0 ? "GA" : "annealing") << " (chain " << (pipeline_index + 1) << "/"
               << params.sequence.size() << ")";
+
+      if (!strokes.empty()) {
+        optimizer->set_basic_strokes(get_strokes_base(strokes));
+      }
 
       optimizer->run_remaining_iterations();
 

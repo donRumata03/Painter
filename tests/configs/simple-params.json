@@ -10,13 +10,30 @@
     20.0
   ],
   "units": "mm",
+  "canvas": {
+    "dpi": 96,
+    "height": 400,
+    "width": 300
+  },
   "optimize_sequence": [
+    {
+      "type": "GA",
+      "epoch_num": 20,
+      "population_size": 10,
+      "allow_multithreading": false
+    },
+    {
+      "type": "annealing",
+      "gene_mutation_fraction": 0.1,
+      "iterations": 200,
+      "typical_temperature": 1e-4
+    },
     {
       "type": "GA",
       "epoch_num": 10,
       "population_size": 100,
-      "allow_multithreading": true
-    },
+      "allow_multithreading": false
+    }
   ],
   "canvas_color": {
     "r": 0.0,

@@ -22,10 +22,12 @@ void GaLoggingCallback::operator()(const GA::Population& population, size_t epoc
   if (type == logging_type::best_genome) {
     assert(population.size() == 1);
     fs::path filename = path_for_best_genomes / (std::to_string(epoch_index) + ".png");
-    LogInfo("GA", "Log") << "Saving best genome image to " << filename.string();
     save_stroke_buffer_as_image(population[0], imageData, filename, canvas_color);
 
-    if (verbose) Logger::UpdateProgress();
+    if (verbose) {
+      LogInfo("GA", "Log") << "Saving best genome image to " << filename.string();
+      Logger::UpdateProgress();
+    }
 
     return;
   }

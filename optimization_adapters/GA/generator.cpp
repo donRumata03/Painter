@@ -63,11 +63,11 @@ StrokeLimits generate_stroke_limits_by_raw_parameters(CommonStrokingParams param
   auto absolute_params = switch_to_absolute_values(params, w, h);
 
   auto limits = StrokeLimits{ // TODO: limit box width/height != limits for stroke_length
-          .min_dx     = std::max(absolute_params.stroke_length.first, 0.),
-          .max_dx     = std::min(absolute_params.stroke_length.second, (double) w),
+          .min_dx     = std::clamp(absolute_params.stroke_length.first, 0., (double) w - 1),
+          .max_dx     = std::clamp(absolute_params.stroke_length.second, 0., (double) w),
 
-          .min_dy     = std::max(absolute_params.stroke_length.first, 0.),
-          .max_dy     = std::min(absolute_params.stroke_length.second, (double) h),
+          .min_dy     = std::clamp(absolute_params.stroke_length.first, 0., (double) h - 1),
+          .max_dy     = std::clamp(absolute_params.stroke_length.second, 0., (double) h),
 
           .min_width  = absolute_params.stroke_width.first,
           .max_width  = absolute_params.stroke_width.second,

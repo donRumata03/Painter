@@ -91,11 +91,9 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
 
 void launch_single_zone_vector(const std::string& filename, const CommonStrokingParams& params,
                                const fs::path& logging_path) {
-  auto canvas = Canvas(400, 300); // TODO: remove
-
   LogConsoleInfo("Launch") << "Launching SVG zoned stroking…";
 
-  VectorZoneLauncher launcher(filename, params, canvas, true);
+  VectorZoneLauncher launcher(filename, params, true);
 
   launcher.run();
 
@@ -109,12 +107,12 @@ void launch_single_zone_vector(const std::string& filename, const CommonStroking
   LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
 
   // Full size, result on canvas (in px)
-  Image stroked_image_mm = make_default_image(canvas.width(Units::PX), canvas.height(Units::PX), params.canvas_color);
+  Image stroked_image_mm = make_default_image(params.canvas.width(Units::PX), params.canvas.height(Units::PX), params.canvas_color);
   rasterize_strokes(stroked_image_mm, launcher.get_final_strokes(Units::PX, true));
   save_image(stroked_image_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
 
   // Save strokes
-  save_log_json(launcher.get_final_strokes(Units::MM, true), canvas);
+  save_log_json(launcher.get_final_strokes(Units::MM, true), params.canvas);
 }
 
 

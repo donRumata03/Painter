@@ -12,6 +12,7 @@ CommonStrokingParams load_params(const std::string& path) {
 void to_json(json& j, const CommonStrokingParams& params) {
   j["stroke_number"] = params.stroke_number;
   j["units"] = params.units == Units::MM ? "mm" : "px";
+  j["canvas"] = params.canvas;
   j["is_relative"] = params.is_relative;
   j["stroke_length"] = params.stroke_length;
   j["stroke_width"] = params.stroke_width;
@@ -43,6 +44,10 @@ void from_json(const json& j, CommonStrokingParams& params) {
   if (j.contains("units")) {
     assert(j["units"] == "mm" || j["units"] == "px");
     new_params.units = j["units"] == "mm" ? Units::MM : Units::PX;
+  }
+
+  if (j.contains("canvas")) {
+    new_params.canvas = j["canvas"];
   }
 
   if (j.contains("is_relative")) {

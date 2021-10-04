@@ -4,6 +4,7 @@
 
 #include "painter_pch.h"
 #include "data/color.h"
+#include "data/canvas.h"
 #include "data/units.h"
 
 
@@ -37,8 +38,8 @@ using OptimizerParams = std::variant<GaStrokingParams, AnnealingStrokingParams>;
 
 struct CommonStrokingParams {
   size_t stroke_number = 0;
-
   Units units = Units::MM;
+  Canvas canvas;
 
   /// Limitations
   bool is_relative = false; // Is limit values are relative to canvas
