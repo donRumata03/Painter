@@ -28,17 +28,14 @@
  * It means that it's more than reasonable to distribute the tasks between threads.
  */
 
-template <class OptimizerType>
 class VectorZoneLauncher {
  public:
-  using OptimizerParameters = typename OptimizerType::ParametersType;
 
 
   VectorZoneLauncher(const fs::path& image_path, const CommonStrokingParams& stroking_params,
-                 const OptimizerParameters& custom_parameters,
-                 const Canvas& canvas, bool parallelize = false,
-                 size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
-                 fs::path logging_path = fs::path{painter_base_path} / "log" / "latest");
+                     const Canvas& canvas, bool parallelize = false,
+                     size_t worker_thread_number = std::thread::hardware_concurrency() - 2,
+                     fs::path logging_path = fs::path{painter_base_path} / "log" / "latest");
 
   void run();
 
@@ -56,7 +53,6 @@ class VectorZoneLauncher {
   fs::path logging_path;
 
   CommonStrokingParams stroking_params;
-  OptimizerParameters optimizer_parameters;
 
   size_t zone_number = 0;
   std::vector<size_t> stroke_distribution;
@@ -80,19 +76,13 @@ class VectorZoneLauncher {
 };
 
 
-template <class OptimizerType>
-VectorZoneLauncher<OptimizerType>::VectorZoneLauncher(const fs::path& image_path,
-                                                      const CommonStrokingParams& stroking_params,
-                                                      const OptimizerParameters& custom_parameters,
-                                                      const Canvas& canvas,
-                                                      bool parallelize,
-                                                      size_t worker_thread_number, fs::path logging_path)
+VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
+                                       const CommonStrokingParams& stroking_params,
+                                       const Canvas& canvas,
+                                       bool parallelize,
+                                       size_t worker_thread_number, fs::path logging_path)
         : logging_path(std::move(logging_path)), stroking_params(stroking_params),
-          optimizer_parameters(custom_parameters),
           canvas(canvas), is_threaded(parallelize), thread_worker_number(worker_thread_number) {
-  // Clear the old log
-  ensure_log_cleared(this->logging_path);
-
   // Determine the number of zones and what the zones actually are
   svg_service.emplace(image_path,
                       canvas,
@@ -105,11 +95,14 @@ VectorZoneLauncher<OptimizerType>::VectorZoneLauncher(const fs::path& image_path
 
   zone_number = svg_service->get_regions_count();
 
-  if (!this->stroking_params.use_absolute_values) {
+  if (this->stroking_params.is_relative) {
     this->stroking_params = switch_to_absolute_values(this->stroking_params, initial_image.cols, initial_image.rows);
-  } else if (this->stroking_params.use_absolute_values && this->stroking_params.units == Units::MM) {
-    this->stroking_params.stroke_length = canvas.mm2px(this->stroking_params.stroke_length);
-    this->stroking_params.stroke_width = canvas.mm2px(this->stroking_params.stroke_width);
+  } else if (this->stroking_params.units == Units::MM) { // TODO: make function for switch mm/px in stroking params
+    this->stroking_params.stroke_length.first = canvas.mm2px(this->stroking_params.stroke_length.first);
+    this->stroking_params.stroke_length.second = canvas.mm2px(this->stroking_params.stroke_length.first);
+    this->stroking_params.stroke_width.first = canvas.mm2px(this->stroking_params.stroke_width.first);
+    this->stroking_params.stroke_width.second = canvas.mm2px(this->stroking_params.stroke_width.second);
+
     LogInfo("Vector Zone Launcher") << "Limits for stroke length: " << this->stroking_params.stroke_length
                                     << " px, for stroke width: " << this->stroking_params.stroke_width << " px";
   }
@@ -117,7 +110,7 @@ VectorZoneLauncher<OptimizerType>::VectorZoneLauncher(const fs::path& image_path
   res_distributor.emplace(svg_service.value(), stroking_params.canvas_color);
   stroke_distribution = res_distributor->distribute_resource(stroking_params.stroke_number, 1);
 
-  // Make task distribution if parallel
+  // TODO: Make task distribution if parallel
 
   if (parallelize) {
     thread_zone_distribution = distribute_task_ranges(zone_number, worker_thread_number);
@@ -130,18 +123,18 @@ VectorZoneLauncher<OptimizerType>::VectorZoneLauncher(const fs::path& image_path
   }
 }
 
-
-template <class OptimizerType>
-void VectorZoneLauncher<OptimizerType>::worker_function(size_t thread_index) {
+void VectorZoneLauncher::worker_function(size_t thread_index) {
   auto job_range = thread_zone_distribution[thread_index];
 
   LogConsoleInfo("Vector Zone Launcher", get_current_thread_info(thread_index))
           << "Started, job range: " << get_range_string(job_range);
 
   for (size_t job_index = job_range.first; job_index < job_range.second; ++job_index) {
-
-    std::optional<OptimizerType> optimizer;
+    size_t pipeline_index = 0;
+    std::vector<ColoredStroke> strokes;
     VectorRegion region;
+    CommonStrokingParams params;
+    Image image;
 
     {
       // Acquire a mutex to work with data, which is common for all the worker threads
@@ -150,47 +143,69 @@ void VectorZoneLauncher<OptimizerType>::worker_function(size_t thread_index) {
 
       region = svg_service->get_region(job_index);
 
-      Image image = region.image;
-      auto params = this->stroking_params;
+      image = region.image;
+      params = this->stroking_params;
 
       params.stroke_number = stroke_distribution[job_index];
       params.use_constant_color = true;
       params.stroke_color = region.color;
-
-      LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index))
-              << "Stroking region #" << job_index
-              << " (" << params.stroke_number << " strokes, " << params << " color)";
-
-      optimizer.emplace(image, params, this->optimizer_parameters,
-                        this->logging_path / "stroking" / ("region" + std::to_string(job_index)), false);
     }
 
-    optimizer->run_remaining_iterations();
+    LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index))
+            << "Stroking region #" << job_index
+            << " (" << params.stroke_number << " strokes, " << params.stroke_color << " color)";
+
+    for (auto& chain : stroking_params.sequence) {
+      std::unique_ptr<SimpleWorker> optimizer;
+
+      auto cur_logging_path = logging_path / "stroking" / ("region" + std::to_string(job_index)) /
+                              ("chain" + std::to_string(pipeline_index));
+
+      if (chain.index() == 0) { // GA
+        optimizer = std::make_unique<GaWorker>(image, params, std::get<GaStrokingParams>(chain), cur_logging_path,
+                                               false);
+      } else if (chain.index() == 1) { // Annealing
+        optimizer = std::make_unique<AnnealingWorker>(image, params, std::get<AnnealingStrokingParams>(chain),
+                                                      cur_logging_path, false);
+      }
+      LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index), "Region #" + std::to_string(job_index))
+              << "Start " << (chain.index() == 0 ? "GA" : "annealing") << " (chain " << (pipeline_index + 1) << "/"
+              << params.sequence.size() << ")";
+
+      optimizer->run_remaining_iterations();
+
+      strokes = unpack_stroke_data_buffer(optimizer->get_best_genome());
+
+      {
+        std::lock_guard<std::mutex> locker(common_worker_data_mutex);
+
+        efficiency_account = efficiency_account + optimizer->get_efficiency_account();
+      }
+      LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index), "Region #" + std::to_string(job_index))
+              << "Chain #" << (pipeline_index + 1) << " finished";
+      pipeline_index++;
+    }
+
+    colorize_strokes(strokes, region.color);
+    svg_service->shift_strokes_to_box(strokes, job_index);
 
     {
-      // Acquire mutex to save the data collected:
+      // Acquire mutex to save the data collected
       std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
-      efficiency_account = efficiency_account + optimizer->get_efficiency_account();
-
-      auto strokes = unpack_stroke_data_buffer(optimizer->get_best_genome());
-      colorize_strokes(strokes, region.color);
-      svg_service->shift_strokes_to_box(strokes, job_index);
-
       std::copy(strokes.begin(), strokes.end(), std::back_inserter(collected_strokes));
-
-      LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index)) << "Finish stroking region #" << job_index;
-      Logger::UpdateProgress();
     }
+
+    LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index)) << "Finish stroking region #"
+                                                                           << job_index;
+    Logger::UpdateProgress();
   }
 
   LogConsoleSuccess("Vector Zone Launcher", get_current_thread_info(thread_index))
           << "Ended, job range: " << get_range_string(job_range);
 }
 
-
-template <class OptimizerType>
-void VectorZoneLauncher<OptimizerType>::run() {
+void VectorZoneLauncher::run() {
   LogConsoleInfo("Vector Zone Launcher") << "Run worker(s)";
   Logger::NewProgress(zone_number);
   if (is_threaded) {
@@ -204,11 +219,10 @@ void VectorZoneLauncher<OptimizerType>::run() {
     worker_function(0);
   }
   LogConsoleSuccess("Vector Zone Launcher") << "End running";
+  efficiency_account.print_diagnostic_information();
 }
 
-
-template <class OptimizerType>
-std::vector<ColoredStroke> VectorZoneLauncher<OptimizerType>::get_final_strokes(Units units, bool shift_strokes) {
+std::vector<ColoredStroke> VectorZoneLauncher::get_final_strokes(Units units, bool shift_strokes) {
   std::vector<ColoredStroke> strokes(collected_strokes.size());
   std::copy(collected_strokes.begin(), collected_strokes.end(), strokes.begin());
   svg_service->transform_strokes_into_mm(strokes);

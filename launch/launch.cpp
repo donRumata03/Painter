@@ -32,9 +32,10 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
 
   for (auto& chain : params.sequence) {
     if (chain.index() == 0) { // GA
-      LogConsoleInfo("Launch", "Single", "Raster") << "Start GA (chain " << (index + 1) << "/" << params.sequence.size() << ")";
+      LogConsoleInfo("Launch", "Single", "Raster") << "Start GA (chain " << (index + 1) << "/" << params.sequence.size()
+                                                   << ")";
       GaWorker worker(image, params, std::get<GaStrokingParams>(chain),
-                      logging_path / ("chain" + std::to_string(index + 1)));
+                      logging_path / ("chain" + std::to_string(index)));
       if (!strokes.empty()) {
         worker.set_basic_strokes(get_strokes_base(strokes));
       }
@@ -44,7 +45,8 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
 
       strokes = unpack_stroke_data_buffer(worker.get_best_genome());
     } else if (chain.index() == 1) { // Annealing
-      LogConsoleInfo("Launch", "Single", "Raster") << "Start annealing (chain " << (index + 1) << "/" << params.sequence.size() << ")";
+      LogConsoleInfo("Launch", "Single", "Raster") << "Start annealing (chain " << (index + 1) << "/"
+                                                   << params.sequence.size() << ")";
       /*
       auto cur_params = params;
       Color major_color, canvas_color, background_color;
@@ -65,7 +67,7 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
       }*/
 
       AnnealingWorker worker(image, params, std::get<AnnealingStrokingParams>(chain),
-                             logging_path / ("chain" + std::to_string(index + 1)));
+                             logging_path / ("chain" + std::to_string(index)));
       worker.run_remaining_iterations();
       worker.get_efficiency_account().print_diagnostic_information();
       worker.show_fitness_dynamic();
@@ -83,11 +85,36 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   Image stroked_image = make_default_image(image.cols, image.rows, params.canvas_color);
   rasterize_strokes(stroked_image, strokes);
   save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+
+  show_image_in_system_viewer(stroked_image);
 }
 
 void launch_single_zone_vector(const std::string& filename, const CommonStrokingParams& params,
                                const fs::path& logging_path) {
+  auto canvas = Canvas(400, 300); // TODO: remove
 
+  LogConsoleInfo("Launch") << "Launching SVG zoned stroking…";
+
+  VectorZoneLauncher launcher(filename, params, canvas, true);
+
+  launcher.run();
+
+  // View result
+  // Full size, only result
+  auto size = launcher.get_image_size();
+  Image stroked_image = make_default_image(size.width, size.height, params.canvas_color);
+  auto strokes = launcher.get_final_strokes();
+  rasterize_strokes(stroked_image, strokes);
+  save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+  LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
+
+  // Full size, result on canvas (in px)
+  Image stroked_image_mm = make_default_image(canvas.width(Units::PX), canvas.height(Units::PX), params.canvas_color);
+  rasterize_strokes(stroked_image_mm, launcher.get_final_strokes(Units::PX, true));
+  save_image(stroked_image_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
+
+  // Save strokes
+  save_log_json(launcher.get_final_strokes(Units::MM, true), canvas);
 }
 
 

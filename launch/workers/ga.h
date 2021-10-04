@@ -17,9 +17,9 @@ class GaWorker : public SimpleWorker {
   using ParametersType = GaStrokingParams;
 
   GaWorker(const Image& image,
-            const CommonStrokingParams& stroking_params, const GaStrokingParams& optimizer_params,
-            const fs::path& logging_path = fs::path(painter_base_path) / "log" / "latest",
-            bool enable_console_output = true);
+           const CommonStrokingParams& stroking_params, const GaStrokingParams& optimizer_params,
+           const fs::path& logging_path = fs::path(painter_base_path) / "log" / "latest",
+           bool enable_console_output = true);
 
   void set_basic_strokes(const std::vector<Stroke>& strokes) override;
 
@@ -62,8 +62,4 @@ class GaWorker : public SimpleWorker {
 
   // Optimizer itself
   std::optional<GA::GA_optimizer> optimizer;
-
-  // Logging
-  std::filesystem::path logging_path;
-  bool verbose = true;
 };

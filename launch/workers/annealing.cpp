@@ -5,7 +5,8 @@ AnnealingWorker::AnnealingWorker(const Image& image, const CommonStrokingParams&
                                  const AnnealingStrokingParams& params, const fs::path& logging_path,
                                  bool verbose)
 
-        : annealing_stroking_params(params), common_stroking_params(stroking_params), logging_path(logging_path), verbose(verbose) {
+        : annealing_stroking_params(params), common_stroking_params(stroking_params),
+          SimpleWorker(logging_path, verbose) {
   image.copyTo(initial_image);
 
   image_w = initial_image.cols;
@@ -35,7 +36,7 @@ AnnealingWorker::AnnealingWorker(const Image& image, const CommonStrokingParams&
   logger = AnnealingLoggingCallback(
           ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
           params.iterations, stroking_params.logging_percentage, logging_path, stroking_params.canvas_color,
-          enable_console_output);
+          verbose);
 }
 
 void AnnealingWorker::set_basic_strokes(const std::vector<Stroke>& strokes) {
@@ -58,7 +59,7 @@ void AnnealingWorker::run_remaining_iterations() {
           generator,
           mutator,
           custom_exp_temperature_dynamic(0.2),
-          enable_console_output,
+          verbose,
           nullptr,
           nullptr,
           nullptr,

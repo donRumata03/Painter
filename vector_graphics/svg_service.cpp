@@ -54,12 +54,14 @@ void SvgService::split_paths(double gomothety_factor, bool verbose) {
     box = scale_rect(limit_bounds(gomothety_bounds(box, gomothety_factor, 5), canvas_borders),
                      1. / kMmPerInch * canvas->dpi());
     region_doc.rootElement()->setAttribute("viewBox", to_viewbox(svg_box));
+    auto image = get_raster_image(region_doc, box.width, box.height);
+    auto path = get_region_path(count);
 
-    VectorRegion region(get_raster_image(region_doc, box.width, box.height), box,
-                        get_element_color(iter.currentElement()), get_region_path(count));
+    cv::imwrite(path, image);
+
+    VectorRegion region(bgr2rgb<Pixel>(convert_image_to_floating_point(image)), box,
+                        get_element_color(iter.currentElement()), path);
     regions.emplace_back(region);
-
-    cv::imwrite(region.path, region.image);
     LogInfo("SVG Service") << "Saved raster image of path #" << count << " to " << region.path;
 
     count++;

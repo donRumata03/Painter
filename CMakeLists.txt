@@ -36,6 +36,10 @@ set(SOURCE_FILES
         operations/stroke/sorting.cpp
         operations/color/deduction.cpp
         operations/color/optimization.cpp
+        operations/image/adaptive_params.cpp
+        operations/image/figure.cpp
+        operations/image/segregation.cpp
+        operations/image/splitting.cpp
         operations/error.cpp
 
         # Rasterization

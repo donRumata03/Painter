@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include <utility>
+
 #include "painter_pch.h"
 #include "data/stroke.h"
 #include "data/algorithm_statistics.h"
@@ -8,6 +10,10 @@
 
 class SimpleWorker {
  public:
+  SimpleWorker() = default;
+
+  explicit SimpleWorker(fs::path logging_path, bool verbose) : logging_path(std::move(logging_path)),
+                                                               verbose(verbose) {}
 
   // Setup
   virtual void set_basic_strokes(const std::vector<Stroke>& strokes) = 0;
@@ -26,5 +32,7 @@ class SimpleWorker {
   virtual void show_fitness_dynamic() = 0;
 
  protected:
-  bool enable_console_output = true;
+  // Logging
+  fs::path logging_path;
+  bool verbose = true;
 };

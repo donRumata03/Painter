@@ -29,8 +29,7 @@ cv::Mat get_raster_image(const lunasvg::SVGDocument& doc, size_t width, size_t h
   return img;
 }
 
-
-cv::Rect get_shape_bounds(const cv::Mat& img) {
+cv::Rect get_region_bounds(const cv::Mat& img) {
   Image gray;
   cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
   return cv::boundingRect(gray);

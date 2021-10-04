@@ -50,9 +50,5 @@ class AnnealingWorker : public SimpleWorker {
 
   // Results
   AnnealingOptimizationOutput<double> result;
-
-  // Logging
-  bool verbose;
-  fs::path logging_path;
 };
 

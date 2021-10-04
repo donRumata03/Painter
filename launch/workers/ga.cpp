@@ -4,7 +4,7 @@
 GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_params,
                    const GaStrokingParams& optimizer_params, const fs::path& logging_path,
                    bool verbose)
-        : stroking_params(stroking_params), GA_params(optimizer_params), logging_path(logging_path), verbose(verbose) {
+        : stroking_params(stroking_params), GA_params(optimizer_params), SimpleWorker(logging_path, verbose) {
   image.copyTo(initial_image);
 
   image_w = image.cols;
@@ -73,7 +73,7 @@ GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_para
 
   optimizer.emplace(fitness_function, point_ranges, ga_params);
   optimizer->plug_logger(logger);
-  optimizer->set_informer(GaInformer(image, GA_params.epoch_num, enable_console_output));
+  optimizer->set_informer(GaInformer(image, GA_params.epoch_num, verbose));
 
   LogSuccess("GA Worker") << "Inited";
 }
