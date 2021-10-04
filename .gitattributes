@@ -11,4 +11,4 @@
 
 *.cmake linguist-vendored=false
 CMakeLists.txt linguist-vendored=false
-./CMake/cotire.cmake linguist-vendored=true
+CMake/cotire.cmake linguist-vendored=true
