@@ -69,5 +69,4 @@ TEST(JsonTest, CommonStrokingParamsConversion) {
   auto converted_params = j_params.get<CommonStrokingParams>();
 
   ASSERT_EQ(params, converted_params);
-
 }

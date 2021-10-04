@@ -1,0 +1,41 @@
+{
+  "is_relative": false,
+  "stroke_length": [
+    20.0,
+    100.0
+  ],
+  "stroke_number": 30,
+  "stroke_width": [
+    10.0,
+    20.0
+  ],
+  "units": "mm",
+  "optimize_sequence": [
+    {
+      "type": "GA",
+      "epoch_num": 20,
+      "population_size": 200,
+      "allow_multithreading": true
+    },
+    {
+      "type": "annealing",
+      "gene_mutation_fraction": 0.1,
+      "iterations": 1000,
+      "typical_temperature": 1e-4
+    }
+  ],
+  "use_constant_color": true,
+  "stroke_color": {
+    "r": 1.0,
+    "b": 0.0,
+    "g": 1.0
+  },
+  "canvas_color": {
+    "r": 0.0,
+    "b": 0.0,
+    "g": 0.0
+  },
+  "logging_percentage": 0.0,
+  "move_mutation_probability": 0.2,
+  "sigma": 0.5
+}

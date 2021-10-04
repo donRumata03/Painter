@@ -44,21 +44,21 @@ class Logger {
     }
 
     template <typename T>
-    LogStream &operator<<(const T &data) {
+    LogStream& operator<<(const T& data) {
       buffer << data;
       return *this;
     }
 
-    LogStream(const LogStream &) = delete;
+    LogStream(const LogStream&) = delete;
 
    private:
     explicit LogStream(LogParams dest) : dest(std::move(dest)), buffer(Logger::buffer) {}
 
-    LogStream(LogStream &prev) : dest(prev.dest), buffer(prev.buffer), flush(prev.flush) {
+    LogStream(LogStream& prev) : dest(prev.dest), buffer(prev.buffer), flush(prev.flush) {
       prev.flush = false;
     }
 
-    std::ostringstream &buffer;
+    std::ostringstream& buffer;
     LogParams dest;
     bool flush = true;
 
@@ -71,7 +71,7 @@ class Logger {
     explicit LogStreamProxy(LogParams dest) : dest(std::move(dest)) {}
 
     template <typename T>
-    LogStream operator<<(const T &data) {
+    LogStream operator<<(const T& data) {
       LogStream stream(dest);
       return (stream << data);
     }
@@ -80,7 +80,7 @@ class Logger {
     LogParams dest;
   };
 
-  static void SetLogFile(const fs::path &output_path) {
+  static void SetLogFile(const fs::path& output_path) {
     Instance().set_log_file(output_path);
   }
 
@@ -106,12 +106,12 @@ class Logger {
     return Instance().progress->GetCurrent();
   }
 
-  static Logger &Instance() {
+  static Logger& Instance() {
     static Logger logger;
     return logger;
   }
 
-  LogStreamProxy operator()(LogLevel level, const std::string &module, bool output_in_console, bool output_in_file) {
+  LogStreamProxy operator()(LogLevel level, const std::string& module, bool output_in_console, bool output_in_file) {
     return LogStreamProxy({level, module, output_in_console, output_in_file});
   }
 
@@ -120,8 +120,9 @@ class Logger {
     thread = std::thread(&Logger::run, this);
   }
 
-  Logger(const Logger &) = delete;
-  Logger &operator=(Logger &) = delete;
+  Logger(const Logger&) = delete;
+
+  Logger& operator=(Logger&) = delete;
 
   inline static std::unordered_map<LogLevel, std::string> LogLevelStrings = {
           {LogLevel::Debug,   "DEBUG"},
@@ -140,11 +141,19 @@ class Logger {
           {LogLevel::Error,   console_colors::red}
   };
 
-  void set_log_file(const fs::path &output_path) {
+  void set_log_file(const fs::path& output_path) {
     if (!std::filesystem::exists(output_path.parent_path())) {
       std::filesystem::create_directories(output_path.parent_path());
     }
+
+    if (file_stream.is_open()) {
+      file_stream.close();
+      fs::copy_file(log_path, output_path, fs::copy_options::update_existing);
+      fs::remove(log_path);
+    }
+
     file_stream = std::ofstream(output_path);
+    log_path = output_path;
   }
 
   void stop() {
@@ -198,7 +207,7 @@ class Logger {
     flush_to_console();
   }
 
-  void push_log(const std::string &message, const LogParams& dest) {
+  void push_log(const std::string& message, const LogParams& dest) {
     std::stringstream time, module;
     if (dest.level != LogLevel::Common) {
       const auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -250,8 +259,9 @@ class Logger {
   std::mutex print_mutex;
   bool is_working;
 
+  fs::path log_path;
   std::ofstream file_stream;
-  std::ostream &console_stream;
+  std::ostream& console_stream;
 
   std::queue<std::string> file_queue;
   std::queue<std::string> console_queue;
@@ -265,7 +275,7 @@ class Logger {
 
 // TODO: find better place for that function
 template <class ...T>
-static std::string concat(const std::string &sep, const T &... args) {
+static std::string concat(const std::string& sep, const T& ... args) {
   std::stringstream ss;
   ((ss << sep << args), ...); // left fold
   return ss.str();
@@ -274,103 +284,102 @@ static std::string concat(const std::string &sep, const T &... args) {
 /// LOGGER CALLERS
 
 template <class ...T>
-inline Logger::LogStreamProxy ConsoleDebug(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy ConsoleDebug(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogDebug(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogDebug(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsoleDebug(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsoleDebug(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Debug, module + concat("][", submodules...), true, true);
 }
 
 
 template <class ...T>
-inline Logger::LogStreamProxy ConsoleInfo(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy ConsoleInfo(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogInfo(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogInfo(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsoleInfo(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsoleInfo(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Info, module + concat("][", submodules...), true, true);
 }
 
 
 template <class ...T>
-inline Logger::LogStreamProxy Console(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy Console(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy Log(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy Log(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsole(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsole(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Common, module + concat("][", submodules...), true, true);
 }
 
 
 template <class ...T>
-inline Logger::LogStreamProxy ConsoleSuccess(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy ConsoleSuccess(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogSuccess(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogSuccess(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsoleSuccess(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsoleSuccess(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Success, module + concat("][", submodules...), true, true);
 }
 
 
 template <class ...T>
-inline Logger::LogStreamProxy ConsoleWarning(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy ConsoleWarning(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogWarning(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogWarning(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsoleWarning(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsoleWarning(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Warning, module + concat("][", submodules...), true, true);
 }
 
 
 template <class ...T>
-inline Logger::LogStreamProxy ConsoleError(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy ConsoleError(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, false);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogError(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogError(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), false, true);
 }
 
 template <class ...T>
-inline Logger::LogStreamProxy LogConsoleError(const std::string &module = "", const T &... submodules) {
+inline Logger::LogStreamProxy LogConsoleError(const std::string& module = "", const T& ... submodules) {
   return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, true);
 }
 
-inline void ensure_log_cleared(const fs::path& log_path = painter_base_path / "log" / "latest")
-{
-  if(fs::exists(log_path)) {
+inline void ensure_log_cleared(const fs::path& log_path = painter_base_path / "log" / "latest") {
+  if (fs::exists(log_path)) {
     fs::remove_all(log_path);
   }
   fs::create_directories(log_path);

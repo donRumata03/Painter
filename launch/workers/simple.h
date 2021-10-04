@@ -2,11 +2,15 @@
 
 
 #include "painter_pch.h"
+#include "data/stroke.h"
 #include "data/algorithm_statistics.h"
 
 
 class SimpleWorker {
  public:
+
+  // Setup
+  virtual void set_basic_strokes(const std::vector<Stroke>& strokes) = 0;
 
   // Run
   virtual void run_one_iteration() = 0;

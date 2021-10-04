@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "data/stroke_limits.h"
 #include "data/common_stroking_params.h"
 #include "operations/stroke/limits.h"
@@ -8,8 +10,11 @@
 
 
 class GaGenomeGenerator {
-  StrokeLimits limits;
-  size_t strokes_in_image;
+  StrokeLimits limits{};
+  size_t strokes_in_image{};
+
+  std::vector<Stroke> basic_strokes;
+  bool use_reference = false;
 
  public:
   GaGenomeGenerator() = default;
@@ -17,18 +22,25 @@ class GaGenomeGenerator {
   explicit GaGenomeGenerator(const StrokeLimits& limits, size_t stroke_number)
           : limits(limits), strokes_in_image(stroke_number) {}
 
+  explicit GaGenomeGenerator(std::vector<Stroke> strokes) : basic_strokes(std::move(strokes)), use_reference(true) {}
+
   std::vector<double> operator()(size_t amount) const {
     // Amount isn't the the number of strokes, it's the amount of pieces
     assert(not(amount % (sizeof(Stroke) / sizeof(double))));
 
     size_t number_of_strokes = amount / 7;
-    assert(number_of_strokes == strokes_in_image);
+    if (use_reference) {
+      assert(number_of_strokes == basic_strokes.size());
 
-    std::vector<Stroke> strokes(strokes_in_image);
-    std::generate(strokes.begin(), strokes.end(), [this]() { return generate_stroke(limits); });
+      return pack_stroke_data(basic_strokes);
+    } else {
+      assert(number_of_strokes == strokes_in_image);
 
+      std::vector<Stroke> strokes(strokes_in_image);
+      std::generate(strokes.begin(), strokes.end(), [this]() { return generate_stroke(limits); });
 
-    return pack_stroke_data(strokes);
+      return pack_stroke_data(strokes);
+    }
   }
 };
 

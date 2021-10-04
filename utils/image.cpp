@@ -41,7 +41,7 @@ void cv_show_image(const Image& img, const std::string& image_name) {
 
 
 void show_image_in_system_viewer(const Image& img, const std::string& temp_name) {
-  std::string temp_folder = (std::filesystem::current_path() / "resources"s / "temp"s).string();
+  std::string temp_folder = (fs::current_path() / "resources"s / "temp"s).string();
   if (not fs::exists(temp_folder)) {
     fs::create_directory(temp_folder);
   }

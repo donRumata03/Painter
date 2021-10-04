@@ -3,14 +3,12 @@
 
 GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_params,
                    const GaStrokingParams& optimizer_params, const fs::path& logging_path,
-                   bool enable_console_output)
-        : stroking_params(stroking_params), GA_params(optimizer_params) {
+                   bool verbose)
+        : stroking_params(stroking_params), GA_params(optimizer_params), logging_path(logging_path), verbose(verbose) {
   image.copyTo(initial_image);
 
   image_w = image.cols;
   image_h = image.rows;
-
-  this->enable_console_output = enable_console_output;
 
   // Count typical distances
   limits = generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h);
@@ -38,12 +36,12 @@ GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_para
           stroking_params.canvas_color
   );
 
-  bool enable_detailed_logging = (stroking_params.logging_percentage != 0);
   logger = GaLoggingCallback(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
+                             optimizer_params.epoch_num,
                              logging_path.string(),
                              stroking_params.logging_percentage,
-                             enable_detailed_logging,
-                             enable_console_output,
+                             verbose,
+                             (stroking_params.logging_percentage != 0),
                              stroking_params.canvas_color);
 
 
@@ -80,6 +78,10 @@ GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_para
   LogSuccess("GA Worker") << "Inited";
 }
 
+void GaWorker::set_basic_strokes(const std::vector<Stroke>& strokes) {
+  generator = GaPopulationGenerator(strokes);
+}
+
 void GaWorker::run_one_iteration() {
   optimizer->run_one_iteration(GA_params.epoch_num);
 }
@@ -100,7 +102,7 @@ void GaWorker::show_fitness_dynamic() {
     xs_for_fitnesses[x_index] = double(x_index);
   }
   add_vectors_to_plot(xs_for_fitnesses, fhist);
-  show_plot({.window_title = "Fitness Dynamic"});
+  show_plot({.output_filename = (logging_path / "fitness_plot.png").string()});
 }
 
 const std::vector<double>& GaWorker::get_best_genome() {

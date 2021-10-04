@@ -3,7 +3,7 @@
 
 std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_genome(
         size_t stroke_number, const point& image_size, const std::pair<double, double>& width_range) {
-  assert(sizeof(stroke) == 7 * sizeof(double));
+  assert(sizeof(Stroke) == 7 * sizeof(double));
   std::vector<std::pair<double, double>> res(stroke_number * 7);
 
   std::pair<double, double> x_range = {0., double(image_size.x)};
@@ -24,7 +24,7 @@ std::vector<std::pair<double, double>> generate_point_ranges_for_stroke_genome(
 std::vector<double> generate_point_sigmas_for_stroke_genome(size_t stroke_number, const point& image_size,
                                                             double absolute_sigma_for_coords,
                                                             double absolute_sigma_for_width) {
-  assert(sizeof(stroke) == 7 * sizeof(double));
+  assert(sizeof(Stroke) == 7 * sizeof(double));
   std::vector<double> res(stroke_number * 7);
 
   double x_sigma = absolute_sigma_for_coords;
@@ -44,7 +44,7 @@ std::vector<double> generate_point_sigmas_for_stroke_genome(size_t stroke_number
 }
 
 CommonStrokingParams switch_to_absolute_values(const CommonStrokingParams& params, size_t w, size_t h) {
-  if (params.is_relative) return params;
+  if (!params.is_relative) return params;
 
   CommonStrokingParams new_params = params;
 

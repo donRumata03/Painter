@@ -42,26 +42,28 @@ int main(int argc, char *argv[]) {
 
   auto image_path = program.get("path");
 
-  if (!std::filesystem::exists(image_path)) {
-    LogConsoleError("Main") << "Invalid image path: " << image_path;
+  try {
+    if (!std::filesystem::exists(image_path)) {
+      throw std::runtime_error("Invalid image path: " + image_path);
+    }
+    LogConsoleInfo("Main") << "Image path: " << image_path;
+
+    CommonStrokingParams params;
+    auto params_path = program.get("--params");
+    if (!params_path.empty()) {
+      if (!std::filesystem::exists(params_path)) {
+        throw std::runtime_error("Invalid params path: " + params_path);
+      }
+      params = load_params(params_path);
+      LogConsoleSuccess("Main") << "Params loaded from: " << params_path;
+    }
+
+    launch_stroking(image_path, params);
+  } catch (const std::exception& ex) {
+    LogConsoleError("Exception") << ex.what();
     Logger::Stop();
     exit(1);
   }
-  LogConsoleInfo("Main") << "Image path: " << image_path;
-
-  CommonStrokingParams params;
-  auto params_path = program.get("--params");
-  if (!params_path.empty()) {
-    if (!std::filesystem::exists(params_path)) {
-      LogConsoleError("Main") << "Invalid params path: " << params_path;
-      Logger::Stop();
-      exit(1);
-    }
-    params = load_params(params_path);
-    LogConsoleSuccess("Main") << "Params loaded from: " << params_path;
-  }
-
-  launch_stroking(image_path, params);
 
   Logger::Stop();
   return 0;

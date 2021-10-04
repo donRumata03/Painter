@@ -24,33 +24,37 @@ class AnnealingLoggingCallback {
   AnnealingLoggingCallback() = default;
 
   AnnealingLoggingCallback(ImageStrokingData imageData, size_t total_iterations, double logging_percentage,
-                              fs::path logging_path, Color canvas_color, bool enable_console_output = true)
+                              const fs::path& logging_path, Color canvas_color, bool verbose = true)
           : canvas_color(canvas_color), total_iterations(total_iterations), logging_fraction(logging_percentage),
-            base_path(std::move(logging_path)), imageData(std::move(imageData)),
-            enable_console_output(enable_console_output) {
-    if (fs::exists(base_path)) fs::remove_all(base_path);
+            logging_path(logging_path), imageData(std::move(imageData)),
+            verbose(verbose) {
+    if (fs::exists(logging_path)) fs::remove_all(logging_path);
 
-    fs::create_directories(base_path);
-    save_image(this->imageData.image, base_path / "original.png");
+    fs::create_directories(logging_path);
+    save_image(this->imageData.image, logging_path / "original.png");
 
-    updating_path = base_path / "updates";
+    updating_path = logging_path / "updates";
     fs::create_directories(updating_path);
+
+    LogInfo("Annealing", "Log") << "Initialized logger with path to updates: " << updating_path;
+    if (verbose) Logger::NewProgress(total_iterations);
   }
 
-  void operator()(const std::vector<double>& stroke_set, size_t this_iteration, double error) const;
+  void operator()(const std::vector<double>& stroke_set, size_t this_iteration, double error);
 
  private:
   size_t total_iterations = 0;
+  size_t prev_iteration = 0;
   double logging_fraction = 0.;
 
   ImageStrokingData imageData;
 
   Color canvas_color{};
 
-  fs::path base_path;
+  fs::path logging_path;
   fs::path updating_path;
 
-  bool enable_console_output;
+  bool verbose;
 };
 
 

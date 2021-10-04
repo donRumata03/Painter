@@ -40,14 +40,21 @@ struct Stroke {
    * @return A pair of dx/dt and dy/dt
    */
   [[nodiscard]] Point derivative_at(double t) const;
+
   [[nodiscard]] double t_at(const Point& point_in_stroke) const;
+
   [[nodiscard]] double length() const;
 
   [[nodiscard]] RangeRectangle<double> get_curve_bounding_box() const;
+
   [[nodiscard]] RangeRectangle<double> get_stroke_bounding_box() const;
+
   [[nodiscard]] Point center() const { return (p0 + p1 + p2) / 3; }
+
   void scale_x_from_center(double scale_factor);
+
   void scale_y_from_center(double scale_factor);
+
   void scale_from_center(double scale_factor);
 
   /**
@@ -67,6 +74,7 @@ struct Stroke {
           StrokeRasterizationAlgorithm algo = StrokeRasterizationAlgorithm::vertical_lines) const;
 
   friend std::ostream& operator<<(std::ostream& os, const Stroke& stroke);
+
   auto operator<=>(const Stroke& stroke) const = default;
 };
 
@@ -166,6 +174,13 @@ RgbColoredStroke<OldColorType>::operator RgbColoredStroke<NewColorType>() const 
   return res;
 }
 
+template <class ColorType>
+inline std::vector<Stroke> get_strokes_base(const std::vector<RgbColoredStroke<ColorType>> strokes) {
+  std::vector<Stroke> result(strokes.size());
+  std::transform(strokes.begin(), strokes.end(), result.begin(), [&](auto stroke) { return (Stroke&) stroke; });
+  return result;
+}
+
 
 /// Json
 
@@ -179,7 +194,9 @@ struct ContextWrapper {
 };
 
 void to_json(json& j, const ContextWrapper<Stroke>& stroke_with_size);
+
 void to_json(json& j, const ContextWrapper<ColoredStroke>& col_stroke);
+
 void to_json(json& j, const ContextWrapper<std::vector<ColoredStroke>>& strokes);
 
 void from_json(const json& j, Stroke& target_stroke, const Canvas& canvas);

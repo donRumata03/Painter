@@ -15,8 +15,9 @@ class AnnealingWorker : public SimpleWorker {
   AnnealingWorker(const Image& image, const CommonStrokingParams& stroking_params,
                   const AnnealingStrokingParams& annealing_params,
                   const fs::path& logging_path = fs::path{painter_base_path} / "log" / "latest",
-                  bool enable_console_output = true);
+                  bool verbose = true);
 
+  void set_basic_strokes(const std::vector<Stroke>& strokes) override;
 
   /// Run methods
   void run_one_iteration() override;
@@ -41,7 +42,7 @@ class AnnealingWorker : public SimpleWorker {
   CommonStrokingParams common_stroking_params;
   AnnealingStrokingParams annealing_stroking_params;
 
-  // Actors
+  // Operations
   FitnessFunction error_function;
   AnnealingGenomeMutator mutator;
   AnnealingGenomeGenerator generator;
@@ -49,5 +50,9 @@ class AnnealingWorker : public SimpleWorker {
 
   // Results
   AnnealingOptimizationOutput<double> result;
+
+  // Logging
+  bool verbose;
+  fs::path logging_path;
 };
 

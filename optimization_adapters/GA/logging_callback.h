@@ -18,7 +18,7 @@ class GaLoggingCallback {
   fs::path path_for_logging;
   fs::path path_for_best_genomes;
 
-  bool enable_console_output = true;
+  bool verbose = true;
   bool detalized_logging = false;
   double logged_genome_rate = 1.;
 
@@ -26,8 +26,8 @@ class GaLoggingCallback {
  public:
   GaLoggingCallback() = default;
 
-  GaLoggingCallback(ImageStrokingData imageData, const std::string& path_for_logging, double logged_percent,
-                    bool log_precisely = true, bool enable_console_output = true, Color canvas_color = {});
+  GaLoggingCallback(ImageStrokingData imageData, size_t total_epoch, const std::string& path_for_logging,
+                    double logged_percent, bool verbose = true, bool log_precisely = true, Color canvas_color = {});
 
   void operator()(const GA::Population& population, size_t epoch_index, logging_type this_logging_type);
 

@@ -28,6 +28,7 @@ set(SOURCE_FILES
         data/common_stroking_params.cpp
         data/stroke_limits.cpp
         data/vector_region.cpp
+        data/algorithm_statistics.cpp
 
         # Operations
         operations/stroke/limits.cpp
@@ -62,8 +63,8 @@ set(SOURCE_FILES
 
         # Launch
         launch/launch.cpp
-        launch/multizone.cpp
-        launch/vector.cpp
+        launch/multizone_launcher.cpp
+        launch/vector_zone_launcher.cpp
         launch/workers/simple.cpp
         launch/workers/ga.cpp
         launch/workers/annealing.cpp
