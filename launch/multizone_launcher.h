@@ -131,7 +131,7 @@ bool MultizoneLauncher<Worker>::process_one_cell() {
   auto& worker = workers[cell_x][cell_y];
   worker->run_remaining_iterations();
 
-  worker->get_efficiency_account().print_diagnostic_information();
+  worker->get_statistics().print_diagnostic_information();
   workers_ready[cell_x][cell_y] = true;
 
   return true;

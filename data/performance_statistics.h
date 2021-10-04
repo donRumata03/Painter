@@ -1,6 +1,6 @@
 #pragma once
 
-struct AlgorithmStatistics {
+struct PerformanceStatistics {
   size_t computations_performed = 0;
   size_t pixels_processed = 0;
   double time_spent_computing = 0;
@@ -17,5 +17,5 @@ struct AlgorithmStatistics {
   void print_diagnostic_information() const;
 
 
-  AlgorithmStatistics operator+(const AlgorithmStatistics& other) const;
+  PerformanceStatistics operator+(const PerformanceStatistics& other) const;
 };

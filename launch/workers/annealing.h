@@ -28,9 +28,9 @@ class AnnealingWorker : public SimpleWorker {
 
 
   /// Diagnostics
-  AlgorithmStatistics get_efficiency_account() const override { return error_function.get_efficiency_account(); }
+  PerformanceStatistics get_statistics() const override { return error_function.get_efficiency_account(); }
 
-  void show_fitness_dynamic() override;
+  void save_fitness_dynamic() override;
 
  private:
   // Image

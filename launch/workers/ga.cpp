@@ -93,7 +93,7 @@ void GaWorker::run_remaining_iterations() {
   );
 }
 
-void GaWorker::show_fitness_dynamic() {
+void GaWorker::save_fitness_dynamic() {
   auto fhist = optimizer->get_fitness_history();
   LogConsoleInfo("GA Worker") << "Fitness dynamic: " << fhist;
 

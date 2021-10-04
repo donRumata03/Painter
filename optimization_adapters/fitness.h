@@ -3,7 +3,7 @@
 #include "operations/error.h"
 #include "operations/color/optimization.h"
 #include "optimization_adapters/utils.h"
-#include "data/algorithm_statistics.h"
+#include "data/performance_statistics.h"
 
 
 struct RunTimeCounter {
@@ -79,7 +79,7 @@ class FitnessFunction {
 
   double operator()(const std::vector<double>& stroke_data_buffer) const;
 
-  AlgorithmStatistics get_efficiency_account() const;
+  PerformanceStatistics get_efficiency_account() const;
 };
 
 

@@ -1,13 +1,13 @@
 {
   "is_relative": false,
   "stroke_length": [
-    20.0,
-    100.0
-  ],
-  "stroke_number": 30,
-  "stroke_width": [
     10.0,
-    20.0
+    40.0
+  ],
+  "stroke_number": 15,
+  "stroke_width": [
+    3.0,
+    6.0
   ],
   "units": "mm",
   "canvas": {
@@ -19,14 +19,8 @@
     {
       "type": "GA",
       "epoch_num": 20,
-      "population_size": 200,
-      "allow_multithreading": true
-    },
-    {
-      "type": "annealing",
-      "gene_mutation_fraction": 0.1,
-      "iterations": 1000,
-      "typical_temperature": 1e-4
+      "population_size": 100,
+      "allow_multithreading": false
     }
   ],
   "use_constant_color": true,

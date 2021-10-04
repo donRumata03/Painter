@@ -27,9 +27,9 @@ class GaWorker : public SimpleWorker {
 
   void run_remaining_iterations() override;
 
-  void show_fitness_dynamic() override;
+  void save_fitness_dynamic() override;
 
-  AlgorithmStatistics get_efficiency_account() const override { return fitness_function.get_efficiency_account(); }
+  PerformanceStatistics get_statistics() const override { return fitness_function.get_efficiency_account(); }
 
   const std::vector<double>& get_best_genome() override;
 

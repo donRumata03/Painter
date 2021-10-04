@@ -28,7 +28,7 @@ set(SOURCE_FILES
         data/common_stroking_params.cpp
         data/stroke_limits.cpp
         data/vector_region.cpp
-        data/algorithm_statistics.cpp
+        data/performance_statistics.cpp
 
         # Operations
         operations/stroke/limits.cpp

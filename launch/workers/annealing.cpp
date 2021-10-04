@@ -71,7 +71,7 @@ const std::vector<double>& AnnealingWorker::get_best_genome() {
   return result.best_genome;
 }
 
-void AnnealingWorker::show_fitness_dynamic() {
+void AnnealingWorker::save_fitness_dynamic() {
   auto current_ys = result.current_energy_dynamic;
   auto best_ys = result.best_energy_dynamic;
 

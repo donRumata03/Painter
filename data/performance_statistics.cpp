@@ -1,16 +1,16 @@
-#include "algorithm_statistics.h"
+#include "performance_statistics.h"
 #include "utils/logger.h"
 
-AlgorithmStatistics AlgorithmStatistics::operator+ (const AlgorithmStatistics& other) const
+PerformanceStatistics PerformanceStatistics::operator+ (const PerformanceStatistics& other) const
 {
-  return AlgorithmStatistics {
+  return PerformanceStatistics {
           computations_performed + other.computations_performed,
           pixels_processed + other.pixels_processed,
           time_spent_computing + other.time_spent_computing,
   };
 }
 
-void AlgorithmStatistics::print_diagnostic_information () const
+void PerformanceStatistics::print_diagnostic_information () const
 {
   size_t exp_precision = 10;
 

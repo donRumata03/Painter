@@ -38,7 +38,7 @@ class VectorZoneLauncher {
 
   void run();
 
-  [[nodiscard]] AlgorithmStatistics get_efficiency_account() const { return efficiency_account; }
+  [[nodiscard]] PerformanceStatistics get_efficiency_account() const { return efficiency_account; }
 
   std::vector<ColoredStroke> get_final_strokes(Units units = Units::PX, bool shift_strokes = false);
 
@@ -71,7 +71,7 @@ class VectorZoneLauncher {
   std::vector<ColoredStroke> collected_strokes;
 
   // For statistics
-  AlgorithmStatistics efficiency_account;
+  PerformanceStatistics efficiency_account;
 };
 
 
@@ -183,7 +183,7 @@ void VectorZoneLauncher::worker_function(size_t thread_index) {
       {
         std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
-        efficiency_account = efficiency_account + optimizer->get_efficiency_account();
+        efficiency_account = efficiency_account + optimizer->get_statistics();
       }
       LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index), "Region #" + std::to_string(job_index))
               << "Chain #" << (pipeline_index + 1) << " finished";

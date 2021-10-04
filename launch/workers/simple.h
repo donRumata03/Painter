@@ -5,7 +5,7 @@
 
 #include "painter_pch.h"
 #include "data/stroke.h"
-#include "data/algorithm_statistics.h"
+#include "data/performance_statistics.h"
 
 
 class SimpleWorker {
@@ -27,9 +27,9 @@ class SimpleWorker {
   virtual const std::vector<double>& get_best_genome() = 0;
 
   // Diagnostic
-  [[nodiscard]] virtual AlgorithmStatistics get_efficiency_account() const = 0;
+  [[nodiscard]] virtual PerformanceStatistics get_statistics() const = 0;
 
-  virtual void show_fitness_dynamic() = 0;
+  virtual void save_fitness_dynamic() = 0;
 
  protected:
   // Logging

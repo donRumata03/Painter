@@ -40,8 +40,8 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
         worker.set_basic_strokes(get_strokes_base(strokes));
       }
       worker.run_remaining_iterations();
-      worker.get_efficiency_account().print_diagnostic_information();
-      worker.show_fitness_dynamic();
+      worker.get_statistics().print_diagnostic_information();
+      worker.save_fitness_dynamic();
 
       strokes = unpack_stroke_data_buffer(worker.get_best_genome());
     } else if (chain.index() == 1) { // Annealing
@@ -69,8 +69,8 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
       AnnealingWorker worker(image, params, std::get<AnnealingStrokingParams>(chain),
                              logging_path / ("chain" + std::to_string(index)));
       worker.run_remaining_iterations();
-      worker.get_efficiency_account().print_diagnostic_information();
-      worker.show_fitness_dynamic();
+      worker.get_statistics().print_diagnostic_information();
+      worker.save_fitness_dynamic();
 
       strokes = unpack_stroke_data_buffer(worker.get_best_genome());
     }
@@ -85,8 +85,6 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   Image stroked_image = make_default_image(image.cols, image.rows, params.canvas_color);
   rasterize_strokes(stroked_image, strokes);
   save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
-
-  show_image_in_system_viewer(stroked_image);
 }
 
 void launch_single_zone_vector(const std::string& filename, const CommonStrokingParams& params,

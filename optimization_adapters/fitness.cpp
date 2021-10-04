@@ -38,8 +38,8 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
   return !reverse ? MSE : (1 / MSE);
 }
 
-AlgorithmStatistics FitnessFunction::get_efficiency_account() const {
-  return AlgorithmStatistics{
+PerformanceStatistics FitnessFunction::get_efficiency_account() const {
+  return PerformanceStatistics{
           .computations_performed = *rt_counter.total_runs,
           .pixels_processed = *rt_counter.total_runs * w * h,
           .time_spent_computing = (*rt_counter.total_time_seconds),
