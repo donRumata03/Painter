@@ -1,265 +1,179 @@
 cmake_minimum_required(VERSION 3.16)
 
-# Set compiler:
-
+# Setup compiler
 if (UNIX)
     message("UNIX => Setting Compiler to gcc-10")
     set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
     set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
 endif()
 
-
 ################################################################################
-# Set dependency directories:
-
-if (UNIX)
-    set(is_computer OFF)
-    set(is_notebook ON)
-endif()
-
-if (WIN32)
-    set(is_computer ON)
-    set(is_notebook OFF)
-endif()
-
-# Override if tou want:
-# set(is_computer ...)
-# set(is_notebook ...)
-
-
-# Library locations:
-include("CMake/LibraryConfig.cmake")
-
-################################################################################
-
-
 
 project(Painter)
 
+# Setup
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export build command to analyze them in CppDepend
+add_compile_options(/utf-8)
 
-# Add source files:
-add_executable(Painter
+set(SOURCE_FILES
+        # Data
+        data/color.cpp
+        data/canvas.cpp
+        data/paint_plan.cpp
+        data/range_rectangle.cpp
+        data/stroke.cpp
+        data/units.cpp
+        data/common_stroking_params.cpp
+        data/stroke_limits.cpp
+        data/vector_region.cpp
+        data/performance_statistics.cpp
 
-        main.cpp
+        # Operations
+        operations/stroke/limits.cpp
+        operations/stroke/generation.cpp
+        operations/stroke/sorting.cpp
+        operations/color/deduction.cpp
+        operations/color/optimization.cpp
+        operations/image/adaptive_params.cpp
+        operations/image/figure.cpp
+        operations/image/segregation.cpp
+        operations/image/splitting.cpp
+        operations/error.cpp
 
-        data_representation/stroke.cpp
-        data_representation/stroke.h
-        data_representation/paint_plan.cpp
-        data_representation/color.cpp
-        data_representation/color.h
-        data_representation/canvas.cpp
-        data_representation/canvas.h
-        data_representation/computational_efficiency_representation.cpp
-        data_representation/computational_efficiency_representation.h
-        data_representation/range_rectangle.h
+        # Rasterization
+        rasterization/stroke.cpp
+        rasterization/pixel_layer_tracker.cpp
+        rasterization/rasterized_painting.cpp
 
-        io_api/image_io_utils.cpp
-        io_api/image_io_utils.h
+        # Optimization adapters
+        optimization_adapters/utils.cpp
+        optimization_adapters/fitness.cpp
+        optimization_adapters/GA/constrainer.cpp
+        optimization_adapters/GA/crossover.cpp
+        optimization_adapters/GA/mutator.cpp
+        optimization_adapters/GA/generator.cpp
+        optimization_adapters/GA/population_generator.cpp
+        optimization_adapters/GA/logging_callback.cpp
+        optimization_adapters/GA/informer.cpp
+        optimization_adapters/annealing/generator.cpp
+        optimization_adapters/annealing/logging_callback.cpp
+        optimization_adapters/annealing/mutator.cpp
 
-        tests/opencv_test.h
-        tests/cv_io_test.h
-        tests/color_test.h
-        tests/rasterization_tests/stroke_rasterization_algorithm_demonstration.h
-        tests/stroke_counting_test.h
-        tests/draw_test.h
-        tests/test_base.h
-        tests/error_computing_tests/image_mse_test.h
-        tests/constraining_tests/stroke_constraining_test.h
-        tests/GA_tests/population_generation_tests.h
-        tests/example_stroke_image_generation.h
-        tests/stroke_color_optimization_test.h
-        tests/image_splitting_test.h
-        tests/strokes_to_json_tests.h
-        tests/area_counting_test.h
-        tests/param_adapting_test.h
-        tests/test_stroke_sorting.h
-        tests/_test_common_utils.h
-        tests/test_logging.h
+        # Vector graphics
+        vector_graphics/svg_service.cpp
+        vector_graphics/utils.cpp
 
+        # Launch
+        launch/launch.cpp
+        launch/multizone_launcher.cpp
+        launch/vector_zone_launcher.cpp
+        launch/workers/simple.cpp
+        launch/workers/ga.cpp
+        launch/workers/annealing.cpp
 
-        rasterization/stroke_rasterizer.cpp
-        rasterization/stroke_rasterizer.h
+        # Utils
+        utils/image.cpp
+        )
 
-        rasterization/drawer.cpp
-        rasterization/drawer.h
+add_library(Painter-lib STATIC ${SOURCE_FILES})
 
-        optimization/error/error_computing.cpp
-        optimization/error/error_computing.h
-
-        optimization/stroke_color_optimizing.cpp
-        optimization/stroke_color_optimizing.h
-
-        optimization/image_stroke_optimization.cpp
-        optimization/image_stroke_optimization.h
-
-        optimization/contrast_color_finding.cpp
-        optimization/contrast_color_finding.h
-
-        GA_operations/mutation.cpp
-        GA_operations/mutation.h
-        GA_operations/final_fitness_function.h
-        GA_operations/util.h
-        GA_operations/final_constrainer.h
-
-        common_operations/stroke_limits.h
-        common_operations/basic_constraining.cpp
-        common_operations/basic_constraining.h
-        common_operations/stroke_generation.cpp
-        common_operations/stroke_generation.h
-        common_operations/image_splitting_scheduling.cpp
-        common_operations/image_splitting_scheduling.h
-        common_operations/image_segregation.cpp
-        common_operations/image_segregation.h
-        common_operations/image_adaptive_params.cpp
-        common_operations/image_adaptive_params.h
-        common_operations/stroke_sorting.cpp
-        common_operations/stroke_sorting.h
-        common_operations/filesystem_primitives.h
-        common_operations/image_color_deduction.cpp
-        common_operations/image_color_deduction.h
-        common_operations/figure_area_and_perimeter.cpp
-        common_operations/figure_area_and_perimeter.h
-
-        GA_operations/all.h
-        GA_operations/stroke_range_generator.h
-        GA_operations/callbacks/image_logging_callback.cpp
-        GA_operations/callbacks/image_logging_callback.h
-        GA_operations/callbacks/on_improvement_updating_logger.cpp
-        GA_operations/callbacks/on_improvement_updating_logger.h
-        GA_operations/callbacks/GA_informer.h
-        GA_operations/population_generator.h
-        GA_operations/final_crossover.cpp
-        GA_operations/final_crossover.h
-        GA_operations/genome_generator.h
-        GA_operations/adjustable_genome_mutation.h
-
-        launching/launch_stroking.cpp
-        launching/launch_stroking.h
-        launching/GA_parameter_sets.h
-        launching/multizoner.cpp
-        launching/multizoner.h
-        launching/SvgZoneLauncher.h
-        launching/single_zone_workers/GA_worker.cpp
-        launching/single_zone_workers/GA_worker.h
-        launching/single_zone_workers/single_zone_worker.h
-        launching/single_zone_workers/annealing_worker.cpp
-        launching/single_zone_workers/annealing_worker.h
-
-        vector_graphics/SVG_service.cpp
-        vector_graphics/SVG_service.h
-
-        utils/Progress.h
-        utils/glue_video.h
-        utils/Logger.h
-        rasterization/RasterizedPainting.cpp rasterization/RasterizedPainting.h tests/constraining_tests/problem_constraining_test.h utils/formatted_output.h tests/rasterization_tests/opencv_alpha_chanel_test.h tests/cv_tests/threading_test.h coloring/color_zone_splitting.cpp coloring/color_zone_splitting.h rasterization/PixelLayerTracker.cpp rasterization/PixelLayerTracker.h tests/rasterization_tests/layer_tracker_test.h tests/rasterization_tests/simple_and_layered_rasterization_comparison.h)
+# Main program
+add_executable(Painter main.cpp)
+target_link_libraries(Painter PRIVATE Painter-lib)
 
 include_directories(./)
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 
-## Add libraries to the project:
+# Add libraries to the project
 
-# They are different configurations
 set(PROJECT_DEPENDENCIES_DIR ${PROJECT_SOURCE_DIR}/dependencies)
+message(STATUS "Loading dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
 
-message("Loading dependencies from: ${PROJECT_DEPENDENCIES_DIR}")
-set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
-
-
-#if (is_computer)
-#    set(current_opencv_dir D:/Workspace/C++/libs/opencv4/build)
-#    set(current_boost_dir D:/Cpp_Libs/boost_1_72_0/boost_1_72_0)
-#
-#    set(current_GA_dir D:/Workspace/C++/libs/PowerfulGA)
-#    set(current_pythonic_dir D:/Workspace/C++/libs/pythonic)
-#elseif(is_notebook)
-#    set(current_opencv_dir DOESNT_MATTER)
-#    set(current_boost_dir D:/lib/boost_1_72_0)
-#    set(current_lunasvg_dir ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
-#
-#    set(current_GA_dir /home/vova/dev/PowerfulGA)
-#    set(current_pythonic_dir /home/vova/dev/pythonic)
-#else()
-#    message(FATAL_ERROR "Specify your platform name!")
-
-#endif()
-## User code for other platforms:
-## elseif(...)
-## ...
-
-
-# Find OpenCV:
-if (NOT ${current_opencv_dir} STREQUAL DOESNT_MATTER)
-    set(OpenCV_DIR ${current_opencv_dir})
+include("CMake/LibraryConfig.cmake") # Library locations
+set(OpenCV_STATIC ON)
+## OpenCV
+message(STATUS "Load OpenCV")
+### Find OpenCV:
+if (NOT ${CURRENT_OPENCV_DIR} STREQUAL DOESNT_MATTER)
+    set(OpenCV_DIR ${CURRENT_OPENCV_DIR})
 endif()
 find_package(OpenCV REQUIRED)
 
-# Add OpenCV
+### Add OpenCV
 include_directories(${OpenCV_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message("Debug ${OpenCV_LIBS}")
-    target_link_libraries(Painter debug ${OpenCV_LIBS})
+    target_link_libraries(Painter-lib debug ${OpenCV_LIBS})
 else()
     message("Release ${OpenCV_LIBS}")
-    target_link_libraries(Painter ${OpenCV_LIBS})
+    target_link_libraries(Painter-lib ${OpenCV_LIBS})
 endif()
 
-# Find LunaSVG
-if (NOT ${current_lunasvg_dir} STREQUAL DOESNT_MATTER)
-    set(LunaSVG_DIR ${current_lunasvg_dir})
+
+## LunaSVG
+message(STATUS "Load LunaSVG")
+set(CURRENT_LUNASVG_DIR ${PROJECT_DEPENDENCIES_DIR}/lunasvg)
+
+### Find LunaSVG
+if (NOT ${CURRENT_LUNASVG_DIR} STREQUAL DOESNT_MATTER)
+    set(LunaSVG_DIR ${CURRENT_LUNASVG_DIR})
 endif()
 
 find_package(LunaSVG REQUIRED)
 
-# Add LunaSVG
+### Add LunaSVG
 include_directories(${LunaSVG_INCLUDE_DIRS})
-# message(${LunaSVG_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message("Debug ${LunaSVG_LIBRARY}")
-    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+    target_link_libraries(Painter-lib ${LunaSVG_LIBRARY})
 else()
     message("Release ${LunaSVG_LIBRARY}")
-    target_link_libraries(Painter ${LunaSVG_LIBRARY})
+    target_link_libraries(Painter-lib ${LunaSVG_LIBRARY})
 endif()
 
 
+## Argparse
+message(STATUS "Load Argparse")
+set(CURRENT_ARGPARSE_DIR ${PROJECT_DEPENDENCIES_DIR}/argparse)
 
-# ______________________________
-# Add my libraries:
+### Find Argparse
+if (NOT ${CURRENT_ARGPARSE_DIR} STREQUAL DOESNT_MATTER)
+    set(Argparse_DIR ${CURRENT_ARGPARSE_DIR})
+endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
-# message(${CMAKE_MODULE_PATH})
+find_package(Argparse REQUIRED)
 
-# Add pythonic:
-set(Pythonic_DIR ${current_pythonic_dir})
-# message(${Pythonic_DIR})
+### Add Argparse
+include_directories(${Argparse_INCLUDE_DIRS})
+
+
+## Pythonic
+message(STATUS "Load Pythonic")
+### Add pythonic
+set(Pythonic_DIR ${CURRENT_PYTHONIC_DIR})
+
 find_package(Pythonic REQUIRED)
 
 include_directories(${pythonic_include_directories})
-target_link_libraries(Painter ${pythonic_static_libraries})
+target_link_libraries(Painter-lib ${pythonic_static_libraries})
 
-# Add GA:
-set(PowerfulGA_DIR ${current_GA_dir})
+
+## PowerfulGA
+message(STATUS "Load PowerfulGA")
+### Add PowerfulGA
+set(PowerfulGA_DIR ${CURRENT_GA_DIR})
 find_package(PowerfulGA REQUIRED)
 
 include_directories(${PowerfulGA_include_directories})
-target_link_libraries(Painter ${PowerfulGA_static_libraries})
+target_link_libraries(Painter-lib ${PowerfulGA_static_libraries})
 
 
-# Add boost:
-# see https://cmake.org/cmake/help/latest/module/FindBoost.html
-# set(Boost_DIR ${current_boost_dir})
+# Testing
+add_subdirectory(${CURRENT_GTEST_DIR})
+add_subdirectory(tests)
 
-# set(Boost_INCLUDE_DIR ${current_boost_dir})
-# find_package(Boost REQUIRED)
-# include_directories(${Boost_INCLUDE_DIR})
-
-
-
-# Run Cotire on the project in order to speed the build up by deducting precompiled headers:
+# Run Cotire on the project in order to speed the build up by deducting precompiled headers
 include(cotire)
+cotire(Painter-lib)
 cotire(Painter)
-
-# Export build command to analyze them in CppDepend:
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-

@@ -2,12 +2,9 @@ cmake-build-debug/
 cmake-build-release/
 .idea/
 
-/resources/temp/
-resources/segregation_output
 /log/
 /dependencies/
 !/log/.gitkeep
-images_for_testing/Vector
 
 # File for indiividual external library configuring:
 CMake/LibraryConfig.cmake
