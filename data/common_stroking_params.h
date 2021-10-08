@@ -47,6 +47,8 @@ struct CommonStrokingParams {
   Limit stroke_length;
   Limit stroke_width;
 
+  double stroke_thickness;
+
   /// Probabilities
   double move_mutation_probability = 0.2;
   double sigma = 0.5;
