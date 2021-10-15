@@ -29,7 +29,22 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
   }
 
   rasterize_strokes(this_buffer, strokes);
+  auto painting = RasterizedPainting(w, h, canvas_color);
+  rasterize_strokes(painting, strokes);
+  Image new_img = painting.render_image();
+  Image imposition = painting.get_imposition_matrix();
+
+  cv::imshow("2", imposition);
+
+  cv::imshow("new", new_img);
+  cv::imshow("old", this_buffer);
+  cv::waitKey();
+
   double MSE = image_mse(imageData.image, this_buffer);
+  double MSE_imposition = image_mse(imposition, make_default_image(w, h, 0));
+
+  MSE += MSE_imposition;
+
   fill_image(this_buffer, canvas_color, false); // Clear
 
   rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));

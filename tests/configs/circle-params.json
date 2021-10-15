@@ -24,8 +24,8 @@
     },
     {
       "type": "annealing",
-      "gene_mutation_fraction": 0.1,
-      "iterations": 1000,
+      "gene_mutation_fraction": 0.2,
+      "iterations": 3000,
       "typical_temperature": 1e-4
     }
   ],

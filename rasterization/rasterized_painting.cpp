@@ -1,4 +1,5 @@
 #include "rasterized_paining.h"
+#include "operations/image/figure.h"
 
 
 RasterizedPainting::RasterizedPainting(li h, li w, Color canvas_color)
@@ -11,11 +12,11 @@ RasterizedPainting::RasterizedPainting(li h, li w, Color canvas_color)
 RasterizedPainting::PixelSet RasterizedPainting::get_pixel_list(const RangeRectangle<li>& bounding_box) {
   std::vector<ColoredPosition> res;
 
-  for (li y = bounding_box.min_y; y < bounding_box.max_y; ++y) {
-    for (li x = bounding_box.min_y; x < bounding_box.max_x; ++x) {
+  for (size_t y = bounding_box.min_y; y < bounding_box.max_y; ++y) {
+    for (size_t x = bounding_box.min_y; x < bounding_box.max_x; ++x) {
       auto pix_value = cv_stroke_trap.at<cv::Vec3d>(y, x);
       if (pix_value != m_canvas_color.to_OpenCV_Vec3()) {
-        res.push_back(ColoredPosition{y, x, Color(pix_value)});
+        res.push_back(ColoredPosition{x, y, Color(pix_value)});
       }
     }
   }
@@ -43,17 +44,11 @@ void RasterizedPainting::add_pixel_layer(const RasterizedPainting::PixelSet& pix
 //}
 
 void RasterizedPainting::process_pixels_from_trap(const RangeRectangle<li>& possible_bounding_box, li layer_index) {
-  RangeRectangle<li> image_range_rectangle = get_image_range_limits(cv_stroke_trap);
-
-  auto bounding_box = possible_bounding_box;
-  image_range_rectangle.constrain_rect_to_fit_into_me(bounding_box);
-
   /// Get stroke pixels:
-  auto pixels = get_pixel_list(bounding_box);
+  auto pixels = get_painted_pixels(cv_stroke_trap, m_canvas_color);
 
   /// Use pixels:
   add_pixel_layer(pixels, layer_index);
-  // paint_pixels(pixels);
 
   /// Delete pixels:
   erase_trap_pixels(pixels);
@@ -62,9 +57,24 @@ void RasterizedPainting::process_pixels_from_trap(const RangeRectangle<li>& poss
 Image RasterizedPainting::render_image() {
   auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
 
-  for (li y = 0; y < layer_matrix.size(); ++y) {
-    for (li x = 0; x < layer_matrix[y].size(); ++x) {
-      image.at<cv::Vec3d>(y, x) = layer_matrix[y][x].get_pixel_color()->to_OpenCV_Vec3();
+  for (size_t y = 0; y < layer_matrix.size(); ++y) {
+    for (size_t x = 0; x < layer_matrix[y].size(); ++x) {
+      auto color = layer_matrix[y][x].get_pixel_color();
+      if (color.has_value()) {
+        image.at<cv::Vec3d>(y, x) = color->to_OpenCV_Vec3();
+      }
+    }
+  }
+
+  return image;
+}
+
+Image RasterizedPainting::get_imposition_matrix() const {
+  auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
+
+  for (size_t y = 0; y < layer_matrix.size(); ++y) {
+    for (size_t x = 0; x < layer_matrix[y].size(); ++x) {
+      image.at<cv::Vec3d>(y, x) = std::clamp<double>(((double)layer_matrix[y][x].get_layers_count() - 1) / 3., 0, 1);
     }
   }
 

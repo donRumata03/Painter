@@ -2,6 +2,11 @@
 
 #include "data/color.h"
 
+struct ColoredPosition {
+  size_t x = 0;
+  size_t y = 0;
+  Color c{};
+};
 
 /**
  * Create a template image in RGB (double, 3 channels)

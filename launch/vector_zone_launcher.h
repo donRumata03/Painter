@@ -184,6 +184,7 @@ void VectorZoneLauncher::worker_function(size_t thread_index) {
         std::lock_guard<std::mutex> locker(common_worker_data_mutex);
 
         efficiency_account = efficiency_account + optimizer->get_statistics();
+        optimizer->save_fitness_dynamic();
       }
       LogInfo("Vector Zone Launcher", get_current_thread_info(thread_index), "Region #" + std::to_string(job_index))
               << "Chain #" << (pipeline_index + 1) << " finished";

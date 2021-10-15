@@ -95,7 +95,7 @@ void GaWorker::run_remaining_iterations() {
 
 void GaWorker::save_fitness_dynamic() {
   auto fhist = optimizer->get_fitness_history();
-  LogConsoleInfo("GA Worker") << "Fitness dynamic: " << fhist;
+  LogInfo("GA Worker") << "Fitness dynamic: " << fhist;
 
   std::vector<double> xs_for_fitnesses(fhist.size());
   for (size_t x_index = 0; x_index < xs_for_fitnesses.size(); ++x_index) {

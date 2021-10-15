@@ -5,13 +5,6 @@
 #include "rasterization/pixel_layer_tracker.h"
 
 
-struct ColoredPosition {
-  li y = 0;
-  li x = 0;
-  Color c{};
-};
-
-
 struct RasterizedPainting {
   using PixelSet = std::vector<ColoredPosition>;
 
@@ -24,7 +17,7 @@ struct RasterizedPainting {
   Color m_canvas_color;
 
  public:
-  explicit RasterizedPainting(li h, li w, Color canvas_color);
+  explicit RasterizedPainting(li w, li h, Color canvas_color);
 
   /// Working with pixel lists
   PixelSet get_pixel_list(const RangeRectangle<li>& bounding_box);
@@ -42,6 +35,8 @@ struct RasterizedPainting {
   Color color_at(li y, li x) { return *layers_at(y, x).get_pixel_color(); }
 
   Image render_image();
+
+  Image get_imposition_matrix() const;
 };
 
 

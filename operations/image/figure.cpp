@@ -28,6 +28,21 @@ size_t painted_pixel_number(const Image& image, Color canvas_color) {
   return painted_pixels;
 }
 
+std::vector<ColoredPosition> get_painted_pixels(const Image& image, Color canvas_color) {
+  std::vector<ColoredPosition> pixels;
+
+  for (size_t y = 0; y < image.rows; y++) {
+    for (size_t x = 0; x < image.cols; x++) {
+      auto color = Color(image.at<cv::Vec3d>(y,x));
+      if (color != canvas_color) {
+        pixels.emplace_back(ColoredPosition{x, y, color});
+      }
+    }
+  }
+
+  return pixels;
+}
+
 size_t perimeter_length_pixels(const Image& image) {
   // TODO!
   return 0;

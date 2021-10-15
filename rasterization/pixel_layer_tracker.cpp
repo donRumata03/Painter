@@ -14,6 +14,10 @@ void PixelLayerTracker::add_color_layer(li priority, Color c) {
   m_data[priority] = c;
 }
 
+size_t PixelLayerTracker::get_layers_count() const {
+  return m_data.size();
+}
+
 Color PixelLayerTracker::remove_layer_by_priority(li priority) {
   auto it = m_data.find(priority);
   if (it == m_data.end()) {

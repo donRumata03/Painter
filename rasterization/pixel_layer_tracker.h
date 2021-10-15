@@ -15,5 +15,7 @@ class PixelLayerTracker {
 
   Color remove_layer_by_priority(li priority);
 
+  size_t get_layers_count() const;
+
   std::optional<Color> get_pixel_color();
 };
