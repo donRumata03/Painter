@@ -21,6 +21,14 @@ struct ImageStrokingData {
 
 };
 
+double smooth_transmit_between_borders_linearal(double max_dimensions);
+
+double smooth_transmit_between_borders_arctan(double max_dimensions,
+                                              double max_width);
+
+double smooth_transmit_between_borders_sigmoid(double max_dimensions, double max_width);
+
+double fatness_to_width(const Stroke& stroke, const double fatness);
 
 /**
  * @attention The returning buffer actually doesn`t have colors. The strokes are marked as colored for performance reasons.
@@ -32,6 +40,8 @@ void colorize_strokes(std::vector<ColoredStroke>& strokes, const Image& image);
 void colorize_strokes(std::vector<ColoredStroke>& strokes, const Color& setup_color);
 
 void colorize_strokes(std::vector<ColoredStroke>& strokes_to_colorize, const ImageStrokingData& data);
+
+double width_to_fatness(const Stroke& stroke, double width);
 
 template <class StrokeType,
         std::enable_if_t<std::is_same_v<StrokeType, Stroke> or
@@ -52,7 +62,7 @@ inline std::vector<double> pack_stroke_data(const std::vector<StrokeType>& strok
     stroke_data_buffer[offset + 4] = strokes[i].p2.x;
     stroke_data_buffer[offset + 5] = strokes[i].p2.y;
 
-    stroke_data_buffer[offset + 6] = strokes[i].width;
+    stroke_data_buffer[offset + 6] = width_to_fatness(strokes[i], strokes[i].width);
   }
 
   return stroke_data_buffer;
