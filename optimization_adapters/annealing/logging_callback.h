@@ -28,7 +28,7 @@ class AnnealingLoggingCallback {
           : canvas_color(canvas_color), total_iterations(total_iterations), logging_fraction(logging_percentage),
             logging_path(logging_path), imageData(std::move(imageData)),
             verbose(verbose) {
-    ensure_log_cleared(logging_path);
+	  ensure_log_exists_and_cleared(logging_path);
 
     fs::create_directories(logging_path);
     save_image(this->imageData.image, logging_path / "original.png");

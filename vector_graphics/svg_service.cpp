@@ -21,7 +21,7 @@ SvgService::SvgService(const fs::path& filepath, const Canvas& canvas, double cr
   canvas_borders = scale_rect(svg_borders, transform->scale_factor);
   workspace_size = cv::Size(canvas.mm2px(canvas_borders.width), canvas.mm2px(canvas_borders.height));
 
-  ensure_log_cleared(logging_path);
+	ensure_log_exists_and_cleared(logging_path);
 
   LogConsoleSuccess("SVG Service") << "Inited";
 }

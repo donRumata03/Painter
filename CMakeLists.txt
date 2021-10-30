@@ -169,7 +169,7 @@ include_directories(${PowerfulGA_include_directories})
 target_link_libraries(Painter-lib ${PowerfulGA_static_libraries})
 
 
-# Testing
+# GoogleTest
 add_subdirectory(${CURRENT_GTEST_DIR})
 add_subdirectory(tests)
 

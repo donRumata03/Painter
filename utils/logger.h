@@ -378,7 +378,7 @@ inline Logger::LogStreamProxy LogConsoleError(const std::string& module = "", co
   return Logger::Instance()(LogLevel::Error, module + concat("][", submodules...), true, true);
 }
 
-inline void ensure_log_cleared(const fs::path& log_path = painter_base_path / "log" / "latest") {
+inline void ensure_log_exists_and_cleared(const fs::path& log_path = painter_base_path / "log" / "latest") {
   if (fs::exists(log_path)) {
     fs::remove_all(log_path);
   }

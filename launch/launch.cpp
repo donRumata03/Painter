@@ -115,7 +115,7 @@ void launch_single_zone_vector(const std::string& filename, const CommonStroking
 
 
 void launch_stroking(const std::string& filename, const CommonStrokingParams& params, const fs::path& logging_path) {
-  ensure_log_cleared(logging_path);
+	ensure_log_exists_and_cleared(logging_path);
   Logger::SetLogFile(logging_path / "log.txt");
 
   if (fs::path(filename).extension() == ".svg") {
