@@ -62,17 +62,16 @@ int main(int argc, char *argv[]) {
 
     CommonStrokingParams params;
     auto params_path = program.get("--params");
-    if (!params_path.empty()) {
-      if (not fs::exists(params_path)) {
-        throw std::runtime_error("Parameters path you provided doesn't exist: " + params_path);
-      } else if (fs::path(params_path).extension().string() != ".json") {
-        throw std::runtime_error(
-                "Parameters path has inappropriate extension: \"" + fs::path(params_path).extension().string() + R"(" (".json" expected))"
-        );
-      }
-      params = load_params(params_path);
-      LogConsoleSuccess("Main") << "Parameters loaded from: " << params_path;
+
+    if (not fs::exists(params_path)) {
+      throw std::runtime_error("Parameters path you provided doesn't exist: " + params_path);
+    } else if (fs::path(params_path).extension().string() != ".json") {
+      throw std::runtime_error(
+              "Parameters path has inappropriate extension: \"" + fs::path(params_path).extension().string() + R"(" (".json" expected))"
+      );
     }
+    params = load_params(params_path);
+    LogConsoleSuccess("Main") << "Parameters loaded from: " << params_path;
 
     launch_stroking(image_path, params);
   } catch (const std::exception& ex) {
