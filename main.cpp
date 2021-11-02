@@ -1,9 +1,6 @@
 #include "painter_pch.h"
 
-// STD headers
-#include <iostream>
-
-// Libraries
+// Main-only Libraries
 #include <argparse/argparse.hpp>
 
 // Project headers

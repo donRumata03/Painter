@@ -75,7 +75,7 @@ class VectorZoneLauncher {
 };
 
 
-VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
+inline VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
                                        const CommonStrokingParams& stroking_params,
                                        bool parallelize,
                                        size_t worker_thread_number, fs::path logging_path)
@@ -123,7 +123,8 @@ VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
   }
 }
 
-void VectorZoneLauncher::worker_function(size_t thread_index) {
+
+inline void VectorZoneLauncher::worker_function(size_t thread_index) {
   auto job_range = thread_zone_distribution[thread_index];
 
   LogConsoleInfo("Vector Zone Launcher", get_current_thread_info(thread_index))
@@ -210,7 +211,8 @@ void VectorZoneLauncher::worker_function(size_t thread_index) {
           << "Ended, job range: " << get_range_string(job_range);
 }
 
-void VectorZoneLauncher::run() {
+
+inline void VectorZoneLauncher::run() {
   LogConsoleInfo("Vector Zone Launcher") << "Run worker(s)";
   Logger::NewProgress(zone_number);
   if (is_threaded) {
@@ -227,7 +229,8 @@ void VectorZoneLauncher::run() {
   efficiency_account.print_diagnostic_information();
 }
 
-std::vector<ColoredStroke> VectorZoneLauncher::get_final_strokes(Units units, bool shift_strokes) {
+
+inline std::vector<ColoredStroke> VectorZoneLauncher::get_final_strokes(Units units, bool shift_strokes) {
   std::vector<ColoredStroke> strokes(collected_strokes.size());
   std::copy(collected_strokes.begin(), collected_strokes.end(), strokes.begin());
   svg_service->transform_strokes_into_mm(strokes);
