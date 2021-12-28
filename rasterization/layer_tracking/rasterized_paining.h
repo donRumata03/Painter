@@ -2,9 +2,11 @@
 
 #include "data/range_rectangle.h"
 #include "utils/image.h"
+#include "rasterization/layer_tracking/pixel_managers/pixel_layer_tracker.h"
 #include "rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.h"
 
 
+template<PixelLayerTracker Tracker>
 struct RasterizedPainting {
   using PixelSet = std::vector<ColoredPosition>;
 
@@ -12,7 +14,7 @@ struct RasterizedPainting {
   // Image image;
 
   Image cv_stroke_trap;
-  std::vector<std::vector<TreeMapPixelLayerTracker>> layer_matrix;
+  std::vector<std::vector<Tracker>> layer_matrix;
 
   Color m_canvas_color;
 
