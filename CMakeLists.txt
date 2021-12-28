@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 
 # Setup compiler
 if (UNIX)
@@ -15,7 +15,7 @@ project(Painter)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Export build command to analyze them in CppDepend
-add_compile_options(/utf-8)
+#add_compile_options(/utf-8)
 
 set(SOURCE_FILES
         # Data
@@ -78,6 +78,9 @@ set(SOURCE_FILES
         )
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
+
+# Precompile non-project headers:
+target_precompile_headers(Painter-lib PRIVATE painter_pch.h)
 
 # Main program
 add_executable(Painter main.cpp)
@@ -174,6 +177,6 @@ add_subdirectory(${CURRENT_GTEST_DIR})
 add_subdirectory(tests)
 
 # Run Cotire on the project in order to speed the build up by deducting precompiled headers
-include(cotire)
-cotire(Painter-lib)
-cotire(Painter)
+#include(cotire)
+#cotire(Painter-lib)
+#cotire(Painter)
