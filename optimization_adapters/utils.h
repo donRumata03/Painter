@@ -5,6 +5,7 @@
 #include "rasterization/stroke.h"
 #include "operations/color/optimization.h"
 #include "utils/image.h"
+#include "data/common_stroking_params.h"
 
 
 struct ImageStrokingData {
@@ -21,9 +22,7 @@ struct ImageStrokingData {
 
 };
 
-double smooth_transmit_between_borders_linearal(double max_dimensions);
-
-double smooth_transmit_between_borders_arctan(double max_dimensions,
+double smooth_transmit_between_borders_tanh(double max_dimensions,
                                               double max_width);
 
 double smooth_transmit_between_borders_sigmoid(double max_dimensions, double max_width);
@@ -81,3 +80,47 @@ void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffer, cons
 
 double transfer_range(double value, std::pair<double, double> from_range, std::pair<double, double> to_range);
 
+class Packer {
+ private:
+  CommonStrokingParams params;
+
+  double smooth_transmit_between_borders_sigmoid(double const max_dimensions,
+                                                 double max_width);
+
+  double smooth_transmit_between_borders_tanh(double const max_dimensions,
+                                              double max_width);
+
+  double fatness_to_width(const Stroke& stroke, double fatness);
+
+  double width_to_fatness(const Stroke& stroke, double width);
+
+ public:
+  Packer(const CommonStrokingParams& params);
+
+  std::vector<ColoredStroke> unpack_stroke_data_buffer(const std::vector<double>& buffer);
+
+  template <class StrokeType,std::enable_if_t<std::is_same_v<StrokeType, Stroke> or
+                             std::is_same_v<StrokeType, ColoredStroke>,int*> nothing = nullptr>
+  std::vector<double> pack_stroke_data(const std::vector<StrokeType>& strokes) {
+    auto total = strokes.size();
+    std::vector<double> stroke_data_buffer(total * 7);
+
+    for (size_t i = 0; i < total; ++i) {
+      size_t offset = i * 7;
+
+      stroke_data_buffer[offset] = strokes[i].p0.x;
+      stroke_data_buffer[offset + 1] = strokes[i].p0.y;
+
+      stroke_data_buffer[offset + 2] = strokes[i].p1.x;
+      stroke_data_buffer[offset + 3] = strokes[i].p1.y;
+
+      stroke_data_buffer[offset + 4] = strokes[i].p2.x;
+      stroke_data_buffer[offset + 5] = strokes[i].p2.y;
+
+      stroke_data_buffer[offset + 6] =
+          width_to_fatness(strokes[i], strokes[i].width);
+    }
+
+    return stroke_data_buffer;
+  }
+};
