@@ -17,7 +17,7 @@ struct RasterizedPainting {
   Color m_canvas_color;
 
  public:
-  explicit RasterizedPainting(li w, li h, Color canvas_color);
+    explicit RasterizedPainting(cv::Size canvas_size, Color canvas_color);
 
   /// Working with pixel lists
   PixelSet get_pixel_list(const RangeRectangle<li>& bounding_box);

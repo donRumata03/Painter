@@ -6,7 +6,7 @@ GaLoggingCallback::GaLoggingCallback(ImageStrokingData imageData, size_t total_e
                                      bool log_precisely, Color canvas_color)
         : path_for_logging(path_for_logging), imageData(std::move(imageData)), canvas_color(canvas_color),
           logged_genome_rate(logged_percent), verbose(verbose), detalized_logging(log_precisely) {
-  ensure_log_cleared(this->path_for_logging);
+	ensure_log_exists_and_cleared(this->path_for_logging);
 
   save_image(this->imageData.image, this->path_for_logging / "original.png");
 

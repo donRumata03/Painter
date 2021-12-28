@@ -40,6 +40,8 @@ bool StrokeLimits::constrain_stroke_to_requirements(Stroke& stroke) const {
   // Scale it
   constrain_stroke_size_parameters(stroke, min_dx, max_dx, min_dy, max_dy,
                                    min_width, max_width);
+  // Move it
+  fit_stroke_into_rect(stroke, image_rectangle);
 
   // Constrain curvature of stroke
   point middle = (stroke.p0 + stroke.p2) / 2;
@@ -49,9 +51,6 @@ bool StrokeLimits::constrain_stroke_to_requirements(Stroke& stroke) const {
   if (vec.module() > max_dist) {
     stroke.p1 = stroke.p1 + vec * (vec.module() - max_dist) / vec.module();
   }
-
-  // Move it
-  fit_stroke_into_rect(stroke, image_rectangle);
 
   return false;
 }

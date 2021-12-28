@@ -30,7 +30,7 @@ double image_mse(const Image& image1, const Image& image2, bool parallel) {
       const auto first_pixel = Color(first_pixel_value);
       const auto second_pixel = Color(image2.at<cv::Vec3d>(position[0], position[1]));
 
-      // TODO: divide pixels into areas to improve performance!
+      // TODO: divide pixels into areas to improve performance through tree-ish reduction
 
       for (size_t dim_index = 0; dim_index < 3; ++dim_index) {
         this_diff_sum += square(second_pixel[dim_index] - first_pixel[dim_index]);

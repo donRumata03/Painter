@@ -2,11 +2,14 @@
 #include "operations/image/figure.h"
 
 
-RasterizedPainting::RasterizedPainting(li h, li w, Color canvas_color)
+RasterizedPainting::RasterizedPainting(cv::Size canvas_size, Color canvas_color)
         : m_canvas_color(canvas_color) {
   // image = make_default_image(w, h, canvas_color);
-  cv_stroke_trap = make_default_image(w, h, canvas_color);
-  layer_matrix = std::vector<std::vector<PixelLayerTracker>>(h, std::vector<PixelLayerTracker>(w, PixelLayerTracker{}));
+  cv_stroke_trap = make_default_image(canvas_size, canvas_color);
+  layer_matrix = std::vector<std::vector<PixelLayerTracker>>(
+          canvas_size.height,
+          std::vector<PixelLayerTracker>(canvas_size.width, PixelLayerTracker{})
+          );
 }
 
 RasterizedPainting::PixelSet RasterizedPainting::get_pixel_list(const RangeRectangle<li>& bounding_box) {
@@ -71,6 +74,7 @@ Image RasterizedPainting::render_image() {
 
 Image RasterizedPainting::get_imposition_matrix() const {
   auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
+  assert(cv_stroke_trap.size == image.size);
 
   for (size_t y = 0; y < layer_matrix.size(); ++y) {
     for (size_t x = 0; x < layer_matrix[y].size(); ++x) {

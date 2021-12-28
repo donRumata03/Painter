@@ -103,6 +103,19 @@ void launch_single_zone_vector(const std::string& filename, const CommonStroking
   rasterize_strokes(stroked_image, strokes);
   save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
   LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
+  std::vector<ColoredStroke> some_strokes;
+  // Save strokes sequence
+  for (int i = 0; i < strokes.size(); i++) {
+    Image some_strokes_image = make_default_image(size.width, size.height, params.canvas_color);
+
+    some_strokes.push_back(strokes[i]);
+    rasterize_strokes(some_strokes_image, some_strokes);
+    std::string image_name = std::to_string(i) + ".png";
+    save_image(some_strokes_image, (fs::path(painter_base_path) / "log" /
+                                    "latest" /
+                               "result_strokes" / image_name).string());
+
+  }
 
   // Full size, result on canvas (in px)
   Image stroked_image_mm = make_default_image(params.canvas.width(Units::PX), params.canvas.height(Units::PX), params.canvas_color);
@@ -115,7 +128,7 @@ void launch_single_zone_vector(const std::string& filename, const CommonStroking
 
 
 void launch_stroking(const std::string& filename, const CommonStrokingParams& params, const fs::path& logging_path) {
-  ensure_log_cleared(logging_path);
+	ensure_log_exists_and_cleared(logging_path);
   Logger::SetLogFile(logging_path / "log.txt");
 
   if (fs::path(filename).extension() == ".svg") {
