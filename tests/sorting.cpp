@@ -7,7 +7,7 @@
 TEST(SortingTest, SortStrokes) {
   // TODO: upgrade to fixture with mocking
   const size_t n = 100, w = 1000, h = 1000, zones = 3, colors_n = 10;
-  StrokeLimits limits{.min_dx = 10, .max_dx = 20, .min_dy = 10, .max_dy = 20, .min_width = 4, .max_width = 5,
+  StrokeLimits limits{.min_sum = 10, .max_dx = 20, .max_dy = 20, .min_width = 4, .max_width = 5,
           .image_rectangle = {0., w, 0., h}};
   std::random_device rd{};
   std::mt19937 gen{rd()};

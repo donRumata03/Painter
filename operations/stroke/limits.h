@@ -16,8 +16,12 @@ void scale_stroke(Stroke& stroke, double factor);
  */
 void fit_stroke_into_rect(Stroke& stroke, const RangeRectangle<double>& rectangle, bool croped = false);
 
+
+bool check_curvature(const Stroke& stroke);
+bool check_curvature(const Stroke& stroke, point& change_vector);
+
 // Here the rect is scaled to
-void constrain_stroke_size_parameters(Stroke& stroke, double min_dx, double max_dx, double min_dy, double max_dy,
+void constrain_stroke_size_parameters(Stroke& stroke, double min_sum, double max_dx, double max_dy,
                                       double min_width, double max_width);
 
 

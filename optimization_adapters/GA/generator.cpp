@@ -63,16 +63,15 @@ StrokeLimits generate_stroke_limits_by_raw_parameters(CommonStrokingParams param
   auto absolute_params = switch_to_absolute_values(params, w, h);
 
   auto limits = StrokeLimits{ // TODO: limit box width/height != limits for stroke_length
-          .min_dx     = std::clamp(absolute_params.stroke_length.first, 0., (double) w - 1),
-          .max_dx     = std::clamp(absolute_params.stroke_length.second, 0., (double) w),
+    .min_sum    = std::clamp(absolute_params.stroke_length.first, 0., (double)(w + h - 1)),
 
-          .min_dy     = std::clamp(absolute_params.stroke_length.first, 0., (double) h - 1),
-          .max_dy     = std::clamp(absolute_params.stroke_length.second, 0., (double) h),
+    .max_dx     = std::clamp(absolute_params.stroke_length.second, 0., (double) w),
+    .max_dy     = std::clamp(absolute_params.stroke_length.second, 0., (double) h),
 
-          .min_width  = absolute_params.stroke_width.first,
-          .max_width  = absolute_params.stroke_width.second,
+    .min_width  = absolute_params.stroke_width.first,
+    .max_width  = absolute_params.stroke_width.second,
 
-          .image_rectangle = RangeRectangle<double>{0., double(w), 0., double(h)}
+    .image_rectangle = RangeRectangle<double>{0., double(w), 0., double(h)}
   };
 
   return limits;
