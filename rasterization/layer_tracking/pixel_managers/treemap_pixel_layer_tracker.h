@@ -4,7 +4,7 @@
 
 
 /**
- * Stores color layers with priority for pixels
+ * Stores color layers with priority for single pixel
  */
 class PixelLayerTracker {
  private:

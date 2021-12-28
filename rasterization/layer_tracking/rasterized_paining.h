@@ -2,7 +2,7 @@
 
 #include "data/range_rectangle.h"
 #include "utils/image.h"
-#include "rasterization/pixel_layer_tracker.h"
+#include "rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.h"
 
 
 struct RasterizedPainting {
