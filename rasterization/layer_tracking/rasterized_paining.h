@@ -12,7 +12,7 @@ struct RasterizedPainting {
   // Image image;
 
   Image cv_stroke_trap;
-  std::vector<std::vector<PixelLayerTracker>> layer_matrix;
+  std::vector<std::vector<TreeMapPixelLayerTracker>> layer_matrix;
 
   Color m_canvas_color;
 
@@ -30,7 +30,7 @@ struct RasterizedPainting {
   void process_pixels_from_trap(const RangeRectangle<li>& possible_bounding_box, li layer_index);
 
   /// Indexing
-  PixelLayerTracker& layers_at(li y, li x) { return layer_matrix[y][x]; }
+  TreeMapPixelLayerTracker& layers_at(li y, li x) { return layer_matrix[y][x]; }
 
   Color color_at(li y, li x) { return *layers_at(y, x).get_pixel_color(); }
 

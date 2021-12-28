@@ -1,7 +1,7 @@
 #include "treemap_pixel_layer_tracker.h"
 
 
-std::optional<Color> PixelLayerTracker::get_pixel_color() {
+std::optional<Color> TreeMapPixelLayerTracker::get_pixel_color() {
   if (m_data.empty()) {
     return {};
   }
@@ -10,15 +10,15 @@ std::optional<Color> PixelLayerTracker::get_pixel_color() {
   return m_data.rbegin()->second;
 }
 
-void PixelLayerTracker::add_color_layer(li priority, Color c) {
+void TreeMapPixelLayerTracker::add_color_layer(li priority, Color c) {
   m_data[priority] = c;
 }
 
-size_t PixelLayerTracker::get_layers_count() const {
+size_t TreeMapPixelLayerTracker::get_layers_count() const {
   return m_data.size();
 }
 
-Color PixelLayerTracker::remove_layer_by_priority(li priority) {
+Color TreeMapPixelLayerTracker::remove_layer_by_priority(li priority) {
   auto it = m_data.find(priority);
   if (it == m_data.end()) {
     throw std::runtime_error("Can't find layer with given priority!");
