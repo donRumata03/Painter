@@ -175,8 +175,3 @@ target_link_libraries(Painter-lib ${PowerfulGA_static_libraries})
 # Testing
 add_subdirectory(${CURRENT_GTEST_DIR})
 add_subdirectory(tests)
-
-# Run Cotire on the project in order to speed the build up by deducting precompiled headers
-#include(cotire)
-#cotire(Painter-lib)
-#cotire(Painter)
