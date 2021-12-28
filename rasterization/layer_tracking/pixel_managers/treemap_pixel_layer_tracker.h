@@ -25,4 +25,4 @@ class TreeMapPixelLayerTracker {
   std::optional<Color> get_pixel_color();
 };
 
-static_assert(PixelLayerTracker<TreeMapPixelLayerTracker>);
+static_assert(RemovablePixelLayerTracker<TreeMapPixelLayerTracker>);

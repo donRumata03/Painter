@@ -5,6 +5,14 @@
 
 #pragma once
 
+struct PixelPaintingData {
+    li priority = 0;
+    Color color;
+};
+
+
+
+
 // Concept, but basically, an interface but allows inlining and optimizations
 
 // :NOTE: The higher the priority, the more valuable the layer is
@@ -29,5 +37,12 @@ concept RemovablePixelLayerTracker<T> =
 
 		// Color remove_layer_by_priority(li priority);
         requires (T tracker) { {tracker.remove_layer_by_priority(li{0})} -> std::same_as<Color>; }
+;
+
+concept SortableAfterPixelLayerTracker<T> =
+  TreeMapPixelLayerTracker<T> &&
+
+  // void sort_by_priority(&mut self);
+  requires (T tracker) { {tracker.sort_by_priority()}; }
 ;
 

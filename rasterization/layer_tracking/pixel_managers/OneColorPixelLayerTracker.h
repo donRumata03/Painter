@@ -24,3 +24,5 @@ public:
     size_t get_layers_count() const;
     std::optional<Color> get_pixel_color();
 };
+
+static_assert(PixelLayerTracker<OneColorPixelLayerTracker>);
