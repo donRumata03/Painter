@@ -5,11 +5,12 @@
 #include "pixel_layer_tracker.h"
 
 /**
- * Stores color layers with priority for single pixel
+ * Stores all color layers with priority for single pixel in tree map (sorted by priority)
+ * Ultimative (contains all information; asymptotically optimal) but slow
  */
 class TreeMapPixelLayerTracker {
  private:
-  std::map<li, Color> m_data;
+  std::map<li, Color> m_data = {};
 
  public:
 	// Constructs defaultly //

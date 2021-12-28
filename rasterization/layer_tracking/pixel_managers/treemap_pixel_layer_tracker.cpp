@@ -21,7 +21,7 @@ size_t TreeMapPixelLayerTracker::get_layers_count() const {
 Color TreeMapPixelLayerTracker::remove_layer_by_priority(li priority) {
   auto it = m_data.find(priority);
   if (it == m_data.end()) {
-    throw std::runtime_error("Can't find layer with given priority!");
+    throw std::runtime_error("Can't find layer with given priority to remove!");
   }
 
   Color c = it->second;

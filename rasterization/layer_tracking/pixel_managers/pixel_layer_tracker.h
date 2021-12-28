@@ -5,7 +5,9 @@
 
 #pragma once
 
-// Basically, an interface but allows inlining and optimizations
+// Concept, but basically, an interface but allows inlining and optimizations
+
+// :NOTE: The higher the priority, the more valuable the layer is
 concept PixelLayerTracker<T> =
 
      // Constructor
