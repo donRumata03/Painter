@@ -18,7 +18,7 @@
   "optimize_sequence": [
     {
       "type": "GA",
-      "epoch_num": 50,
+      "epoch_num": 20,
       "population_size": 100,
       "allow_multithreading": false
     },

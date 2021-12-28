@@ -45,8 +45,7 @@ Stroke generate_stroke(const StrokeLimits& limits) {
   // Width is easy to generate
   res_stroke.width = randval(limits.min_width, limits.max_width, gen);
 
-  constrain_stroke_size_parameters(res_stroke, limits.min_dx, limits.max_dx, limits.min_dy, limits.max_dy,
-                                   limits.min_width, limits.max_width);
+  limits.constrain_stroke_to_requirements(res_stroke);
 
   return res_stroke;
 }

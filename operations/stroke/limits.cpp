@@ -2,6 +2,7 @@
 #include "data/stroke_limits.h"
 #include "utils/logger.h"
 
+const double change_coeff = 1.01; // To avoid percision mistakes
 
 bool is_fitting(const Stroke& stroke, const RangeRectangle<double>& rectangle) {
   return rectangle.point_satisfies_requirements(stroke.p0) and
@@ -74,24 +75,46 @@ void fit_stroke_into_rect(Stroke& stroke, const RangeRectangle<double>& rectangl
 
     shift_stroke(stroke, {dx, dy});
   }
-
+/*
   rectangle.constrain_point(stroke.p0);
   rectangle.constrain_point(stroke.p1);
-  rectangle.constrain_point(stroke.p2);
+  rectangle.constrain_point(stroke.p2);*/
 }
 
-void constrain_stroke_size_parameters(Stroke& stroke, double min_dx, double max_dx, double min_dy, double max_dy,
+bool check_curvature(const Stroke& stroke) {
+  point p;
+  return check_curvature(stroke, p);
+}
+
+bool check_curvature(const Stroke& stroke, point& change_vector) {
+  point middle = (stroke.p0 + stroke.p2) / 2;
+  double max_dist = point::dist(stroke.p0, stroke.p2) / 2;
+  point vec = middle - stroke.p1;
+
+  if (vec.module() > max_dist) {
+    change_vector = change_coeff * vec * (vec.module() - max_dist) / vec.module();
+    return false;
+  }
+
+  return true;
+}
+
+void constrain_stroke_size_parameters(Stroke& stroke, double min_sum, double max_dx, double max_dy,
                                       double min_width, double max_width) {
+  point change_vector;
+  if (!check_curvature(stroke, change_vector)) {
+    stroke.p1 = stroke.p1 + change_vector;
+  }
+
   auto bounding_box = stroke.get_curve_bounding_box();
 
   auto stroke_dx = bounding_box.max_x - bounding_box.min_x;
   auto stroke_dy = bounding_box.max_y - bounding_box.min_y;
 
-  if (stroke_dx < min_dx) stroke.scale_x_from_center(min_dx / stroke_dx);
-  if (stroke_dx > max_dx) stroke.scale_x_from_center(max_dx / stroke_dx);
+  if (stroke_dx + stroke_dy < min_sum) stroke.scale_from_center(change_coeff * min_sum / (stroke_dx + stroke_dy));
 
-  if (stroke_dy < min_dy) stroke.scale_y_from_center(min_dy / stroke_dy);
-  if (stroke_dy > max_dy) stroke.scale_y_from_center(max_dy / stroke_dy);
+  if (stroke_dx > max_dx) stroke.scale_from_center(max_dx / stroke_dx / change_coeff);
+  if (stroke_dy > max_dy) stroke.scale_from_center(max_dy / stroke_dy / change_coeff);
 
   // Width
   stroke.width = std::clamp(stroke.width, min_width, max_width);
