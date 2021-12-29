@@ -1,4 +1,5 @@
 #include "fitness.h"
+#include "rasterization/layer_tracking/pixel_managers/OneColorPixelLayerTracker.h"
 
 
 FitnessFunction::FitnessFunction(const ImageStrokingData& imageData, size_t strokes, bool is_run_sequentially,
@@ -29,7 +30,7 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
   }
 
   rasterize_strokes(this_buffer, strokes);
-  auto painting = RasterizedPainting<TreeMapPixelLayerTracker>({static_cast<int>(w), static_cast<int>(h)}, canvas_color);
+  auto painting = RasterizedPainting<OneColorPixelLayerTracker>({static_cast<int>(w), static_cast<int>(h)}, canvas_color);
   rasterize_strokes(painting, strokes);
   Image imposition = painting.get_imposition_matrix();
 
