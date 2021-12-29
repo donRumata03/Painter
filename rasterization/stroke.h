@@ -2,7 +2,7 @@
 
 #include "data/stroke.h"
 #include "utils/image.h"
-#include "rasterization/layer_tracking/rasterized_paining.h"
+#include "rasterization/rasterized_paining.h"
 
 
 void rasterize_stroke(Image& target_image, const ColoredStroke& stroke,

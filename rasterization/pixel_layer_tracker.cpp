@@ -1,4 +1,4 @@
-#include "treemap_pixel_layer_tracker.h"
+#include "pixel_layer_tracker.h"
 
 
 std::optional<Color> PixelLayerTracker::get_pixel_color() {

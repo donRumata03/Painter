@@ -44,8 +44,8 @@ set(SOURCE_FILES
 
         # Rasterization
         rasterization/stroke.cpp
-        rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.cpp
-        rasterization/layer_tracking/rasterized_painting.cpp
+        rasterization/pixel_layer_tracker.cpp
+        rasterization/rasterized_painting.cpp
 
         # Optimization adapters
         optimization_adapters/utils.cpp
@@ -75,7 +75,7 @@ set(SOURCE_FILES
 
         # Utils
         utils/image.cpp
-        rasterization/layer_tracking/pixel_managers/pixel_layer_tracker.h)
+        )
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 
