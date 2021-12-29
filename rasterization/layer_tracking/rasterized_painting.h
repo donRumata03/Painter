@@ -38,7 +38,7 @@ struct RasterizedPainting {
 
   Image render_image();
 
-  Image get_imposition_matrix() const;
+  [[nodiscard]] Image get_imposition_matrix() const;
 };
 
 

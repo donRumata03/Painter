@@ -18,7 +18,7 @@ RasterizedPainting<Tracker>::RasterizedPainting(cv::Size canvas_size, Color canv
 }
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-RasterizedPainting::PixelSet RasterizedPainting::get_pixel_list(const RangeRectangle<li>& bounding_box) {
+typename RasterizedPainting<Tracker>::PixelSet RasterizedPainting<Tracker>::get_pixel_list(const RangeRectangle<li>& bounding_box) {
   std::vector<ColoredPosition> res;
 
   for (size_t y = bounding_box.min_y; y < bounding_box.max_y; ++y) {
@@ -35,14 +35,14 @@ RasterizedPainting::PixelSet RasterizedPainting::get_pixel_list(const RangeRecta
 
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-void RasterizedPainting::erase_trap_pixels(const RasterizedPainting::PixelSet& pixels) {
+void RasterizedPainting<Tracker>::erase_trap_pixels(const RasterizedPainting::PixelSet& pixels) {
   for (const auto& pixel : pixels) {
     cv_stroke_trap.at<cv::Vec3d>(pixel.y, pixel.x) = m_canvas_color.to_OpenCV_Vec3();
   }
 }
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-void RasterizedPainting::add_pixel_layer(const RasterizedPainting::PixelSet& pixels, size_t layer_index) {
+void RasterizedPainting<Tracker>::add_pixel_layer(const RasterizedPainting::PixelSet& pixels, size_t layer_index) {
   for (const auto& pixel : pixels) {
     layer_matrix[pixel.y][pixel.x].add_color_layer(layer_index, pixel.c);
   }
@@ -56,7 +56,7 @@ void RasterizedPainting::add_pixel_layer(const RasterizedPainting::PixelSet& pix
 //}
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-void RasterizedPainting::process_pixels_from_trap(const RangeRectangle<li>& possible_bounding_box, li layer_index) {
+void RasterizedPainting<Tracker>::process_pixels_from_trap(const RangeRectangle<li>& possible_bounding_box, li layer_index) {
   /// Get stroke pixels:
   auto pixels = get_painted_pixels(cv_stroke_trap, m_canvas_color);
 
@@ -68,7 +68,7 @@ void RasterizedPainting::process_pixels_from_trap(const RangeRectangle<li>& poss
 }
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-Image RasterizedPainting::render_image() {
+Image RasterizedPainting<Tracker>::render_image() {
   auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
 
   for (size_t y = 0; y < layer_matrix.size(); ++y) {
@@ -84,7 +84,7 @@ Image RasterizedPainting::render_image() {
 }
 
 template<typename Tracker> requires PixelLayerTracker<Tracker>
-Image RasterizedPainting::get_imposition_matrix() const {
+Image RasterizedPainting<Tracker>::get_imposition_matrix() const {
   auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
   assert(cv_stroke_trap.size == image.size);
 
