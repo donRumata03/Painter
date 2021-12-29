@@ -22,7 +22,7 @@ public:
     OneColorPixelLayerTracker() {}
     void add_color_layer(li priority, Color c);
     size_t get_layers_count() const;
-    std::optional<Color> get_pixel_color();
+    std::optional<Color> get_pixel_color() const;
 };
 
 static_assert(PixelLayerTracker<OneColorPixelLayerTracker>);

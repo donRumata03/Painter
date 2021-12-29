@@ -16,4 +16,4 @@ void OneColorPixelLayerTracker::add_color_layer(li priority, Color c) {
 
 size_t OneColorPixelLayerTracker::get_layers_count() const { return layers_count; }
 
-std::optional<Color> OneColorPixelLayerTracker::get_pixel_color() { return upper_color; }
+std::optional<Color> OneColorPixelLayerTracker::get_pixel_color() const { return upper_color; }

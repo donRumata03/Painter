@@ -19,7 +19,7 @@ void SortAfterFillingPixelLayerTracker::add_color_layer(li priority, Color c) {
   });
 }
 
-std::optional<Color> SortAfterFillingPixelLayerTracker::get_pixel_color() {
+std::optional<Color> SortAfterFillingPixelLayerTracker::get_pixel_color() const {
   if (!is_sorted) {
     throw std::runtime_error("Can't get color with highest priority while not sorted");
   }
