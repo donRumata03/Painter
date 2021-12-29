@@ -3,7 +3,7 @@
 #include "data/stroke.h"
 #include "utils/image.h"
 #include "rasterization/layer_tracking/pixel_managers/pixel_layer_tracker.h"
-#include "rasterization/layer_tracking/rasterized_paining.h"
+#include "rasterization/layer_tracking/rasterized_painting.h"
 
 
 /* One stroke on simple image */

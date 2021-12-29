@@ -45,7 +45,7 @@ set(SOURCE_FILES
         # Rasterization
         rasterization/stroke_rasterization.cpp
         rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.cpp
-        rasterization/layer_tracking/rasterized_painting.cpp
+        rasterization/layer_tracking/rasterized_painting.inl.cpp
 
         # Optimization adapters
         optimization_adapters/utils.cpp
@@ -81,7 +81,7 @@ set(SOURCE_FILES
         rasterization/layer_tracking/pixel_managers/SortAfterFillingPixelLayerTracker.cpp
         rasterization/layer_tracking/pixel_managers/SortAfterFillingPixelLayerTracker.h
 
-        rasterization/stroke_rasterization.inl.h)
+        rasterization/stroke_rasterization.inl.h rasterization/layer_tracking/rasterized_painting.inl.h)
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 

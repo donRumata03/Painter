@@ -1,4 +1,9 @@
-#include "rasterized_paining.h"
+//
+// Created by Vova on 29.12.2021.
+//
+
+#pragma once
+
 #include "operations/image/figure.h"
 
 
@@ -9,7 +14,7 @@ RasterizedPainting::RasterizedPainting(cv::Size canvas_size, Color canvas_color)
   layer_matrix = std::vector<std::vector<Tracker>>(
           canvas_size.height,
           std::vector<Tracker>(canvas_size.width, Tracker())
-          );
+  );
 }
 
 RasterizedPainting::PixelSet RasterizedPainting::get_pixel_list(const RangeRectangle<li>& bounding_box) {

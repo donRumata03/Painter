@@ -42,3 +42,4 @@ struct RasterizedPainting {
 };
 
 
+#include "rasterized_painting.inl.h"
