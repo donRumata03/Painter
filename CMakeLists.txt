@@ -75,7 +75,7 @@ set(SOURCE_FILES
 
         # Utils
         utils/image.cpp
-        rasterization/layer_tracking/pixel_managers/pixel_layer_tracker.h rasterization/layer_tracking/pixel_managers/OneColorPixelLayerTracker.cpp rasterization/layer_tracking/pixel_managers/OneColorPixelLayerTracker.h)
+        rasterization/layer_tracking/pixel_managers/pixel_layer_tracker.h)
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 
