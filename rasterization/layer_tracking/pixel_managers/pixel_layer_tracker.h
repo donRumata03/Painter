@@ -7,12 +7,8 @@
 
 // Basically, an interface but allows inlining and optimizations
 concept PixelLayerTracker<T> =
-
-     // Constructor
-     requires () {T()}
-
 		// void add_color_layer(li priority, Color c);
-	&&	requires (T tracker, li priority, Color c) { {tracker.add_color_layer(priority, c)} -> std::same_as<Color>; }
+		requires (T tracker, li priority, Color c) { {tracker.add_color_layer(priority, c)} -> std::same_as<Color>; }
 
 		// size_t get_layers_count();
 	&&  requires (const T tracker) { {tracker.get_layers_count()} -> std::same_as<size_t>; }
@@ -23,7 +19,7 @@ concept PixelLayerTracker<T> =
 
 
 concept RemovablePixelLayerTracker<T> =
-		TreeMapPixelLayerTracker<T> &&
+		PixelLayerTracker<T> &&
 
 		// Color remove_layer_by_priority(li priority);
         requires (T tracker) { {tracker.remove_layer_by_priority(li{0})} -> std::same_as<Color>; }

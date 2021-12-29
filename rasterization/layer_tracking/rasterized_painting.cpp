@@ -6,9 +6,9 @@ RasterizedPainting::RasterizedPainting(cv::Size canvas_size, Color canvas_color)
         : m_canvas_color(canvas_color) {
   // image = make_default_image(w, h, canvas_color);
   cv_stroke_trap = make_default_image(canvas_size, canvas_color);
-  layer_matrix = std::vector<std::vector<TreeMapPixelLayerTracker>>(
+  layer_matrix = std::vector<std::vector<PixelLayerTracker>>(
           canvas_size.height,
-          std::vector<TreeMapPixelLayerTracker>(canvas_size.width, TreeMapPixelLayerTracker{})
+          std::vector<PixelLayerTracker>(canvas_size.width, PixelLayerTracker{})
           );
 }
 
