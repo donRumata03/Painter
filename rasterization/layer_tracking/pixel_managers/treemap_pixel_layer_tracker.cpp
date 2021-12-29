@@ -1,7 +1,7 @@
 #include "treemap_pixel_layer_tracker.h"
 
 
-std::optional<Color> TreeMapPixelLayerTracker::get_pixel_color() {
+std::optional<Color> TreeMapPixelLayerTracker::get_pixel_color() const {
   if (m_data.empty()) {
     return {};
   }

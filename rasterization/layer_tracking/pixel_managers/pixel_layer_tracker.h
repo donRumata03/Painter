@@ -5,9 +5,14 @@
 
 #pragma once
 
+#include "painter_pch.h"
+
+#include "utils/image.h"
+
+
 struct PixelPaintingData {
     li priority = 0;
-    Color color;
+    Color color{};
 };
 
 
@@ -16,13 +21,14 @@ struct PixelPaintingData {
 // Concept, but basically, an interface but allows inlining and optimizations
 
 // :NOTE: The higher the priority, the more valuable the layer is
-concept PixelLayerTracker<T> =
+template <typename T>
+concept PixelLayerTracker =
 
      // Constructor
-     requires () {T()}
+     requires () {T();}
 
 		// void add_color_layer(li priority, Color c);
-	&&	requires (T tracker, li priority, Color c) { {tracker.add_color_layer(priority, c)} -> std::same_as<Color>; }
+	&&	requires (T tracker, li priority, Color c) { {tracker.add_color_layer(priority, c)} -> std::same_as<void>; }
 
 		// size_t get_layers_count();
 	&&  requires (const T tracker) { {tracker.get_layers_count()} -> std::same_as<size_t>; }
@@ -32,17 +38,20 @@ concept PixelLayerTracker<T> =
 ;
 
 
-concept RemovablePixelLayerTracker<T> =
-		TreeMapPixelLayerTracker<T> &&
+template <typename Tracker>
+concept RemovablePixelLayerTracker =
+  PixelLayerTracker<Tracker> &&
 
-		// Color remove_layer_by_priority(li priority);
-        requires (T tracker) { {tracker.remove_layer_by_priority(li{0})} -> std::same_as<Color>; }
+	// Color remove_layer_by_priority(li priority);
+  requires (Tracker tracker) { {tracker.remove_layer_by_priority(li{0})} -> std::same_as<Color>; }
 ;
 
-concept SortableAfterPixelLayerTracker<T> =
-  TreeMapPixelLayerTracker<T> &&
+
+template<typename Tracker>
+concept SortableAfterPixelLayerTracker =
+  PixelLayerTracker<Tracker> &&
 
   // void sort_by_priority(&mut self);
-  requires (T tracker) { {tracker.sort_by_priority()}; }
+  requires (Tracker tracker) { {tracker.sort_by_priority()}; }
 ;
 
