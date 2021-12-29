@@ -43,7 +43,7 @@ set(SOURCE_FILES
         operations/error.cpp
 
         # Rasterization
-        rasterization/stroke.cpp
+        rasterization/stroke_rasterization.cpp
         rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.cpp
         rasterization/layer_tracking/rasterized_painting.cpp
 
@@ -81,7 +81,7 @@ set(SOURCE_FILES
         rasterization/layer_tracking/pixel_managers/SortAfterFillingPixelLayerTracker.cpp
         rasterization/layer_tracking/pixel_managers/SortAfterFillingPixelLayerTracker.h
 
-        )
+        rasterization/stroke_rasterization.inl.h)
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 

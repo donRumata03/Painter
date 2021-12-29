@@ -2,7 +2,7 @@
 
 #include "painter_pch.h"
 #include "utils/image.h"
-#include "rasterization/stroke.h"
+#include "rasterization/stroke_rasterization.h"
 
 #include "optimization_adapters/utils.h"
 #include "utils/logger.h"

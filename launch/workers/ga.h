@@ -7,7 +7,7 @@
 #include "data/common_stroking_params.h"
 #include "operations/stroke/limits.h"
 #include "optimization_adapters/GA/all.h"
-#include "rasterization/stroke.h"
+#include "rasterization/stroke_rasterization.h"
 #include "launch/workers/simple.h"
 #include "utils/image.h"
 

@@ -2,7 +2,7 @@
 
 #include "data/color.h"
 #include "data/stroke.h"
-#include "rasterization/stroke.h"
+#include "rasterization/stroke_rasterization.h"
 #include "operations/color/optimization.h"
 #include "utils/image.h"
 #include "data/common_stroking_params.h"

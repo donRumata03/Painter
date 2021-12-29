@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "data/stroke.h"
-#include "rasterization/stroke.h"
+#include "rasterization/stroke_rasterization.h"
 #include "utils/image.h"
 #include "optimization_adapters/utils.h"
 
