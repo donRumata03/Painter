@@ -20,9 +20,9 @@ class TreeMapPixelLayerTracker {
 
   Color remove_layer_by_priority(li priority);
 
-  size_t get_layers_count() const;
+  [[nodiscard]] size_t get_layers_count() const;
 
-  std::optional<Color> get_pixel_color() const;
+  [[nodiscard]] std::optional<Color> get_pixel_color() const;
 };
 
 static_assert(RemovablePixelLayerTracker<TreeMapPixelLayerTracker>);
