@@ -6,8 +6,8 @@
 #include "rasterization/layer_tracking/pixel_managers/treemap_pixel_layer_tracker.h"
 
 
-template<typename Tracker>
-struct RasterizedPainting /* requires PixelLayerTracker<Tracker> */ {
+template<PixelLayerTracker Tracker>
+struct RasterizedPainting {
   using PixelSet = std::vector<ColoredPosition>;
 
 
