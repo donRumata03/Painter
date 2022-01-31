@@ -26,7 +26,7 @@ class GaInformer {
     return;
 
     // Show image:
-    auto strokes = unpack_stroke_data_buffer(best_stroke_genome);
+    auto strokes = Packer::unpack_stroke_data_buffer(best_stroke_genome);
     colorize_strokes(strokes, initial_image);
 
     Image new_image = make_default_image(initial_image.cols, initial_image.rows);

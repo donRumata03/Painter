@@ -21,7 +21,7 @@ class GaMutator {
 
   void operator()(std::vector<double>& stroke_data_buffer, const std::vector<double>& sigmas, double target_gene_number,
                   const normalizer& norma) const {
-    auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
+    auto strokes = Packer::unpack_stroke_data_buffer(stroke_data_buffer);
 
     if (pythonic_random() < move_probability) {
       assert(sizeof(Stroke) / sizeof(double) == 7);

@@ -6,6 +6,7 @@
 // Project headers
 #include "utils/logger.h"
 #include "launch/launch.h"
+#include "optimization_adapters/utils.h"
 
 
 int main(int argc, char *argv[]) {
@@ -69,6 +70,7 @@ int main(int argc, char *argv[]) {
     }
     params = load_params(params_path);
     LogConsoleSuccess("Main") << "Parameters loaded from: " << params_path;
+    Packer::params = params;
 
     launch_stroking(image_path, params);
   } catch (const std::exception& ex) {

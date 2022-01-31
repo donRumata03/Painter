@@ -179,7 +179,7 @@ inline void VectorZoneLauncher::worker_function(size_t thread_index) {
 
       optimizer->run_remaining_iterations();
 
-      strokes = unpack_stroke_data_buffer(optimizer->get_best_genome());
+      strokes = Packer::unpack_stroke_data_buffer(optimizer->get_best_genome());
 
       {
         std::lock_guard<std::mutex> locker(common_worker_data_mutex);

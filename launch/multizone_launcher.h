@@ -8,6 +8,7 @@
 #include "operations/color/optimization.h"
 #include "operations/image/segregation.h"
 #include "optimization_adapters/GA/all.h"
+#include "optimization_adapters/utils.h"
 #include "launch/workers/simple.h"
 
 
@@ -162,14 +163,14 @@ std::vector<double> MultizoneLauncher<Worker>::glue_best_genomes() {
       size_t this_x_shift = this_cell_descriptor.min_x;
       size_t this_y_shift = this_cell_descriptor.min_y;
 
-      auto strokes = unpack_stroke_data_buffer(worker->get_best_genome());
+      auto strokes = Packer::unpack_stroke_data_buffer(worker->get_best_genome());
 
       std::for_each(strokes.begin(), strokes.end(),
                     [this_x_shift, this_y_shift](Stroke& stroke) {
                       shift_stroke(stroke, {double(this_x_shift), double(this_y_shift)});
                     });
 
-      auto shifted_buffer = pack_stroke_data(strokes);
+      auto shifted_buffer = Packer::pack_stroke_data(strokes);
 
       std::copy(shifted_buffer.begin(), shifted_buffer.end(), std::back_inserter(res));
 

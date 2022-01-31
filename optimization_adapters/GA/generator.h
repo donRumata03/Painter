@@ -32,14 +32,14 @@ class GaGenomeGenerator {
     if (use_reference) {
       assert(number_of_strokes == basic_strokes.size());
 
-      return pack_stroke_data(basic_strokes);
+      return Packer::pack_stroke_data(basic_strokes);
     } else {
       assert(number_of_strokes == strokes_in_image);
 
       std::vector<Stroke> strokes(strokes_in_image);
       std::generate(strokes.begin(), strokes.end(), [this]() { return generate_stroke(limits); });
 
-      return pack_stroke_data(strokes);
+      return Packer::pack_stroke_data(strokes);
     }
   }
 };

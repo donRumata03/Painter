@@ -18,7 +18,7 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
 
   Timer computation_timer;
 
-  auto strokes = unpack_stroke_data_buffer(stroke_data_buffer);
+  auto strokes = Packer::unpack_stroke_data_buffer(stroke_data_buffer);
   colorize_strokes(strokes, imageData);
 
   // Compute MSE; OpenCV reference counting system manages the memory properly

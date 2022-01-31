@@ -16,13 +16,13 @@ struct GaConstrainer {
   void operator()(GA::Population& population, const std::vector<std::pair<double, double>>& constraints) const {
     // Ignore given constraints
     for (auto& genome : population) {
-      auto strokes = unpack_stroke_data_buffer(genome);
+      auto strokes = Packer::unpack_stroke_data_buffer(genome);
 
       for (auto& stroke : strokes) {
         limits.constrain_stroke_to_requirements(stroke);
       }
       // std::vector<double> stroke_data = pack_stroke_data(strokes);
-      genome = pack_stroke_data(strokes); // std::move(stroke_data);
+      genome = Packer::pack_stroke_data(strokes); // std::move(stroke_data);
     }
   }
 };

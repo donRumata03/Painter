@@ -43,7 +43,7 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
       worker.get_statistics().print_diagnostic_information();
       worker.save_fitness_dynamic();
 
-      strokes = unpack_stroke_data_buffer(worker.get_best_genome());
+      strokes = Packer::unpack_stroke_data_buffer(worker.get_best_genome());
     } else if (chain.index() == 1) { // Annealing
       LogConsoleInfo("Launch", "Single", "Raster") << "Start annealing (chain " << (index + 1) << "/"
                                                    << params.sequence.size() << ")";
@@ -72,7 +72,7 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
       worker.get_statistics().print_diagnostic_information();
       worker.save_fitness_dynamic();
 
-      strokes = unpack_stroke_data_buffer(worker.get_best_genome());
+      strokes = Packer::unpack_stroke_data_buffer(worker.get_best_genome());
     }
 
     LogConsoleSuccess("Launch", "Single", "Raster") << "Chain #" << (index + 1) << " finished";

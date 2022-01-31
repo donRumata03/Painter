@@ -56,13 +56,13 @@ class AnnealingGenomeMutator {
 
     // Constrain if configured so
     if (constrain_after_mutation) {
-      auto strokes = unpack_stroke_data_buffer(result);
+      auto strokes = Packer::unpack_stroke_data_buffer(result);
 
       for (auto& stroke : strokes) {
         limits.constrain_stroke_to_requirements(stroke);
       }
 
-      result = pack_stroke_data(strokes);
+      result = Packer::pack_stroke_data(strokes);
     }
 
     return result;
