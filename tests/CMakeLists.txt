@@ -7,7 +7,7 @@ add_executable(Painter_tests
         json.cpp
         generation.cpp
         sorting.cpp
-        )
+        pixel_tracking.cpp)
 
 target_link_libraries(Painter_tests gtest gtest_main Painter-lib)
 
