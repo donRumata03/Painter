@@ -9,3 +9,4 @@
 CMakeLists.txt linguist-vendored=false
 CMake/cotire.cmake linguist-vendored=true
 papers/parallel_algorithms/ filter=lfs diff=lfs merge=lfs -text
+papers/parallel_algorithms/2019_Book_.pdf filter=lfs diff=lfs merge=lfs -text
