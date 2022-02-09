@@ -62,7 +62,7 @@ class FitnessFunction {
 
   std::shared_ptr<BufferBank> buffer_holder = std::make_shared<BufferBank>();
 
-  bool reverse;
+  bool inverse;
   Color canvas_color;
 
   RunTimeCounter rt_counter;
@@ -75,7 +75,7 @@ class FitnessFunction {
    * and uses it everywhere. This approach is only applicable for sequential running!!
    */
   explicit FitnessFunction(const ImageStrokingData& imageData, size_t strokes, bool is_run_sequentially,
-                           bool reverse = false, const Color& canvas_color = {0., 0., 0.});
+                           bool inverse = false, const Color& canvas_color = {0., 0., 0.});
 
   double operator()(const std::vector<double>& stroke_data_buffer) const;
 
