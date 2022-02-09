@@ -2,9 +2,9 @@
 
 
 FitnessFunction::FitnessFunction(const ImageStrokingData& imageData, size_t strokes, bool is_run_sequentially,
-                                 bool reverse, const Color& canvas_color)
+                                 bool inverse, const Color& canvas_color)
         : imageData(imageData), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially),
-          canvas_color(canvas_color), reverse(reverse) {
+          canvas_color(canvas_color), inverse(inverse) {
   w = imageData.image.cols;
   h = imageData.image.rows;
 
@@ -43,7 +43,7 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
   rt_counter.total_time_seconds->operator+=(computation_timer.get_time(Timer::time_units::seconds));
   rt_counter.total_runs->operator++();
 
-  return !reverse ? MSE : (1 / MSE);
+  return !inverse ? MSE : (1 / MSE);
 }
 
 PerformanceStatistics FitnessFunction::get_efficiency_account() const {
