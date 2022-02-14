@@ -181,6 +181,8 @@ inline std::vector<Stroke> get_strokes_base(const std::vector<RgbColoredStroke<C
   return result;
 }
 
+ColoredStroke transform_stroke_into(const ColoredStroke &target, const Canvas &canvas, Units units_to);
+
 
 /// Json
 

@@ -18,6 +18,7 @@ static void rasterize_plan_json(const std::string& name) {
   std::transform(strokes_mm.begin(), strokes_mm.end(), strokes_px.begin(), [&](const ColoredStroke& stroke){
     return transform_stroke_into(stroke, plan.canvas, Units::PX);
   });
+  plan.strokes = strokes_px;
 
   auto rasterized = rasterize_paint_plan(plan, { 0., 0., 0. });
 
@@ -30,6 +31,6 @@ TEST(Rasterizaton, Cross) {
 }
 
 TEST(Rasterizaton, CrossInRectangle) {
-  rasterize_plan_json("small-cross-in-rectangle");
+  rasterize_plan_json("small-cross-inside-rectangle");
 }
 

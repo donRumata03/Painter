@@ -178,6 +178,28 @@ RangeRectangle<double> Stroke::get_stroke_bounding_box() const {
 }
 
 
+ColoredStroke transform_stroke_into(const ColoredStroke &target, const Canvas &canvas, Units units_to) {
+  auto res = target;
+
+  auto transform = (units_to == Units::MM) ?
+                   std::function<double(double)>([&canvas](double px){ return canvas.px2mm(px); }) :
+                   std::function<double(double)>([&canvas](double mm){ return canvas.mm2px(mm); });
+
+  auto transform_point = [&transform](Point& p){
+      p.x = transform(p.x);
+      p.y = transform(p.y);
+  };
+
+  transform_point(res.p0);
+  transform_point(res.p1);
+  transform_point(res.p2);
+
+  return res;
+}
+
+
+/// Json
+
 void to_json(json& j, const ContextWrapper<Stroke>& wrapped_stroke) {
   Stroke temp_stroke = wrapped_stroke.object;
   auto invert_y = [&](Point& p) {
