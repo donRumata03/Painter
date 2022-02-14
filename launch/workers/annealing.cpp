@@ -15,9 +15,10 @@ AnnealingWorker::AnnealingWorker(const Image& image, const CommonStrokingParams&
   error_function = FitnessFunction(
           ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
           common_stroking_params.stroke_number,
-          true,
-          false,
-          common_stroking_params.canvas_color
+          true, // annealing is sequential
+          common_stroking_params.canvas_color,
+          common_stroking_params.imposition_penalization_coefficient,
+          false // raw MSE
   );
 
   auto stroke_limits = generate_stroke_limits_by_raw_parameters(stroking_params, image_w, image_h);

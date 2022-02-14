@@ -40,6 +40,7 @@
     "g": 0.0,
     "r": 0.0
   },
+  "imposition_penalization_coefficient": 0.5,
   "logging_percentage": 0.0,
   "move_mutation_probability": 0.2
 }

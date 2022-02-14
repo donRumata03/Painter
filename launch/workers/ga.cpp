@@ -32,8 +32,9 @@ GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_para
           ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),
           stroking_params.stroke_number,
           !GA_params.allow_multithreading,
-          true,
-          stroking_params.canvas_color
+          stroking_params.canvas_color,
+          stroking_params.imposition_penalization_coefficient,
+          true // invert „MSE“ → 1/„MSE“
   );
 
   logger = GaLoggingCallback(ImageStrokingData(image, stroking_params.use_constant_color, stroking_params.stroke_color),

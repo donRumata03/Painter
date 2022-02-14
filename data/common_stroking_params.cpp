@@ -17,6 +17,7 @@ void to_json(json& j, const CommonStrokingParams& params) {
   j["stroke_length"] = params.stroke_length;
   j["stroke_width"] = params.stroke_width;
   j["stroke_thickness"] = params.stroke_thickness;
+  j["imposition_penalization_coefficient"] = params.imposition_penalization_coefficient;
   j["move_mutation_probability"] = params.move_mutation_probability;
   j["sigma"] = params.sigma;
   j["canvas_color"] = params.canvas_color;
@@ -82,6 +83,10 @@ void from_json(const json& j, CommonStrokingParams& params) {
 
   if (j.contains("stroke_color")) {
     new_params.stroke_color = j["stroke_color"];
+  }
+
+  if (j.contains("imposition_penalization_coefficient")) {
+    new_params.imposition_penalization_coefficient = j["imposition_penalization_coefficient"];
   }
 
   if (j.contains("use_constant_color")) {

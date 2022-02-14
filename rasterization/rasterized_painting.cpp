@@ -72,13 +72,16 @@ Image RasterizedPainting::render_image() {
   return image;
 }
 
-Image RasterizedPainting::get_imposition_matrix() const {
+Image RasterizedPainting::get_imposition_matrix(double punishing_for_additional_layers_coeff) const {
   auto image = make_default_image(cv::Size{cv_stroke_trap.cols, cv_stroke_trap.rows,}, m_canvas_color);
   assert(cv_stroke_trap.size == image.size);
 
   for (size_t y = 0; y < layer_matrix.size(); ++y) {
     for (size_t x = 0; x < layer_matrix[y].size(); ++x) {
-      image.at<cv::Vec3d>(y, x) = std::clamp<double>(((double)layer_matrix[y][x].get_layers_count() - 1) / 3., 0, 1);
+      image.at<cv::Vec3d>(y, x) = std::clamp<double>(
+              (double(layer_matrix[y][x].get_layers_count()) - 1) * punishing_for_additional_layers_coeff,
+              0, 1
+              );
     }
   }
 

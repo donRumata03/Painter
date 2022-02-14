@@ -47,7 +47,10 @@ struct CommonStrokingParams {
   Limit stroke_length;
   Limit stroke_width;
 
-  double stroke_thickness;
+  double stroke_thickness = 0;
+
+  /// Optimization
+  double imposition_penalization_coefficient = 0.5;
 
   /// Probabilities
   double move_mutation_probability = 0.2;

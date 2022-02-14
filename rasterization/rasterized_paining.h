@@ -36,7 +36,7 @@ struct RasterizedPainting {
 
   Image render_image();
 
-  Image get_imposition_matrix() const;
+  Image get_imposition_matrix(double punishing_for_additional_layers_coeff) const;
 };
 
 

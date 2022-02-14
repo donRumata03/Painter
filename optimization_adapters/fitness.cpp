@@ -2,9 +2,10 @@
 
 
 FitnessFunction::FitnessFunction(const ImageStrokingData& imageData, size_t strokes, bool is_run_sequentially,
-                                 bool inverse, const Color& canvas_color)
+                                 const Color& canvas_color, double imposition_penalization_coeff, bool inverse)
         : imageData(imageData), total_stroke_number(strokes), is_run_sequentially(is_run_sequentially),
-          canvas_color(canvas_color), inverse(inverse) {
+          canvas_color(canvas_color), inverse(inverse), imposition_penalization_coeff(imposition_penalization_coeff)
+{
   w = imageData.image.cols;
   h = imageData.image.rows;
 
@@ -31,7 +32,7 @@ double FitnessFunction::operator()(const std::vector<double>& stroke_data_buffer
   rasterize_strokes(this_buffer, strokes);
   auto painting = RasterizedPainting({static_cast<int>(w), static_cast<int>(h)}, canvas_color);
   rasterize_strokes(painting, strokes);
-  Image imposition = painting.get_imposition_matrix();
+  Image imposition = painting.get_imposition_matrix(imposition_penalization_coeff);
 
   double MSE = image_mse(imageData.image, this_buffer);
   double MSE_imposition = image_mse(imposition, make_default_image(w, h, 0));

@@ -4,7 +4,7 @@
     10.0,
     40.0
   ],
-  "stroke_number": 10,
+  "stroke_number": 6,
   "stroke_width": [
     3.0,
     6.0
@@ -18,13 +18,13 @@
   "optimize_sequence": [
     {
       "type": "GA",
-      "epoch_num": 20,
-      "population_size": 100,
+      "epoch_num": 5,
+      "population_size": 10,
       "allow_multithreading": false
     },
     {
       "type": "annealing",
-      "gene_mutation_fraction": 0.2,
+      "gene_mutation_fraction": 0.1,
       "iterations": 3000,
       "typical_temperature": 1e-4
     }
@@ -40,6 +40,7 @@
     "b": 0.0,
     "g": 0.0
   },
+  "imposition_penalization_coefficient": 0.5,
   "logging_percentage": 0.0,
   "move_mutation_probability": 0.2,
   "sigma": 0.5
