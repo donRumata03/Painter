@@ -13,6 +13,12 @@ static void rasterize_plan_json(const std::string& name) {
                   *read_file(painter_base_path / "tests" / "test-plans" / (name + ".json"))
                   ).get<PaintPlan>();
 
+  auto& strokes_mm = plan.strokes;
+  std::vector<ColoredStroke> strokes_px(strokes_mm.size());
+  std::transform(strokes_mm.begin(), strokes_mm.end(), strokes_px.begin(), [&](const ColoredStroke& stroke){
+    return transform_stroke_into(stroke, plan.canvas, Units::PX);
+  });
+
   auto rasterized = rasterize_paint_plan(plan, { 0., 0., 0. });
 
   save_image(rasterized, painter_base_path / "tests" / "test-plans" / (name + ".png"));
@@ -22,3 +28,8 @@ TEST(Rasterizaton, Cross) {
   rasterize_plan_json("small-cross");
   rasterize_plan_json("big-cross");
 }
+
+TEST(Rasterizaton, CrossInRectangle) {
+  rasterize_plan_json("small-cross-in-rectangle");
+}
+

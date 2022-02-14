@@ -2,6 +2,7 @@
 
 #include "painter_pch.h"
 #include "units.h"
+#include "stroke.h"
 
 
 struct TransformImageData {
@@ -39,6 +40,8 @@ class Canvas {
 
   auto operator<=>(const Canvas& canvas) const = default;
 };
+
+ColoredStroke transform_stroke_into(const ColoredStroke &target, const Canvas &canvas, Units units_to);
 
 TransformImageData calc_transform_to_canvas(const Canvas& canvas, size_t w, size_t h);
 
