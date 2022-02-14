@@ -3,7 +3,7 @@ project(Painter_tests)
 add_executable(Painter_tests
         main.cpp
 
-        convert.cpp
+        color_test.cpp
         json.cpp
         generation.cpp
         sorting.cpp
