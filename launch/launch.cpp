@@ -110,20 +110,22 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
   // Full size, only result
   auto size = launcher.get_image_size();
   Image stroked_image = make_default_image(size.width, size.height, params.canvas_color);
-  auto strokes = launcher.get_final_strokes();
+  auto strokes = sort_strokes(launcher.get_final_strokes(), size.width, size.height);
   rasterize_strokes(stroked_image, strokes);
-  save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
+  save_image(stroked_image, (latest_log_path / "result.png").string());
   LogConsoleSuccess("Launch") << "Result: " << strokes.size() << " strokes";
-  std::vector<ColoredStroke> some_strokes;
+
+
   // Save strokes sequence
+  std::vector<ColoredStroke> some_strokes;
+
   for (int i = 0; i < strokes.size(); i++) {
     Image some_strokes_image = make_default_image(size.width, size.height, params.canvas_color);
 
     some_strokes.push_back(strokes[i]);
     rasterize_strokes(some_strokes_image, some_strokes);
     std::string image_name = std::to_string(i) + ".png";
-    save_image(some_strokes_image, (latest_log_path /
-                               "result_strokes" / image_name).string());
+    save_image(some_strokes_image, (latest_log_path / "result_strokes" / image_name).string());
 
   }
 
@@ -137,6 +139,9 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
 }
 
 
+/**
+ * Decides what to run based on file extension
+ */
 void launch_stroking(const std::string& filename, const CommonStrokingParams& params, const fs::path& logging_path) {
 	ensure_log_exists_and_cleared(logging_path);
   Logger::SetLogFile(logging_path / "log.txt");
