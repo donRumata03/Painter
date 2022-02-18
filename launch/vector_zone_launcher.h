@@ -15,10 +15,11 @@
 
 
 /**
- * Divides image into several zones
+ * — Divides image into several zones
  * following the partitioning made by a pasteurizer such as Adobe Illustrator
  * and expressed in the SVG image given.
- *
+ * — Runs optimizer for all zones
+ * — Shifts and merges optimizer results
  *
  * The ability of running optimizers for multiple zones in parallel is supported.
  *
