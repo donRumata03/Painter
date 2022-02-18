@@ -11,49 +11,67 @@
 #include "utils/logger.h"
 
 
-class SortedStrokesForImage {
+struct SortedStrokesForImage {
     double w = 0;
     double h = 0;
     Image template_image;
     std::vector<ColoredStroke> strokes;
+    Units stroke_units;
 
 public:
-    SortedStrokesForImage(double w, double h, const Image &templateImage, const std::vector<ColoredStroke> &strokes)
-            : w(w), h(h), template_image(templateImage), strokes(sort_strokes(strokes, w, h)) {}
+    SortedStrokesForImage(double w, double h, const Color &canvas_color, const std::vector<ColoredStroke> &strokes,
+                          Units stroke_units, const Canvas &canvas)
+            :
+            w(w), h(h),
+            template_image(make_default_image(w, h, canvas_color)),
+            strokes(sort_strokes(strokes, w, h)),
+            stroke_units(stroke_units)
+
+            {}
+
+//    std::vector<ColoredStroke> get_strokes_mm() {
+//      return (stroke_units == Units::MM) ?
+//        strokes :
+//             transform_stroke_into( canvas, Units::MM)
+//        ;
+//    }
 };
 
 
-static void save_paint_plan(const std::vector<ColoredStroke>& strokes, const Canvas& canvas = Canvas(),
-                            Units units = Units::MM,
-                            const fs::path& filepath = fs::path(painter_base_path) / "log" / "latest" / "plan.json") {
-  json j = PaintPlan(sort_strokes(strokes, canvas.width(units), canvas.height(units)), canvas);
-  std::ofstream json_file(filepath);
+/**
+ * @param strokes_for_image strokes are assumed to be in MM!
+ */
+static void save_paint_plan(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas,
+                            const fs::path& path = latest_log_path / "plan.json")
+{
+  json j = PaintPlan(strokes_for_image.strokes, canvas);
+  std::ofstream json_file(path);
   json_file << j.dump(1, '\t');
   json_file.close();
-  LogConsoleSuccess("Launch") << "Save paint plan to: " << filepath.string();
+  LogConsoleSuccess("Launch") << "Save paint plan to: " << path.string();
 }
 
 
-static void save_resultant_image(const Image& image_template, const std::vector<ColoredStroke>& strokes) {
-  auto temp = image_template.clone();
-  rasterize_strokes(temp, strokes);
+static void save_resultant_image(const SortedStrokesForImage& strokes_for_image) {
+  auto temp = strokes_for_image.template_image.clone();
+  rasterize_strokes(temp, strokes_for_image.strokes);
   save_image(temp, (latest_log_path / "result.png").string());
 }
 
-static void save_cumulative_stroke_images(const Image& initial_image, const std::vector<ColoredStroke>& strokes) {
-  Image current_state = initial_image.clone();
+static void save_cumulative_stroke_images(const SortedStrokesForImage& strokes_for_image) {
+  Image current_state = strokes_for_image.template_image.clone();
 
-  for (int i = 0; i < strokes.size(); i++) {
-    rasterize_stroke(current_state, strokes[i]);
+  for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
+    rasterize_stroke(current_state, strokes_for_image.strokes[i]);
     std::string image_name = "strokes_up_to_" + std::to_string(i + 1) + ".png";
     save_image(current_state, (latest_log_path / "cumulative_stroke_images" / image_name).string());
   }
 }
 
-static void save_single_stroke_images(const Image& initial_image, const std::vector<ColoredStroke>& strokes) {
-  for (int i = 0; i < strokes.size(); i++) {
-    Image with_new_stroke = initial_image.clone();
-    rasterize_stroke(with_new_stroke, strokes[i]);
+static void save_single_stroke_images(const SortedStrokesForImage& strokes_for_image) {
+  for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
+    Image with_new_stroke = strokes_for_image.template_image.clone();
+    rasterize_stroke(with_new_stroke, strokes_for_image.strokes[i]);
     std::string image_name = "stroke_" + std::to_string(i + 1) + ".png";
     save_image(with_new_stroke, (latest_log_path / "single_stroke_images" / image_name).string());
   }
@@ -142,22 +160,29 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
                                          const fs::path& logging_path) {
 
   VectorZoneLauncher launcher(filename, params, true);
-
   launcher.run();
 
-  // Get result (now only in Pixels on  canvas, in MM on canvas)
-  auto image_size = launcher.get_image_size();
-  Image template_image = make_default_image(image_size.width, image_size.height, params.canvas_color);
-  auto strokes_on_image = sort_strokes(launcher.get_final_strokes(Units::PX, false), image_size.width, image_size.height);
+  // Get result (both in Pixels on matrix, in pixels on canvas, in MM on canvas)
+
+  auto pixel_mat_image = SortedStrokesForImage(
+          launcher.get_image_size().width, launcher.get_image_size().height,
+          params.canvas_color, launcher.get_final_strokes(Units::PX, false), Units::PX, <#initializer#>);
+
+  auto pixel_canvas_image = SortedStrokesForImage(
+          params.canvas.width(Units::PX), params.canvas.height(Units::PX),
+          params.canvas_color, launcher.get_final_strokes(Units::PX, true), Units::PX, <#initializer#>);
+
+  auto mm_canvas_image = SortedStrokesForImage(
+          params.canvas.width(Units::MM), params.canvas.height(Units::MM),
+          params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::PX, <#initializer#>);
 
 
-  auto strokes_on_canvas = launcher.get_final_strokes(Units::MM, true);
-  auto strokes_on_pixel_canvas = launcher.get_final_strokes(Units::PX, true)
 
   LogConsoleSuccess("Launch") << "Result: " << strokes_on_image.size() << " strokes";
   save_resultant_image(template_image, strokes);
 
   // Save cumulative stroke images with plans:
+  // TODO: save into plans (take mm-s and shift into account)
   save_cumulative_stroke_images(make_default_image(image_size.width, image_size.height, params.canvas_color), strokes_on_image);
 
   // Single strokes with plans:
