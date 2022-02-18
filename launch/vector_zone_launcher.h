@@ -15,7 +15,7 @@
 
 
 /**
- * Is responsible for dividing the image into several zones
+ * Divides image into several zones
  * following the partitioning made by a pasteurizer such as Adobe Illustrator
  * and expressed in the SVG image given.
  *

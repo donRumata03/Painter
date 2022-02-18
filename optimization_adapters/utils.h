@@ -44,7 +44,11 @@ void save_stroke_buffer_as_images(const std::vector<double>& stroke_buffer, cons
 
 double transfer_range(double value, std::pair<double, double> from_range, std::pair<double, double> to_range);
 
-
+/**
+ * The operation of converting genotype to phenotype (strokes) isn't trivial:
+ * For example, fatness should be converted into actual width with respect to hyperparameters
+ * Packer contains context and unpacks genome.
+ */
 class Packer {
  private:
   static double smooth_transmit_between_borders_sigmoid(double const max_dimensions,
