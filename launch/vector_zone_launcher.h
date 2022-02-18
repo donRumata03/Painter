@@ -103,7 +103,7 @@ inline VectorZoneLauncher::VectorZoneLauncher(const fs::path& image_path,
   svg_service->split_paths();
 
   initial_image = svg_service->get_raster_original_image();
-  save_image(initial_image, (fs::path(painter_base_path) / "log" / "latest" / "original.png").string());
+  save_image(initial_image, (latest_log_path / "original.png").string());
 
   zone_number = svg_service->get_regions_count();
 

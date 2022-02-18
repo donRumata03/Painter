@@ -7,7 +7,9 @@
 #include "data/canvas.h"
 #include "data/units.h"
 
-
+/**
+ * Parameters specific for GA optimizer
+ */
 struct GaStrokingParams {
   size_t population_size = 0;
   size_t epoch_num = 0;
@@ -20,6 +22,9 @@ struct GaStrokingParams {
   NLOHMANN_DEFINE_TYPE_INTRUSIVE(GaStrokingParams, population_size, epoch_num, allow_multithreading)
 };
 
+/**
+ * Parameters specific for Annealing optimizer
+ */
 struct AnnealingStrokingParams {
   size_t iterations = 0;
   double typical_temperature = 1.;
@@ -35,7 +40,16 @@ struct AnnealingStrokingParams {
 
 using OptimizerParams = std::variant<GaStrokingParams, AnnealingStrokingParams>;
 
-
+/**
+ * Contains general optimizer settings,
+ * common for all optimization algorithms.
+ *
+ * For specific hyper-parameters see Ga-, Annealing-, e.t.c. -StrokingParams
+ *
+ * TODO: it's extremely error-prone that some fields
+ * TODO: contain values from different domains depending on `units` and `is_relative` fields
+ * TODO: So, we should use type-system to deal with it
+ */
 struct CommonStrokingParams {
   size_t stroke_number = 0;
   Units units = Units::MM;
@@ -44,8 +58,8 @@ struct CommonStrokingParams {
   /// Limitations
   bool is_relative = false; // Is limit values are relative to canvas
 
-  Limit stroke_length;
-  Limit stroke_width;
+  RangeLimit stroke_length;
+  RangeLimit stroke_width;
 
   double stroke_thickness = 0;
 

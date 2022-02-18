@@ -21,7 +21,10 @@ static void save_log_json(const std::vector<ColoredStroke>& strokes, const Canva
   LogConsoleSuccess("Launch") << "Save paint plan to: " << filepath.string();
 }
 
-
+/**
+ * Runs chain treating the whole image as a single zone;
+ * Sequential: no multithreading
+ */
 static void launch_single_zone_raster(const std::string& filename, const CommonStrokingParams& params,
                                       const fs::path& logging_path) {
   Image image = open_image(filename);
@@ -89,6 +92,13 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 }
 
+/**
+ * — Runs `VectorZoneLauncher` in parallel manner
+ * — Views result
+ * — Save strokes into single json
+ *
+ * @param filename should be and svg file
+ */
 static void launch_zoned_vector_stroking(const std::string& filename, const CommonStrokingParams& params,
                                          const fs::path& logging_path) {
 
@@ -112,8 +122,7 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
     some_strokes.push_back(strokes[i]);
     rasterize_strokes(some_strokes_image, some_strokes);
     std::string image_name = std::to_string(i) + ".png";
-    save_image(some_strokes_image, (fs::path(painter_base_path) / "log" /
-                                    "latest" /
+    save_image(some_strokes_image, (latest_log_path /
                                "result_strokes" / image_name).string());
 
   }

@@ -16,9 +16,11 @@
 // Typedefs
 using Image = cv::Mat;
 using Point = point;
-using Limit = std::pair<double, double>;
+using RangeLimit = std::pair<double, double>;
 
 // Constants
 #include "utils_constexpr/stringing.h"
 inline constexpr const char* painter_pch_file_path = __FILE__;
 inline std::filesystem::path painter_base_path = get_path_folder(painter_pch_file_path);
+inline std::filesystem::path latest_log_path = painter_base_path / "log" / "latest";
+
