@@ -30,6 +30,8 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   std::vector<ColoredStroke> strokes;
   size_t index = 0;
 
+  // TODO: separate class for chain to remove code duplication
+  // TODO: or use optimization tree
   for (auto& chain : params.sequence) {
     if (chain.index() == 0) { // GA
       LogConsoleInfo("Launch", "Single", "Raster") << "Start GA (chain " << (index + 1) << "/" << params.sequence.size()
@@ -87,9 +89,8 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   save_image(stroked_image, (fs::path(painter_base_path) / "log" / "latest" / "result.png").string());
 }
 
-void launch_single_zone_vector(const std::string& filename, const CommonStrokingParams& params,
-                               const fs::path& logging_path) {
-  LogConsoleInfo("Launch") << "Launching SVG zoned stroking…";
+static void launch_zoned_vector_stroking(const std::string& filename, const CommonStrokingParams& params,
+                                         const fs::path& logging_path) {
 
   VectorZoneLauncher launcher(filename, params, true);
 
@@ -132,28 +133,36 @@ void launch_stroking(const std::string& filename, const CommonStrokingParams& pa
   Logger::SetLogFile(logging_path / "log.txt");
 
   if (fs::path(filename).extension() == ".svg") {
-    launch_single_zone_vector(filename, params, logging_path);
+    LogConsoleInfo("Launch") << "Filename „" << filename << "“ ends with „.svg“ => Launching SVG zoned stroking…";
+
+    launch_zoned_vector_stroking(filename, params, logging_path);
   } else {
+    LogConsoleInfo("Launch") << "Filename „" << filename << "“ does NOT end with „.svg“ => Launching raster stroking…";
+
     launch_single_zone_raster(filename, params, logging_path);
   }
 }
 
+
+/**
+ * This function will probably eventually resurrect from The Oblivion…
+ * It launches process of splitting a raster image into rectangular zones
+ */
 void launch_multizone_stroking(const std::string& filename, const CommonStrokingParams& params,
                                const fs::path& logging_path) {
-  assert(false);
-
   /*
-  CommonStrokingParams this_common_params = default_stroking_parameters;
-  GA_stroking_parameters this_ga_params = default_GA_params;
-  image_splitting_params this_splitting_params = van_gogh_splitting_params;
+    CommonStrokingParams this_common_params = default_stroking_parameters;
+    GA_stroking_parameters this_ga_params = default_GA_params;
+    image_splitting_params this_splitting_params = van_gogh_splitting_params;
 
-  Image image = open_image(filename);
-  MultizoneLaunchWrapper<GA_worker> launcher(image,
-                                             this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
-                                             this_common_params, this_ga_params);
-  std::cout << "[main launching function]: Performed initialization. Running.." << std::endl;
+    Image image = open_image(filename);
+    MultizoneLaunchWrapper<GA_worker> launcher(image,
+                                               this_splitting_params.zones_x, this_splitting_params.zones_y, this_splitting_params.overlay_percent,
+                                               this_common_params, this_ga_params);
+    std::cout << "[main launching function]: Performed initialization. Running.." << std::endl;
 
-  launcher.run();
+    launcher.run();
 
-  launcher.save_result(painter_base_path / "log" / "latest" / "result.png");*/
+    launcher.save_result(painter_base_path / "log" / "latest" / "result.png");
+   */
 }
