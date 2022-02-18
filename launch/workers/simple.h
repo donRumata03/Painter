@@ -7,7 +7,13 @@
 #include "data/stroke.h"
 #include "data/performance_statistics.h"
 
-
+/**
+ * `Workers` are inherited from `BaseWorker`.
+ * They optimize strokes for a given image
+ *
+ * Workers are typically used in higher order abstractions
+ * (e.g. zone splitters and launchers)
+ */
 class BaseWorker {
  public:
   BaseWorker() = default;

@@ -8,6 +8,9 @@
 #include "launch/workers/simple.h"
 
 
+/**
+ * Uses simulated annealing algorithm for implementing `BaseWorker`
+ */
 class AnnealingWorker : public BaseWorker {
  public:
   using ParametersType = AnnealingStrokingParams;

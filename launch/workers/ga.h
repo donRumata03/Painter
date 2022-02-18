@@ -12,6 +12,9 @@
 #include "utils/image.h"
 
 
+/**
+ * Uses genetic algorithm for implementing `BaseWorker`
+ */
 class GaWorker : public BaseWorker {
  public:
   using ParametersType = GaStrokingParams;
