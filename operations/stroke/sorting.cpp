@@ -17,6 +17,11 @@ size_t get_default_number_of_zones_by_stroke_number(size_t stroke_number) {
 }
 
 
+/**
+ * Sorts strokes the way that strokes with close indexes are close on each other on the image plane
+ * (i.e. tries to minimize resultant distance passed by the brush)
+ * TODO: think about invariant of preserving resultant image (not to change order of overlapping strokes)
+ */
 template <class StrokeType>
 std::vector<StrokeType> sort_strokes(const std::vector<StrokeType>& strokes, double w, double h, size_t zones) {
   if (zones == 0) {
