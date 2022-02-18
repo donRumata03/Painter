@@ -13,6 +13,9 @@
 
 
 /**
+ * — Splits raster image into rectangular zones
+ * — Launches optimization (@tparam Worker) algorithms for all of them
+ * — Merges shifted algorithm results
  * Class that wraps dividing the image into a couple of zones and launching
  */
 template <class Worker>

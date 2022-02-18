@@ -12,7 +12,7 @@
 #include "utils/image.h"
 
 
-class GaWorker : public SimpleWorker {
+class GaWorker : public BaseWorker {
  public:
   using ParametersType = GaStrokingParams;
 

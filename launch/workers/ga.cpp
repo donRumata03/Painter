@@ -4,7 +4,7 @@
 GaWorker::GaWorker(const Image& image, const CommonStrokingParams& stroking_params,
                    const GaStrokingParams& optimizer_params, const fs::path& logging_path,
                    bool verbose)
-        : stroking_params(stroking_params), GA_params(optimizer_params), SimpleWorker(logging_path, verbose) {
+        : stroking_params(stroking_params), GA_params(optimizer_params), BaseWorker(logging_path, verbose) {
   image.copyTo(initial_image);
 
   image_w = image.cols;

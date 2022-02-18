@@ -157,7 +157,7 @@ inline void VectorZoneLauncher::worker_function(size_t thread_index) {
             << " (" << params.stroke_number << " strokes, " << params.stroke_color << " color)";
 
     for (auto& chain : stroking_params.sequence) {
-      std::unique_ptr<SimpleWorker> optimizer;
+      std::unique_ptr<BaseWorker> optimizer;
 
       auto cur_logging_path = logging_path / "stroking" / ("region" + std::to_string(job_index)) /
                               ("chain" + std::to_string(pipeline_index));

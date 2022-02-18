@@ -8,12 +8,12 @@
 #include "data/performance_statistics.h"
 
 
-class SimpleWorker {
+class BaseWorker {
  public:
-  SimpleWorker() = default;
+  BaseWorker() = default;
 
-  explicit SimpleWorker(fs::path logging_path, bool verbose) : logging_path(std::move(logging_path)),
-                                                               verbose(verbose) {}
+  explicit BaseWorker(fs::path logging_path, bool verbose) : logging_path(std::move(logging_path)),
+                                                             verbose(verbose) {}
 
   // Setup
   virtual void set_basic_strokes(const std::vector<Stroke>& strokes) = 0;

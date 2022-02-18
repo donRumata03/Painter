@@ -6,7 +6,7 @@ AnnealingWorker::AnnealingWorker(const Image& image, const CommonStrokingParams&
                                  bool verbose)
 
         : annealing_stroking_params(params), common_stroking_params(stroking_params),
-          SimpleWorker(logging_path, verbose) {
+          BaseWorker(logging_path, verbose) {
   image.copyTo(initial_image);
 
   image_w = initial_image.cols;

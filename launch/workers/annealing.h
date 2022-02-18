@@ -8,7 +8,7 @@
 #include "launch/workers/simple.h"
 
 
-class AnnealingWorker : public SimpleWorker {
+class AnnealingWorker : public BaseWorker {
  public:
   using ParametersType = AnnealingStrokingParams;
 
