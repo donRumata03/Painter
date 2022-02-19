@@ -16,7 +16,6 @@ struct SortedStrokesForImage {
     double h = 0;
     Image template_image;
     std::vector<ColoredStroke> strokes;
-    Units stroke_units;
 
 public:
     SortedStrokesForImage(double w, double h, const Color &canvas_color, const std::vector<ColoredStroke> &strokes,
@@ -39,12 +38,12 @@ public:
 
 
 /**
- * @param strokes_for_image strokes are assumed to be in MM!
+ * @param strokes are assumed to be in MM!
  */
-static void save_paint_plan(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas,
+static void save_paint_plan(const std::vector<ColoredStroke>& strokes, const Canvas& canvas,
                             const fs::path& path = latest_log_path / "plan.json")
 {
-  json j = PaintPlan(strokes_for_image.strokes, canvas);
+  json j = PaintPlan(strokes, canvas);
   std::ofstream json_file(path);
   json_file << j.dump(1, '\t');
   json_file.close();
@@ -68,12 +67,43 @@ static void save_cumulative_stroke_images(const SortedStrokesForImage& strokes_f
   }
 }
 
+/**
+ * @param strokes_for_image strokes should be in MM
+ */
+static void save_cumulative_plans(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas) {
+  auto cumulative_stroke_plans_dir = latest_log_path / "cumulative_stroke_plans";
+  fs::create_directories(cumulative_stroke_plans_dir);
+
+  std::vector<ColoredStroke> cum;
+  for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
+    cum.push_back(strokes_for_image.strokes[i]);
+
+    std::string plan_name = "strokes_up_to_" + std::to_string(i + 1) + ".png";
+    save_paint_plan(cum, canvas, cumulative_stroke_plans_dir / plan_name);
+  }
+}
+
 static void save_single_stroke_images(const SortedStrokesForImage& strokes_for_image) {
   for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
     Image with_new_stroke = strokes_for_image.template_image.clone();
     rasterize_stroke(with_new_stroke, strokes_for_image.strokes[i]);
     std::string image_name = "stroke_" + std::to_string(i + 1) + ".png";
     save_image(with_new_stroke, (latest_log_path / "single_stroke_images" / image_name).string());
+  }
+}
+
+
+/**
+ * @param strokes_for_image strokes should be in MM
+ */
+static void save_single_stroke_plans(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas) {
+  auto single_stroke_plans_dir = latest_log_path / "single_stroke_plans";
+  fs::create_directories(single_stroke_plans_dir);
+
+  for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
+    std::string plan_name = "stroke_" + std::to_string(i + 1) + ".png";
+
+    save_paint_plan({ strokes_for_image.strokes[i] }, canvas, single_stroke_plans_dir / plan_name);
   }
 }
 
@@ -204,7 +234,7 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
  */
 void launch_stroking(const std::string& filename, const CommonStrokingParams& params, const fs::path& logging_path) {
 	ensure_log_exists_and_cleared(logging_path);
-  Logger::SetLogFile(logging_path / "log.txt");
+  Logger::SetLogFile(logging_path / "Painter.log");
 
   if (fs::path(filename).extension() == ".svg") {
     LogConsoleInfo("Launch") << "Filename „" << filename << "“ ends with „.svg“ => Launching SVG zoned stroking…";
