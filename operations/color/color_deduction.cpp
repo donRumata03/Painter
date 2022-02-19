@@ -1,4 +1,4 @@
-#include "deduction.h"
+#include "color_deduction.h"
 #include "utils/logger.h"
 
 
@@ -68,7 +68,7 @@ Color find_major_image_color(const Image& image, double minimal_allowed_percenta
 Color find_image_background_color(const Image& image, double max_can_be_non_background_color) {
   std::vector<Color> colors_noticed;
 
-  // Horizontal rows
+  // Horizontal borders
   for (size_t x = 0; x < image.cols; ++x) {
     colors_noticed.emplace_back(image.at<cv::Vec3d>(0, x));
   }
@@ -76,6 +76,7 @@ Color find_image_background_color(const Image& image, double max_can_be_non_back
     colors_noticed.emplace_back(image.at<cv::Vec3d>(image.rows - 1, x));
   }
 
+  // Vertical borders
   for (size_t y = 0; y < image.rows; ++y) {
     colors_noticed.emplace_back(image.at<cv::Vec3d>(y, 0));
   }

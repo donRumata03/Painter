@@ -150,24 +150,27 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
     } else if (chain.index() == 1) { // Annealing
       LogConsoleInfo("Launch", "Single", "Raster") << "Start annealing (chain " << (index + 1) << "/"
                                                    << params.sequence.size() << ")";
+
+      /// Automatic color detection (suppressed for now)
       /*
-      auto cur_params = params;
-      Color major_color, canvas_color, background_color;
-      if (auto_find_color) {
-        major_color = find_major_image_color(image);
-        canvas_color = find_contrast_color(major_color);
-        background_color = find_image_background_color(image);
+        auto cur_params = params;
+        Color major_color, canvas_color, background_color;
+        if (auto_find_color) {
+          major_color = find_major_image_color(image);
+          canvas_color = find_contrast_color(major_color);
+          background_color = find_image_background_color(image);
 
-        std::cout << "[launch_single_zone_annealing]: Found major color for the image: "
-                  << major_color << " the one, contrast to it, is " << canvas_color << ". It's taken to be canvas color"
-                  << std::endl;
-        std::cout << "[launch_single_zone_annealing]: Original Image's background color is " << background_color
-                  << std::endl;
+          std::cout << "[launch_single_zone_annealing]: Found major color for the image: "
+                    << major_color << " the one, contrast to it, is " << canvas_color << ". It's taken to be canvas color"
+                    << std::endl;
+          std::cout << "[launch_single_zone_annealing]: Original Image's background color is " << background_color
+                    << std::endl;
 
-        cur_params.stroke_color = major_color;
-        // this_common_params.canvas_color = canvas_color;
-        cur_params.use_constant_color = true;
-      }*/
+          cur_params.stroke_color = major_color;
+          // this_common_params.canvas_color = canvas_color;
+          cur_params.use_constant_color = true;
+        }
+      */
 
       AnnealingWorker worker(image, params, std::get<AnnealingStrokingParams>(chain),
                              logging_path / ("chain" + std::to_string(index)));

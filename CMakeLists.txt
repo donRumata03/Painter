@@ -34,7 +34,7 @@ set(SOURCE_FILES
         operations/stroke/limits.cpp
         operations/stroke/generation.cpp
         operations/stroke/sorting.cpp
-        operations/color/deduction.cpp
+        operations/color/color_deduction.cpp
         operations/color/optimization.cpp
         operations/image/adaptive_params.cpp
         operations/image/figure.cpp
