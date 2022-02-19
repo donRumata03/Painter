@@ -87,7 +87,7 @@ static void save_cumulative_plans(const SortedStrokesForImage& strokes_for_image
   for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
     cum.push_back(strokes_for_image.strokes[i]);
 
-    std::string plan_name = "strokes_up_to_" + std::to_string(i + 1) + ".png";
+    std::string plan_name = "strokes_up_to_" + std::to_string(i + 1) + ".json";
     save_paint_plan(cum, canvas, cumulative_stroke_plans_dir / plan_name);
   }
 }
@@ -112,7 +112,7 @@ static void save_single_stroke_plans(const SortedStrokesForImage& strokes_for_im
   fs::create_directories(single_stroke_plans_dir);
 
   for (int i = 0; i < strokes_for_image.strokes.size(); i++) {
-    std::string plan_name = "stroke_" + std::to_string(i + 1) + ".png";
+    std::string plan_name = "stroke_" + std::to_string(i + 1) + ".json";
 
     save_paint_plan({ strokes_for_image.strokes[i] }, canvas, single_stroke_plans_dir / plan_name);
   }
@@ -245,7 +245,7 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
 
   auto mm_canvas_image = SortedStrokesForImage(
           params.canvas.width(Units::MM), params.canvas.height(Units::MM),
-          params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::PX, params.canvas);
+          params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::MM, params.canvas);
 
 
   LogConsoleSuccess("Launch", "VectorStroking") << "Result: " << pixel_mat_image.strokes.size() << " strokes";
@@ -257,8 +257,8 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
   save_cumulative_plans(mm_canvas_image, params.canvas);
 
   // Single strokes with plans:
-  save_cumulative_stroke_images(pixel_mat_image);
-  save_cumulative_plans(mm_canvas_image, params.canvas);
+  save_single_stroke_images(pixel_mat_image);
+  save_single_stroke_plans(mm_canvas_image, params.canvas);
 
   // Result as it would look on canvas
   save_image(pixel_canvas_image.get_rendered_image(), latest_log_path / "result_canvas.png");
