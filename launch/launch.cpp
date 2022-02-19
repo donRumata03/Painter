@@ -31,7 +31,7 @@ public:
 
     Image get_rendered_image() {
       Image res = template_image.clone();
-      rasterize_strokes(template_image, strokes);
+      rasterize_strokes(res, strokes);
       return res;
     }
 
