@@ -186,7 +186,34 @@ static void launch_single_zone_raster(const std::string& filename, const CommonS
   }
 
   colorize_strokes(strokes, ImageStrokingData(image, params.use_constant_color, params.stroke_color));
-  save_paint_plan(strokes);
+  strokes = sort_strokes(strokes, image.cols, image.rows);
+
+  LogConsoleSuccess("Launch", "SingleZoneRaster") << "Result: " << strokes.size() << " strokes";
+
+//  auto pixel_mat_image = SortedStrokesForImage(
+//        launcher.get_image_size().width, launcher.get_image_size().height,
+//        params.canvas_color, launcher.get_final_strokes(Units::PX, false), Units::PX, params.canvas
+//        );
+//
+//
+//  save_resultant_image(pixel_mat_image);
+//
+//  // Save cumulative stroke images with plans:
+//  save_cumulative_stroke_images(pixel_mat_image);
+//  save_cumulative_plans(mm_canvas_image, params.canvas);
+//
+//  // Single strokes with plans:
+//  save_cumulative_stroke_images(pixel_mat_image);
+//  save_cumulative_plans(mm_canvas_image, params.canvas);
+//
+//  // Result as it would look on canvas
+//  save_image(pixel_canvas_image.get_rendered_image(), latest_log_path / "result_canvas.png");
+//
+//  // Save paint plan as json
+//  save_paint_plan(mm_canvas_image.strokes, params.canvas);
+//
+//
+//  save_paint_plan(strokes, );
 
   Image stroked_image = make_default_image(image.cols, image.rows, params.canvas_color);
   rasterize_strokes(stroked_image, strokes);
@@ -221,7 +248,7 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
           params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::PX, params.canvas);
 
 
-  LogConsoleSuccess("Launch") << "Result: " << pixel_mat_image.strokes.size() << " strokes";
+  LogConsoleSuccess("Launch", "VectorStroking") << "Result: " << pixel_mat_image.strokes.size() << " strokes";
 
   save_resultant_image(pixel_mat_image);
 
