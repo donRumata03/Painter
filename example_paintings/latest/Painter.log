@@ -1,0 +1,58 @@
+[19.02.2022 14:52:31][Main] INFO: Using up to 3 threads of 4
+[19.02.2022 14:52:31][Main] INFO: Image path: tests/images/circle.svg
+[19.02.2022 14:52:31][Main] SUCCESS: Parameters loaded from: tests/configs/circle-params.json
+[19.02.2022 14:52:31][Launch] INFO: Filename „tests/images/circle.svg“ ends with „.svg“ => Launching SVG zoned stroking…
+[19.02.2022 14:52:31][Vector Zone Launcher] INFO: Limits for stroke length: (37.7953, 142.848) px, for stroke width: (11.3386, 22.6772) px
+[19.02.2022 14:52:31][SVG Service] SUCCESS: Inited
+[19.02.2022 14:52:31][SVG Service] INFO: Region #0: 36 mm, 36 mm
+[19.02.2022 14:52:31][SVG Service] INFO: Saved raster image of path #0 to /home/vova/dev/Painter/log/latest/svg/region0.png
+[19.02.2022 14:52:31][SVG Service] SUCCESS: Splitted image into 1 parts
+[19.02.2022 14:52:31][Vector Zone Launcher] INFO: Run worker(s)
+[19.02.2022 14:52:31][Vector Zone Launcher][Thread 0 (139733952419584)] INFO: Started, job range: [0, 0]
+[19.02.2022 14:52:31][Vector Zone Launcher][Thread 0 (139733952419584)] INFO: Stroking region #0 (6 strokes, RGB_Color { r: 0.980392 g: 0.92549 b: 0.129412 } color)
+[19.02.2022 14:52:31][Vector Zone Launcher][Thread 1 (139733875291904)] INFO: Started, job range: ø
+[19.02.2022 14:52:31][Vector Zone Launcher][Thread 1 (139733875291904)] SUCCESS: Ended, job range: ø
+[19.02.2022 14:52:31][GA][Log] INFO: Initialized logger with path to best genomes: "/home/vova/dev/Painter/log/latest/stroking/region0/chain0/best_genomes"
+[19.02.2022 14:52:31][GA Worker] SUCCESS: Inited
+[19.02.2022 14:52:31][Vector Zone Launcher][Thread 0 (139733952419584)][Region #0] INFO: Start GA (chain 1/2)
+[19.02.2022 14:52:32][GA Worker] INFO: Fitness dynamic: [1.23052, 1.32734, 1.27275, 1.34357, 1.45505]
+[19.02.2022 14:52:34][Vector Zone Launcher][Thread 0 (139733952419584)][Region #0] INFO: Chain #1 finished
+[19.02.2022 14:52:34][Annealing][Log] INFO: Initialized logger with path to updates: "/home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates"
+[19.02.2022 14:52:34][Vector Zone Launcher][Thread 0 (139733952419584)][Region #0] INFO: Start annealing (chain 2/2)
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/1.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/4.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/7.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/8.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/9.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/12.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/14.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/15.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/16.png
+[19.02.2022 14:52:34][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/18.png
+[19.02.2022 14:52:35][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/27.png
+[19.02.2022 14:52:35][Annealing][Log] INFO: Update logged:  /home/vova/dev/Painter/log/latest/stroking/region0/chain1/updates/28.png
+[19.02.2022 14:52:36][Vector Zone Launcher][Thread 0 (139733952419584)][Region #0] INFO: Chain #2 finished
+[19.02.2022 14:52:36][Vector Zone Launcher][Thread 0 (139733952419584)] INFO: Finish stroking region #0
+[19.02.2022 14:52:36][Vector Zone Launcher][Thread 0 (139733952419584)] SUCCESS: Ended, job range: [0, 0]
+[19.02.2022 14:52:36][Vector Zone Launcher] SUCCESS: End running
+[19.02.2022 14:52:36][Statistics] INFO: Computations performed: 81
+[19.02.2022 14:52:36][Statistics] INFO: Average computational time: 27.742ms
+[19.02.2022 14:52:36][Statistics] INFO: Computational time per pixel: 926.926ns
+[19.02.2022 14:52:36][Statistics] INFO: Computational speed: 1.1 MegaPixel / sec
+[19.02.2022 14:52:36][Stroke Sorting] INFO: Number of zones: 3
+[19.02.2022 14:52:36][Stroke Sorting] INFO: Number of zones: 3
+[19.02.2022 14:52:36][Stroke Sorting] INFO: Number of zones: 3
+[19.02.2022 14:52:36][Launch][VectorStroking] SUCCESS: Result: 6 strokes
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_1.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_2.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_3.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_4.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_5.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/cumulative_stroke_plans/strokes_up_to_6.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_1.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_2.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_3.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_4.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_5.json
+[19.02.2022 14:52:36][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/single_stroke_plans/stroke_6.json
+[19.02.2022 14:52:37][Launch] SUCCESS: Save paint plan to: /home/vova/dev/Painter/log/latest/plan.json

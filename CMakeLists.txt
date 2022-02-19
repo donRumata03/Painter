@@ -75,7 +75,7 @@ set(SOURCE_FILES
 
         # Utils
         utils/image.cpp
-        rasterization/paint_plan_rasterization.cpp rasterization/paint_plan_rasterization.h)
+        rasterization/paint_plan_rasterization.cpp rasterization/paint_plan_rasterization.h launch/saving_results.cpp launch/saving_results.h)
 
 add_library(Painter-lib STATIC ${SOURCE_FILES})
 
