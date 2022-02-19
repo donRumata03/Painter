@@ -16,6 +16,7 @@ struct SortedStrokesForImage {
     double h = 0;
     Image template_image;
     std::vector<ColoredStroke> strokes;
+    Units stroke_units;
 
 public:
     SortedStrokesForImage(double w, double h, const Color &canvas_color, const std::vector<ColoredStroke> &strokes,
@@ -27,6 +28,12 @@ public:
             stroke_units(stroke_units)
 
             {}
+
+    Image get_rendered_image() {
+      Image res = template_image.clone();
+      rasterize_strokes(template_image, strokes);
+      return res;
+    }
 
 //    std::vector<ColoredStroke> get_strokes_mm() {
 //      return (stroke_units == Units::MM) ?
@@ -71,6 +78,8 @@ static void save_cumulative_stroke_images(const SortedStrokesForImage& strokes_f
  * @param strokes_for_image strokes should be in MM
  */
 static void save_cumulative_plans(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas) {
+  assert(strokes_for_image.stroke_units == Units::MM);
+
   auto cumulative_stroke_plans_dir = latest_log_path / "cumulative_stroke_plans";
   fs::create_directories(cumulative_stroke_plans_dir);
 
@@ -97,6 +106,8 @@ static void save_single_stroke_images(const SortedStrokesForImage& strokes_for_i
  * @param strokes_for_image strokes should be in MM
  */
 static void save_single_stroke_plans(const SortedStrokesForImage& strokes_for_image, const Canvas& canvas) {
+  assert(strokes_for_image.stroke_units == Units::MM);
+
   auto single_stroke_plans_dir = latest_log_path / "single_stroke_plans";
   fs::create_directories(single_stroke_plans_dir);
 
@@ -196,36 +207,34 @@ static void launch_zoned_vector_stroking(const std::string& filename, const Comm
 
   auto pixel_mat_image = SortedStrokesForImage(
           launcher.get_image_size().width, launcher.get_image_size().height,
-          params.canvas_color, launcher.get_final_strokes(Units::PX, false), Units::PX, <#initializer#>);
+          params.canvas_color, launcher.get_final_strokes(Units::PX, false), Units::PX, params.canvas);
 
   auto pixel_canvas_image = SortedStrokesForImage(
           params.canvas.width(Units::PX), params.canvas.height(Units::PX),
-          params.canvas_color, launcher.get_final_strokes(Units::PX, true), Units::PX, <#initializer#>);
+          params.canvas_color, launcher.get_final_strokes(Units::PX, true), Units::PX, params.canvas);
 
   auto mm_canvas_image = SortedStrokesForImage(
           params.canvas.width(Units::MM), params.canvas.height(Units::MM),
-          params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::PX, <#initializer#>);
+          params.canvas_color, launcher.get_final_strokes(Units::MM, true), Units::PX, params.canvas);
 
 
+  LogConsoleSuccess("Launch") << "Result: " << pixel_mat_image.strokes.size() << " strokes";
 
-  LogConsoleSuccess("Launch") << "Result: " << strokes_on_image.size() << " strokes";
-  save_resultant_image(template_image, strokes);
+  save_resultant_image(pixel_mat_image);
 
   // Save cumulative stroke images with plans:
-  // TODO: save into plans (take mm-s and shift into account)
-  save_cumulative_stroke_images(make_default_image(image_size.width, image_size.height, params.canvas_color), strokes_on_image);
+  save_cumulative_stroke_images(pixel_mat_image);
+  save_cumulative_plans(mm_canvas_image, params.canvas);
 
   // Single strokes with plans:
-  save_single_stroke_images(make_default_image(image_size.width, image_size.height, params.canvas_color), strokes);
+  save_cumulative_stroke_images(pixel_mat_image);
+  save_cumulative_plans(mm_canvas_image, params.canvas);
 
+  // Result as it would look on canvas
+  save_image(pixel_canvas_image.get_rendered_image(), latest_log_path / "result_canvas.png");
 
-  // Full size, result on canvas (in px)
-  Image stroked_image_mm = make_default_image(params.canvas.width(Units::PX), params.canvas.height(Units::PX), params.canvas_color);
-  rasterize_strokes(stroked_image_mm, );
-  save_image(stroked_image_mm, (fs::path(painter_base_path) / "log" / "latest" / "result_canvas.png").string());
-
-  // Save strokes
-  save_paint_plan(launcher.get_final_strokes(Units::MM, true), params.canvas);
+  // Save paint plan as json
+  save_paint_plan(mm_canvas_image.strokes, params.canvas);
 }
 
 
